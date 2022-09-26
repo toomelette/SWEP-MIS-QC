@@ -198,21 +198,21 @@
                             {!! $italic_cl !!}
                         </td>
                         <td class="text-left">
-                            @if(\Carbon\Carbon::parse($month.'-'.$date)->format('w') == 6)
-                                @php($saturdays++)
-                                SAT
+                            @if($dtr_array[$month.'-'.$date]->remarks == null)
+                                @if(\Carbon\Carbon::parse($month.'-'.$date)->format('w') == 6)
+                                    @php($saturdays++)
+                                    SAT
+                                @endif
+                                @if(\Carbon\Carbon::parse($month.'-'.$date)->format('w') == 0)
+                                    @php($sundays++)
+                                    SUN
+                                @endif
+                                @if(isset($holidays[$month.'-'.$date]))
+                                    <b>{{$holidays[$month.'-'.$date]['type']}}</b>
+                                @endif
+                            @else
+                                <span class="text-red">{{$dtr_array[$month.'-'.$date]->remarks}}</span>
                             @endif
-                            @if(\Carbon\Carbon::parse($month.'-'.$date)->format('w') == 0)
-                                @php($sundays++)
-                                SUN
-                            @endif
-                            @if(isset($holidays[$month.'-'.$date]))
-                                <b>{{$holidays[$month.'-'.$date]['type']}}</b>
-                            @endif
-
-{{--                            @if($dtr_array[$month.'-'.$date]->calculated == -1)--}}
-{{--                                <span class="incomplete">INC</span>--}}
-{{--                            @endif--}}
                         </td>
                     </tr>
                 @else
@@ -392,21 +392,21 @@
                             {!! $italic_cl !!}
                         </td>
                         <td class="text-left">
-                            @if(\Carbon\Carbon::parse($month.'-'.$date)->format('w') == 6)
-                                @php($saturdays++)
-                                SAT
+                            @if($dtr_array[$month.'-'.$date]->remarks == null)
+                                @if(\Carbon\Carbon::parse($month.'-'.$date)->format('w') == 6)
+                                    @php($saturdays++)
+                                    SAT
+                                @endif
+                                @if(\Carbon\Carbon::parse($month.'-'.$date)->format('w') == 0)
+                                    @php($sundays++)
+                                    SUN
+                                @endif
+                                @if(isset($holidays[$month.'-'.$date]))
+                                    <b>{{$holidays[$month.'-'.$date]['type']}}</b>
+                                @endif
+                            @else
+                                <span class="text-red">{{$dtr_array[$month.'-'.$date]->remarks}}</span>
                             @endif
-                            @if(\Carbon\Carbon::parse($month.'-'.$date)->format('w') == 0)
-                                @php($sundays++)
-                                SUN
-                            @endif
-                            @if(isset($holidays[$month.'-'.$date]))
-                                <b>{{$holidays[$month.'-'.$date]['type']}}</b>
-                            @endif
-
-{{--                            @if($dtr_array[$month.'-'.$date]->calculated == -1)--}}
-{{--                                <span class="incomplete">INC</span>--}}
-{{--                            @endif--}}
                         </td>
                     </tr>
                 @else
@@ -452,6 +452,7 @@
                                     @php($sundays++)
                                     SUN
                                 @endif
+
                             </td>
                         </tr>
                     @endif
