@@ -189,6 +189,13 @@
                             <p class="text-info"><i class="fa fa-info"></i> You can add more "Position applied for" by pressing <b>ENTER</b>. </p>
                         </div>
                     </div>
+
+                    <div class="row">
+                        {!! \App\Swep\ViewHelpers\__form2::textbox('contact_no',[
+                            'cols' => 6,
+                            'label' => 'Contact No.:*',
+                        ]) !!}
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-default pull-left" data-toggle="modal" data-target="#import_from_employee_modal"> Import data from employee</button>

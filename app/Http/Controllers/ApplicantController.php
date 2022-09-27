@@ -192,6 +192,20 @@ class ApplicantController extends Controller{
                 ->editColumn('received_at',function($data){
                     return Carbon::parse($data->received_at)->format('m/d/y');
                 })
+                ->editColumn('fullname',function($data){
+                    return $data->fullname .'
+                    <div class="table-subdetail" style="margin-top: 3px">
+                        <table>
+                            <tr>
+                                <td style="padding-right: 10px">Contact:</td>
+                                <td style="padding-right: 20px">'.$data->contact_no.'</td>
+                                <td style="padding-right: 10px">Sex:</td>
+                                <td>'.$data->gender.'</td>
+                            </tr>
+                        </table>
+                        
+                    </div>';
+                })
                 ->escapeColumns([])
                 ->setRowId('slug')
                 ->toJson();
