@@ -130,84 +130,25 @@
             <div class="col-md-12">
                 <div class="panel">
                     <div class="panel-body">
-                        <center><label><span for="">{{Carbon::now()->format('Y')}}</span> | Employees' Milestone</label>
+                        <center><label><span for="year_name">{{Carbon::now()->format('Y')}}</span> | Employees' Milestone</label>
+                            <div class="btn-group pull-right">
+                                <button type="button" data="{{\Illuminate\Support\Carbon::now()->format('Y')-1}}" id="prev_btn_milestone" class="btn btn-default btn-xs nav_month_btn_milestone"><i class="fa fa-chevron-left"></i></button>
+                                <button type="button" data="{{\Illuminate\Support\Carbon::now()->format('Y')+1}}" id="next_btn_milestone" class="btn btn-default btn-xs nav_month_btn_milestone"><i class="fa fa-chevron-right"></i></button>
+                            </div></center>
                         <hr class="no-margin">
                         <div style="max-height: 355px;overflow-x: hidden; padding-top: 15px" id="" >
-                            <div class="nav-tabs-custom">
-                                @if(!empty($loyaltys))
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Name of Employee</th>
-                                                <th>First day in government</th>
-                                                <th>Years in govt. service</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                            @foreach($loyaltys as $employee)
-                                                <tr>
-                                                    <td class="text-strong">{{$employee->lastname}}, {{$employee->firstname}}</td>
-                                                    <td>{{\Illuminate\Support\Carbon::parse($employee->firstday_gov)->format('F d, Y')}}</td>
-                                                    <td>{{$employee->years_in_gov}} years</td>
-                                                    <td style="width: 50px;"><a href="{{route('dashboard.employee.index')}}?find={{$employee->employee_no}}" target="_blank"><button class="btn btn-xs">View Employee</button></a></td>
-                                                </tr>
-                                            @endforeach
-                                        </table>
-                                @endif
-                                </div>
-
+                            <div class="nav-tabs-custom" id="milestoneContainer">
+                                   {!! $loyaltys !!}
                             </div>
+
                         </div>
                     </div>
                 </div>
-
             </div>
-        </div>
-{{--        <div class="row">--}}
-{{--            <div class="col-md-12">--}}
-{{--                <div class="panel">--}}
-{{--                    <div class="panel-body">--}}
-{{--                        <center><label>Applicants by Course</label></center>--}}
-{{--                        <hr class="no-margin">--}}
-{{--                        <div class="col-md-3">--}}
 
-{{--                            <canvas id="applicants_by_gender" width="300" height="390"></canvas>--}}
-{{--                        </div>--}}
-{{--                        <div class="col-md-9">--}}
-{{--                            <table class="table table-bordered table-condensed" id="per_course_table">--}}
-{{--                                <thead>--}}
-{{--                                    <tr>--}}
-{{--                                        <th>Course</th>--}}
-{{--                                        <th>Applicants</th>--}}
-{{--                                    </tr>--}}
-{{--                                </thead>--}}
-{{--                                <tbody>--}}
-{{--                                    @if($per_course->count() > 0)--}}
-{{--                                        @foreach($per_course as $key=>$data)--}}
-{{--                                        <tr dataset-Index="{{$key}}" class="course_tr">--}}
-{{--                                            <td>{{str_replace('BACHELOR OF SCIENCE IN','BS',$data->name)}}</td>--}}
-{{--                                            <td class="text-center">{{$data->count}}</td>--}}
-{{--                                        </tr>--}}
-{{--                                        @endforeach--}}
-{{--                                    @endif--}}
-{{--                                </tbody>--}}
-{{--                            </table>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--        <div class="row">--}}
-{{--            <div class="col-md-12">--}}
-{{--                <div class="panel">--}}
-{{--                    <div class="panel-body">--}}
-{{--                        <center><label>Applicants by Date</label></center>--}}
-{{--                        <hr class="no-margin">--}}
-{{--                        <canvas id="applicants_by_date" width="400" height="80"></canvas>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
+        </div>
+        </div>
+
     </section>
 
 @endsection
@@ -263,6 +204,30 @@
             }
         })
     })
+
+    $(".nav_month_btn_milestone").click(function () {
+        let get_date = $(this).attr('data');
+        $.ajax({
+            url : '{{Request::url()}}?milestone=true',
+            data : {year : get_date},
+            type: 'GET',
+            headers: {
+                {!! __html::token_header() !!}
+            },
+            success: function (res) {
+                $("#milestoneContainer").html(res.view);
+                $("span[for='year_name']").html(res.year);
+                $("#next_btn_milestone").attr('data',res.new_next);
+                $("#prev_btn_milestone").attr('data',res.new_prev);
+
+            },
+            error: function (res) {
+                console.log(res);
+            }
+        })
+    })
+
+
     $("document").ready(function () {
         var ctx = $("#employee_by_gender");
 

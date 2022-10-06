@@ -63,6 +63,16 @@ class HomeController extends Controller{
                 ];
             }
 
+            if(request()->ajax() && request()->has('milestone')){
+                $new_next = request('year') + 1;
+                $new_prev =  request('year') -1;
+                return [
+                    'view' =>  $this->milestones(request('year')),
+                    'new_next' => $new_next,
+                    'new_prev' => $new_prev,
+                    'year' => request('year'),
+                ];
+            }
 
 
 
@@ -238,12 +248,14 @@ class HomeController extends Controller{
             'year_step' => $year
         ])->render();
     }
-    private function milestones(){
+    private function milestones($yr = null){
+        $year = $yr == null ? Carbon::now()->format('Y') : $yr;
         $loyaltys = Employee::query()
-            ->select('slug','employee_no','lastname','firstname','firstday_gov',DB::raw('YEAR(firstday_gov) as firstday_gov_year'),DB::raw('YEAR(firstday_gov) as firstday_gov_year'),DB::raw(Carbon::now()->format("Y").' - YEAR(firstday_gov) as years_in_gov'))
-            ->where(DB::raw('('.Carbon::now()->format("Y").' - YEAR(firstday_gov)) % 5'),'=',0)
-            ->where(DB::raw(Carbon::now()->format("Y").' - YEAR(firstday_gov)'),'>',9)
-            ->where('locations','!=', 'COS')
+            ->select('slug','employee_no','lastname','firstname','firstday_gov',DB::raw('YEAR(firstday_gov) as firstday_gov_year'),DB::raw('YEAR(firstday_gov) as firstday_gov_year'),DB::raw($year.' - YEAR(firstday_gov) as years_in_gov'))
+            ->where(DB::raw('('.$year.' - YEAR(firstday_gov)) % 5'),'=',0)
+            ->where(DB::raw($year.' - YEAR(firstday_gov)'),'>',9)
+            ->where('locations','!=', 'COS-VISAYAS')
+            ->where('locations','!=', 'COS-LM')
             ->where('locations','!=','RETIREE')
             ->where('is_active','!=','INACTIVE')
             ->orderBy('firstday_gov','desc')
@@ -253,6 +265,9 @@ class HomeController extends Controller{
         foreach ($loyaltys as $loyalty) {
             $loyaltysArr[$loyalty->slug] = $loyalty;
         }
-        return $loyaltysArr;
+        return view('dashboard.home.milestones')->with([
+                'loyaltys' => $loyaltysArr,
+            ]
+        )->render();
     }
 }

@@ -108,6 +108,27 @@ class Helper
             }
         }
     }
+    public static function dtrTypeToInt(){
+        return [
+            'am_in' => 10,
+            'am_out' => 20,
+            'pm_in' => 30,
+            'pm_out' => 40,
+            'ot_in' => 50,
+            'ot_out' => 60,
+        ];
+    }
+
+    public static function dtrIntToField(){
+        return [
+            10 => 'am_in',
+            20 => 'am_out',
+            30 => 'pm_in',
+            40 => 'pm_out',
+            50 => 'ot_in',
+            60 => 'ot_out',
+        ];
+    }
 
     public static function name_extensions(){
         return [
