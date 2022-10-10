@@ -38,10 +38,11 @@
               </div>
             @endif
           @endif
-            @include('dashboard.home.announcement_banner')
+
 
         @yield('content')
         @yield('content2')
+            @include('dashboard.home.announcement_banner')
       </div>
 
       <footer class="main-footer">

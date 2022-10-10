@@ -26,7 +26,7 @@
                     <a href="{{route('dashboard.home')}}?initiator={{$announcement->slug}}" target="_blank">
                         <div class="news">
                             <h4 style="color: black">{{\Illuminate\Support\Str::limit($announcement->title,30,'...')}}</h4>
-                            <p style="color: black">{!! \Illuminate\Support\Str::limit($announcement->details,60,' ...') !!}.</p>
+                            <p style="color: black">{!! \Illuminate\Support\Str::limit(strip_tags($announcement->details),60,' ...') !!}.</p>
                         </div>
                     </a>
                 @endforeach

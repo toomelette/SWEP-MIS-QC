@@ -43,7 +43,7 @@ $max = 2;
                         </div>
 
                         <div class="box-body" {{($ct > 0) ? 'style=display:none' : ''}}>
-                            <p>{!! $announcement->details !!}</p>
+                            <p>{!! $announcement->details !!} </p>
 
                             @if($announcement->attachments->count() > 0)
                             <label><i class="fa fa-paperclip"></i> Attachments [{{$announcement->attachments->count()}}]:</label>
