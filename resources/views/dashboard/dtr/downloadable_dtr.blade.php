@@ -157,14 +157,14 @@
 
                         <td>
                             @if(isset($dtr_edits_array[$fullDate]['am_in']))
-                                <span class="text-red">{{$dtr_edits_array[$fullDate]['am_in']}}</span>
+                                <span class="text-red"><i>{{$dtr_edits_array[$fullDate]['am_in']}}</i></span>
                             @else
                                 {!! __html::dtrTime($dtr_array[$month.'-'.$date]->am_in) !!}
                             @endif
                         </td>
                         <td >
                             @if(isset($dtr_edits_array[$fullDate]['am_out']))
-                                <span class="text-red">{{$dtr_edits_array[$fullDate]['am_out']}}</span>
+                                <span class="text-red"><i>{{$dtr_edits_array[$fullDate]['am_out']}}</i></span>
                             @else
                                 {!! __html::dtrTime($dtr_array[$month.'-'.$date]->am_out) !!}
                             @endif
@@ -172,14 +172,14 @@
                         </td>
                         <td>
                             @if(isset($dtr_edits_array[$fullDate]['pm_in']))
-                                <span class="text-red">{{$dtr_edits_array[$fullDate]['pm_in']}}</span>
+                                <span class="text-red"><i>{{$dtr_edits_array[$fullDate]['pm_in']}}</i></span>
                             @else
                                 {!! __html::dtrTime($dtr_array[$month.'-'.$date]->pm_in) !!}
                             @endif
                         </td>
                         <td>
                             @if(isset($dtr_edits_array[$fullDate]['pm_out']))
-                                <span class="text-red">{{$dtr_edits_array[$fullDate]['pm_out']}}</span>
+                                <span class="text-red"><i>{{$dtr_edits_array[$fullDate]['pm_out']}}</i></span>
                             @else
                                 {!! __html::dtrTime($dtr_array[$month.'-'.$date]->pm_out) !!}
                             @endif
@@ -351,14 +351,14 @@
 
                         <td>
                             @if(isset($dtr_edits_array[$fullDate]['am_in']))
-                                <span class="text-red">{{$dtr_edits_array[$fullDate]['am_in']}}</span>
+                                <span class="text-red"><i>{{$dtr_edits_array[$fullDate]['am_in']}}</i></span>
                             @else
                                 {!! __html::dtrTime($dtr_array[$month.'-'.$date]->am_in) !!}
                             @endif
                         </td>
                         <td >
                             @if(isset($dtr_edits_array[$fullDate]['am_out']))
-                                <span class="text-red">{{$dtr_edits_array[$fullDate]['am_out']}}</span>
+                                <span class="text-red"><i>{{$dtr_edits_array[$fullDate]['am_out']}}</i></span>
                             @else
                                 {!! __html::dtrTime($dtr_array[$month.'-'.$date]->am_out) !!}
                             @endif
@@ -366,14 +366,14 @@
                         </td>
                         <td>
                             @if(isset($dtr_edits_array[$fullDate]['pm_in']))
-                                <span class="text-red">{{$dtr_edits_array[$fullDate]['pm_in']}}</span>
+                                <span class="text-red"><i>{{$dtr_edits_array[$fullDate]['pm_in']}}</i></span>
                             @else
                                 {!! __html::dtrTime($dtr_array[$month.'-'.$date]->pm_in) !!}
                             @endif
                         </td>
                         <td>
                             @if(isset($dtr_edits_array[$fullDate]['pm_out']))
-                                <span class="text-red">{{$dtr_edits_array[$fullDate]['pm_out']}}</span>
+                                <span class="text-red"><i>{{$dtr_edits_array[$fullDate]['pm_out']}}</i></span>
                             @else
                                 {!! __html::dtrTime($dtr_array[$month.'-'.$date]->pm_out) !!}
                             @endif
