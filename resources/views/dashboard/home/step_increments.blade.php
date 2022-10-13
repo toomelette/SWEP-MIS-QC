@@ -20,7 +20,11 @@
                     <td>{{$employee->salary_grade}}</td>
                     <td>{{$employee->step_inc}}</td>
                     <td>
-                        {{$employee->step_inc+1}}
+                        @if($employee->step_inc+1 > 8)
+                            N/A
+                        @else
+                            {{$employee->step_inc+1}}
+                        @endif
                     </td>
                     <td style="width: 50px">
                         <a href="{{route('dashboard.employee.index')}}?find={{$employee->employee_no}}" target="_blank">
