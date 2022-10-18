@@ -169,16 +169,24 @@ class UserController extends Controller{
                         return $button;
                     })
                     ->editColumn('lastname', function ($data){
-
+                        $div = '<div class="pull-right" style="width: 30px;">';
                         if(!empty($data->employee)){
                             $default_pword = Carbon::parse($data->employee->date_of_birth)->format('mdy');
                             $add = '';
                             if(!Hash::check($default_pword,$data->password)){
                                 $add = '<i class="fa fa-lock text-muted" title="The user has already changed its password."></i>';
                             }
-                            return strtoupper($data->employee->lastname.', '.$data->employee->firstname) .' '.$add;
+                            if(file_exists(public_path('images/EmployeePics/1by1Low/'.$data->employee->employee_no.'.jpg'))){
+                                $div = $div.'<img src="'.asset('images/EmployeePics/1by1Low/'.$data->employee->employee_no.'.jpg').'" style="object-fit: contain;width: 100%" class="img-circle" alt="User Image">';
+                            }else{
+                                $div = $div.'<img src="'.asset('images/avatar.jpeg').'" style="object-fit: contain;width: 100%" class="img-circle" alt="User Image">';
+                            }
+                            $div = $div.'</div>';
+                            return strtoupper($data->employee->lastname.', '.$data->employee->firstname) .' '.$add.$div;
                         }
-                        return $data->lastname.', '.$data->firstname;
+                        $div = $div.'<img src="'.asset('images/avatar.jpeg').'" style="object-fit: contain;width: 100%" class="img-circle" alt="User Image">';
+                        $div = $div.'</div>';
+                        return $data->lastname.', '.$data->firstname.$div;
                     })
                     ->editColumn('is_online', function($data){
                         return Helper::online_badge($data->last_activity);
