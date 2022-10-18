@@ -15,10 +15,12 @@ use App\Models\News;
 use App\Models\PermissionSlip;
 use App\Swep\Services\HomeService;
 use Carbon\Carbon;
+use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Response;
 
 
 class HomeController extends Controller{
@@ -270,4 +272,6 @@ class HomeController extends Controller{
             ]
         )->render();
     }
+
+
 }

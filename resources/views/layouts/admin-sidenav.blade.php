@@ -18,7 +18,11 @@
   <section class="sidebar">
     <div class="user-panel">
       <div class="pull-left image">
-        <img src="{{ asset('images/avatar.jpeg') }}" class="img-circle" alt="User Image">
+          @if(!empty(Auth::user()->employee))
+            <img src="{{asset('images/EmployeePics/1by1Low/'.Auth::user()->employee->employee_no.'.jpg')}}" class="img-circle" alt="User Image">
+            @else
+          <img src="{{asset('images/avatar.jpeg')}}" class="img-circle" alt="User Image">
+          @endif
       </div>
       <div class="pull-left info">
         
@@ -40,7 +44,6 @@
                     @endif
                 @endif
             @endif
-
       </div>
     </div>
     <style>
@@ -65,8 +68,6 @@
                     <span>Home</span>
                 </a>
             </li>
-
-
         @if(count($tree) > 0)
             @php($tree_copy = $tree)
             @php(ksort($tree_copy))

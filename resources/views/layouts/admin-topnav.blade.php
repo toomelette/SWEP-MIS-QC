@@ -35,14 +35,24 @@
           </li>
         <li class="dropdown user user-menu">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            @if(!empty(Auth::user()->employee))
+            <img src="{{asset('images/EmployeePics/1by1Low/'.Auth::user()->employee->employee_no.'.jpg')}}" class="user-image" alt="User Image">
+            @else
             <img src="{{asset('images/avatar.jpeg')}}" class="user-image" alt="User Image">
+            @endif
             @if(Auth::check())
               {!! strtoupper(Helper::getUserName()['firstname']) !!}
             @endif
           </a>
           <ul class="dropdown-menu">
             <li class="user-header">
-              <img src="{{asset('images/avatar.jpeg')}}" class="img-circle" alt="User Image">
+              @if(!empty(Auth::user()->employee))
+                <img src="{{asset('images/EmployeePics/1by1Low/'.Auth::user()->employee->employee_no.'.jpg')}}" class="img-circle" alt="User Image">
+              @else
+                <img src="{{asset('images/avatar.jpeg')}}" class="img-circle" alt="User Image">
+              @endif
+
+
               <p>
                 @if(Auth::check())
                   {!! strtoupper(Helper::getUserName()['firstname']) !!}  {!! strtoupper(Helper::getUserName()['lastname']) !!}
