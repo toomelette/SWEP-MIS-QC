@@ -441,11 +441,12 @@ class DocumentService extends BaseService{
         $document = $this->document_repo->findBySlug($slug);
 
         if(!empty($document->filename)){
-
-            $path = $this->__static->archive_dir() . $document->year .'/'. $document->folder_code .'/'. $document->filename;
-            $path = '/home/swep_afd_storage/2022/ADMIN_ORD/MEMO-VIS-BAC-2022-Aug-002.pdf';
+//            $path = $this->__static->archive_dir() . $document->year .'/'. $document->folder_code .'/'. $document->filename;
             $path = $this->getStorage()->path('/'.$document->path.$document->filename);
-            if (!File::exists($path)) { return "Cannot Detect File!"; }
+
+            if (!File::exists($path)) {
+                abort(504,'File does not exist.');
+            }
             $file = File::get($path);
             $type = File::mimeType($path);
             $response = response()->make($file, 200);
