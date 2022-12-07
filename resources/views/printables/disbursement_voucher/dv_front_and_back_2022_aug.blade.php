@@ -97,24 +97,10 @@
 <div class="printable">
     <div style="break-after: page">
         <div class="printable font-px14">
-            <table class="dv_table" style="width: 100%; border-bottom: none">
-                <tr style="border: none">
-                    <td style="border: none"></td>
-                    <td style="border: none; width: 40px"></td>
-                    <td style="border: none"></td>
-                    <td style="border: none"></td>
-                    <td style="border: none"></td>
-                    <td style="border: none"></td>
-                    <td style="border: none"></td>
-                    <td style="border: none"></td>
-                    <td style="border: none"></td>
-                    <td style="border: none"></td>
-                    <td style="border: none"></td>
-                    <td style="border: none"></td>
-
-                </tr>
+            <table style="width: 100%" cellpadding="0" cellspacing="0">
+                <tbody>
                 <tr>
-                    <td colspan="3" rowspan="4" class="no-border-bottom no-border-right" style="width: 300px">
+                    <td  rowspan="3" class="no-border-bottom no-border-right" style="width: 20%; border-left: 2px solid black; border-top: 2px solid black">
                         <div style=" width: 100%">
                             <div style="width: 100%; float: left">
                                 <center>
@@ -124,28 +110,81 @@
 
                         </div>
                     </td>
-                    <td colspan="7" class="text-strong text-center no no-border-bottom no-border-left text-strong">Republic of the Philippines</td>
-                    <td colspan="2" class="text-strong no-border-bottom font-px11">Fund Cluster:</td>
+                    <td rowspan="3" class="text-strong text-center no no-border-bottom no-border-left text-strong" style="width: 50%; border-top: 2px solid black; border-right: none !important;">
+                        <p class="no-margin">Republic of the Philippines</p>
+                        <p class="no-margin">SUGAR REGULATORY ADMINISTRATION</p>
+                        <p class="no-margin">Araneta Street, Singcang, Bacolod City</p>
+                        <p class="no-margin" style="font-size: 18px">DISBURSEMENT VOUCHER	</p>
+                    </td>
+                    <td rowspan="3" style="width: 7%; border-top: 2px solid black; border-left: none !important; border-bottom: none !important; border-right: none !important;"></td>
+                    <td style="vertical-align: top; border-top: 2px solid black; border-right: 2px solid black" class="text-strong no-border-bottom font-px11">
+                        Fund Cluster:
+                        <p class="no-margin">{{(isset(\App\Swep\Helpers\Helper::budgetTypes()[$dv->fund_source])) ? \App\Swep\Helpers\Helper::budgetTypes()[$dv->fund_source] : $dv->fund_source}}</p>
+                    </td>
                 </tr>
                 <tr>
-                    <td colspan="7" class="text-strong text-center no-border-top no-border-bottom no-border-left">SUGAR REGULATORY ADMINISTRATION</td>
-                    <td colspan="2" class="no-border-top text-strong f-12">{{(isset(\App\Swep\Helpers\Helper::budgetTypes()[$dv->fund_source])) ? \App\Swep\Helpers\Helper::budgetTypes()[$dv->fund_source] : $dv->fund_source}}</td>
+                    <td class="font-px11" style="vertical-align: top; border-right: 2px solid black">
+                        <b>Date:</b>
+                        <p class="no-margin">{{\Illuminate\Support\Carbon::parse($dv->date)->format('M. d, Y')}}</p>
+                    </td>
                 </tr>
                 <tr>
-                    <td colspan="7"  class="text-strong text-center no-border-top no-border-bottom no-border-left">Araneta Street, Singcang, Bacolod City</td>
-                    <td colspan="2" class="text-strong no-border-bottom font-px12">Date: {{\Illuminate\Support\Carbon::parse($dv->date)->format('F d, Y')}}</td>
+                    <td class="font-px11" style="vertical-align: top; border-top: none !important; border-right: 2px solid black; border-bottom: none !important;">
+                        DV No.:
+                        <p class="no-margin">{{$dv->dv_no ?? '<br>'}}</p>
+                    </td>
                 </tr>
-                <tr>
-                    <td colspan="7" class="no-border-top no-border-bottom no-border-left"></td>
-                    <td colspan="2" class="no-border-top no-border-bottom font-px11">DV No.:</td>
-                </tr>
-                <tr>
-                    <td colspan="3" class="no-border-top no-border-right"></td>
-                    <td colspan="7" class="text-strong font-px18 text-center no-border-top no-border-left">DISBURSEMENT VOUCHER</td>
-                    <td colspan="2" class="no-border-top text-strong f-12">{{$dv->dv_no}}</td>
-                </tr>
+                </tbody>
+            </table>
+            <table class="dv_table" style="width: 100%; border-bottom: none">
+{{--                <tr style="border: none">--}}
+{{--                    <td style="border: none"></td>--}}
+{{--                    <td style="border: none; width: 40px"></td>--}}
+{{--                    <td style="border: none"></td>--}}
+{{--                    <td style="border: none"></td>--}}
+{{--                    <td style="border: none"></td>--}}
+{{--                    <td style="border: none"></td>--}}
+{{--                    <td style="border: none"></td>--}}
+{{--                    <td style="border: none"></td>--}}
+{{--                    <td style="border: none"></td>--}}
+{{--                    <td style="border: none"></td>--}}
+{{--                    <td style="border: none"></td>--}}
+{{--                    <td style="border: none"></td>--}}
+
+{{--                </tr>--}}
+{{--                <tr>--}}
+{{--                    <td colspan="3" rowspan="4" class="no-border-bottom no-border-right" style="width: 300px">--}}
+{{--                        <div style=" width: 100%">--}}
+{{--                            <div style="width: 100%; float: left">--}}
+{{--                                <center>--}}
+{{--                                    <img src="{{ asset('images/sra.png') }}" style="width:90px; float: right">--}}
+{{--                                </center>--}}
+{{--                            </div>--}}
+
+{{--                        </div>--}}
+{{--                    </td>--}}
+{{--                    <td colspan="7" class="text-strong text-center no no-border-bottom no-border-left text-strong">Republic of the Philippines</td>--}}
+{{--                    <td colspan="2" class="text-strong no-border-bottom font-px11">Fund Cluster:</td>--}}
+{{--                </tr>--}}
+{{--                <tr>--}}
+{{--                    <td colspan="7" class="text-strong text-center no-border-top no-border-bottom no-border-left">SUGAR REGULATORY ADMINISTRATION</td>--}}
+{{--                    <td colspan="2" class="no-border-top text-strong f-12"></td>--}}
+{{--                </tr>--}}
+{{--                <tr>--}}
+{{--                    <td colspan="7"  class="text-strong text-center no-border-top no-border-bottom no-border-left">Araneta Street, Singcang, Bacolod City</td>--}}
+{{--                    <td colspan="2" class="text-strong no-border-bottom font-px12">Date: {{\Illuminate\Support\Carbon::parse($dv->date)->format('F d, Y')}}</td>--}}
+{{--                </tr>--}}
+{{--                <tr>--}}
+{{--                    <td colspan="7" class="no-border-top no-border-bottom no-border-left"></td>--}}
+{{--                    <td colspan="2" class="no-border-top no-border-bottom font-px11">DV No.:</td>--}}
+{{--                </tr>--}}
+{{--                <tr>--}}
+{{--                    <td colspan="3" class="no-border-top no-border-right"></td>--}}
+{{--                    <td colspan="7" class="text-strong font-px18 text-center no-border-top no-border-left">DISBURSEMENT VOUCHER</td>--}}
+{{--                    <td colspan="2" class="no-border-top text-strong f-12">{{$dv->dv_no}}</td>--}}
+{{--                </tr>--}}
                 <tr class="font-px12 text-strong">
-                    <td rowspan="2" colspan="2">Mode of Payment</td>
+                    <td rowspan="2" colspan="2" style="width: 13%">Mode of Payment</td>
                     <td rowspan="2" class="text-center no-border-right">
                         <div style="width: 20px; height: 20px; border: 1.4px solid; float: right; {{($dv->mode_of_payment == 'CHECK')? 'background-color: black' : ''}}"></div>
                     </td>
@@ -169,7 +208,7 @@
                 <tr class="text-strong ">
                     <td colspan="2" rowspan="2" class="font-px11">Payee</td>
                     <td colspan="6" rowspan="2">{{strtoupper($dv->payee)}}</td>
-                    <td colspan="3" class="no-border-bottom font-px11">TIN/Employee No.:</td>
+                    <td colspan="3" class="no-border-bottom font-px11">TIN/Emp. No.:</td>
                     <td class="no-border-bottom font-px11">ORS/BURS NO.:</td>
                 </tr>
 
