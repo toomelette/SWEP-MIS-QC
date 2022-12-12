@@ -36,6 +36,13 @@
             'Yes' => '1',
           ], '', '', '', ''
         ) !!}
+        {!! \App\Swep\ViewHelpers\__form2::select('portal',[
+            'label' => 'Portal',
+            'cols' => 12,
+            'options' => \App\Swep\Helpers\Arrays::portals(),
+        ],
+        $menu ?? null
+        ) !!}
     </div>
 @endsection
 

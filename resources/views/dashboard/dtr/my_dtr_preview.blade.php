@@ -2,13 +2,22 @@
     $ud = \App\Models\UserData::query()->where('user_id','=',\Illuminate\Support\Facades\Auth::user()->user_id)
             ->where('data','=','dtr_edit_intro')
             ->first();
-    if($employee->biometric_user_id !== \Illuminate\Support\Facades\Auth::user()->employee->biometric_user_id){
+    //if($employee->biometric_user_id !== \Illuminate\Support\Facades\Auth::user()->employee->biometric_user_id){
+    //    $editable_class = '';
+    //    $editable_remarks_class = '';
+    //}else{
+     //   $editable_class = 'editable-dtr';
+    //    $editable_remarks_class = 'editable-remarks';
+    //}
+
+    if(empty(\App\Swep\Helpers\Helper::checkRouteAccess('dashboard.dtr.store'))){
         $editable_class = '';
         $editable_remarks_class = '';
     }else{
         $editable_class = 'editable-dtr';
         $editable_remarks_class = 'editable-remarks';
     }
+
 @endphp
 @extends('layouts.modal-content')
 
@@ -434,7 +443,7 @@
             $('#print_frame').get(0).contentWindow.print();
         }
 
-    @if($employee->biometric_user_id === \Illuminate\Support\Facades\Auth::user()->employee->biometric_user_id)
+    @if(!empty(\App\Swep\Helpers\Helper::checkRouteAccess('dashboard.dtr.store')))
         $(".editable-dtr").click(function () {
             let btn = $(this);
             let date = btn.attr('data');

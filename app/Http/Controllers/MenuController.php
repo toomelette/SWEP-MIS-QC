@@ -121,6 +121,7 @@ class MenuController extends Controller{
         $menu->icon = $request->icon;
         $menu->is_dropdown = $request->is_dropdown;
         $menu->is_menu = $request->is_menu;
+        $menu->portal = $request->portal;
         $menu->save();
         return $menu->only('slug');
         return $this->menu->store($request);
@@ -150,6 +151,7 @@ class MenuController extends Controller{
         $menu->icon = $request->icon;
         $menu->is_menu = $request->is_menu;
         $menu->is_dropdown = $request->is_dropdown;
+        $menu->portal = $request->portal;
         $menu->update();
         return $menu->only('slug');
         return $this->menu->update($request, $slug);

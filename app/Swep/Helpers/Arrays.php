@@ -53,6 +53,14 @@ class Arrays
         }
         return $array;
     }
+
+    public static function portals(){
+        return [
+            'DIGIFILE' => 'DIGIFILE',
+            'PPU' => 'PPU',
+            'MIS' => 'MIS',
+        ];
+    }
     public static function countries(){
         return [
             "AF" => "Afghanistan",

@@ -424,7 +424,7 @@ class DTRController extends  Controller
 
     public function updateTimeRecord(Request $request){
 
-        if($request->employee_no !== Auth::user()->employee->employee_no){
+        if(empty(\App\Swep\Helpers\Helper::checkRouteAccess('dashboard.dtr.store'))){
             abort(503,'You are not allowed to edit the Time Record of other employees.');
         }
         if(!$request->has('time') || $request->time == null){
@@ -519,7 +519,7 @@ class DTRController extends  Controller
 
     public function updateRemarks(Request $request){
         $request->validate(['remark' => 'required|string|max:10']);
-        if(Auth::user()->employee->employee_no !== $request->employee_no){
+        if(empty(\App\Swep\Helpers\Helper::checkRouteAccess('dashboard.dtr.store'))){
             abort(503,'You are not allowed to perform this action.');
         }
         $dtr = DailyTimeRecord::query()

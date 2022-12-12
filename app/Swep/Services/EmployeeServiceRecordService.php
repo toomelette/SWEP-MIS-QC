@@ -40,7 +40,6 @@ class EmployeeServiceRecordService extends BaseService{
 
 
     public function store($request, $slug){
-
         $employee_sr = $this->employee_sr_repo->store($request, $slug);
 
         return $employee_sr;

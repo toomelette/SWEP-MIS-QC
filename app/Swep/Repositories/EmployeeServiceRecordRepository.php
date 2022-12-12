@@ -63,7 +63,7 @@ class EmployeeServiceRecordRepository extends BaseRepository implements Employee
         $employee_sr->employee_no = $employee->employee_no;
         $employee_sr->sequence_no = $request->sequence_no;
         $employee_sr->from_date = $request->from_date;
-        $employee_sr->to_date = $request->to_date;
+        $employee_sr->to_date = $request->to_date ?? null;
         $employee_sr->position = $request->position;
         $employee_sr->appointment_status = $request->appointment_status;
         $employee_sr->salary = Helper::sanitizeAutonum($request->salary);
@@ -102,7 +102,7 @@ class EmployeeServiceRecordRepository extends BaseRepository implements Employee
         $employee_sr = $this->findBySlug($slug);
         $employee_sr->sequence_no = $request->sequence_no;
         $employee_sr->from_date = $request->from_date;
-        $employee_sr->to_date = $request->to_date;
+        $employee_sr->to_date = $request->to_date ?? null;
         $employee_sr->position = $request->position;
         $employee_sr->appointment_status = $request->appointment_status;
         $employee_sr->salary = Helper::sanitizeAutonum($request->salary);

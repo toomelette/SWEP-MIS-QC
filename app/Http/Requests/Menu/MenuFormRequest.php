@@ -30,7 +30,7 @@ class MenuFormRequest extends FormRequest{
             'category'=>'required|string|max:45',
             'is_menu'=>'required|string|max:11',
             'is_dropdown'=>'required|string|max:5',
-
+            'portal' => 'required',
         ];
 
 

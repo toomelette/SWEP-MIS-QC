@@ -13,7 +13,7 @@ class TreeComposer
 {
     public function compose($view){
         $tree = [];
-        $menus = Menu::with('submenu')->where('portal','=',Auth::user()->portal)->where('category','!=','PPU')->get();
+        $menus = Menu::with('submenu')->where('portal','=',Auth::user()->portal)->where('portal','!=','PPU')->get();
 
         $user_submenus = UserSubmenu::with('submenu')->where('user_id', Auth::user()->user_id)
             ->whereHas('submenu', function ($query) {
@@ -21,7 +21,7 @@ class TreeComposer
             });
         if(Auth::user()->portal != ''){
             $user_submenus = $user_submenus->whereHas('submenu.menu', function ($query) {
-                return $query->where('portal', '=', Auth::user()->portal);
+                return $query->where('portal', '=', Auth::user()->portal)->where('portal' ,'!=','PPU');
             });
         }
 
@@ -52,7 +52,7 @@ class TreeComposer
 
         foreach ($user_submenus as $user_submenu){
    
-            if($user_submenu->submenu->menu->category != 'PPU'){
+            if($user_submenu->submenu->menu->portal != 'PPU'){
             $tree[$user_submenu->submenu->menu->category][$user_submenu->submenu->menu->menu_id]['menu_obj'] = $user_submenu->submenu->menu;
             $tree[$user_submenu->submenu->menu->category][$user_submenu->submenu->menu->menu_id]['submenus'][$user_submenu->submenu_id] = $user_submenu->submenu;
             }

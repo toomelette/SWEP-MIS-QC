@@ -1028,18 +1028,10 @@ Route::get('/updateee',function (){
 });
 
 
-Route::get('/aaa',function (){
-//    $courses = \App\Models\Course::query()->get();
-//    $arr = [];
-//    foreach ($courses as $course){
-//        $arr[$course->course_id] = $course->name;
-//    }
-//    $as = \App\Models\Applicant::query()->where('course','=',null)->get();
-//    foreach ($as as $a){
-//        if(isset($arr[$a->course_id])){
-//            $a->course = $arr[$a->course_id];
-//            $a->save();
-//        }
-//    }
-//    return $as;
+Route::get('/acc',function (){
+    $a = \App\Models\UserSubmenu::query()->where('user_id','=',\Illuminate\Support\Facades\Auth::user()->user_id)
+        ->leftJoin('su_submenus','su_submenus.submenu_id','=','su_user_submenus.submenu_id')
+        ->where('su_submenus.route','=','dashboard.dtr.store')
+        ->first();
+    return $a;
 });
