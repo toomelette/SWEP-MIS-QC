@@ -11,8 +11,13 @@
     //}
 
     if(empty(\App\Swep\Helpers\Helper::checkRouteAccess('dashboard.dtr.store'))){
-        $editable_class = '';
-        $editable_remarks_class = '';
+        if($employee->biometric_user_id !== \Illuminate\Support\Facades\Auth::user()->employee->biometric_user_id){
+            $editable_class = '';
+            $editable_remarks_class = '';
+        }else{
+            $editable_class = 'editable-dtr';
+            $editable_remarks_class = 'editable-remarks';
+        }
     }else{
         $editable_class = 'editable-dtr';
         $editable_remarks_class = 'editable-remarks';
@@ -443,7 +448,7 @@
             $('#print_frame').get(0).contentWindow.print();
         }
 
-    @if(!empty(\App\Swep\Helpers\Helper::checkRouteAccess('dashboard.dtr.store')))
+    @if(!empty(\App\Swep\Helpers\Helper::checkRouteAccess('dashboard.dtr.store')) || $employee->biometric_user_id == \Illuminate\Support\Facades\Auth::user()->employee->biometric_user_id)
         $(".editable-dtr").click(function () {
             let btn = $(this);
             let date = btn.attr('data');

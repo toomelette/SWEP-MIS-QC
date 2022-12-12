@@ -424,93 +424,95 @@ class DTRController extends  Controller
 
     public function updateTimeRecord(Request $request){
 
-        if(empty(\App\Swep\Helpers\Helper::checkRouteAccess('dashboard.dtr.store'))){
-            abort(503,'You are not allowed to edit the Time Record of other employees.');
-        }
-        if(!$request->has('time') || $request->time == null){
+        if(!empty(\App\Swep\Helpers\Helper::checkRouteAccess('dashboard.dtr.store')) || $request->biometric_user_id == \Illuminate\Support\Facades\Auth::user()->employee->biometric_user_id){
+            if(!$request->has('time') || $request->time == null){
 
-            $dtrEdits = DTREdits::query()
-                ->where('biometric_user_id','=',$request->biometric_user_id)
-                ->where('date','=',$request->date)
-                ->where('type','=',$request->type)
-                ->get();
-            //DELETE DTR EDITS HERE
-            foreach ($dtrEdits as $dtrEdit){
-                $dtrEdit->delete();
-            }
+                $dtrEdits = DTREdits::query()
+                    ->where('biometric_user_id','=',$request->biometric_user_id)
+                    ->where('date','=',$request->date)
+                    ->where('type','=',$request->type)
+                    ->get();
+                //DELETE DTR EDITS HERE
+                foreach ($dtrEdits as $dtrEdit){
+                    $dtrEdit->delete();
+                }
 
-            //GET ORIGINAL TIME FROM LOGS
+                //GET ORIGINAL TIME FROM LOGS
 
-            $dtr = DTR::query()->where('timestamp','like','%'.$request->date.'%')
-                ->where('type','=',Helper::dtrTypeToInt()[$request->type])
-                ->where('user','=',$request->biometric_user_id)
-                ->first();
-            if(!empty($dtr)){
+                $dtr = DTR::query()->where('timestamp','like','%'.$request->date.'%')
+                    ->where('type','=',Helper::dtrTypeToInt()[$request->type])
+                    ->where('user','=',$request->biometric_user_id)
+                    ->first();
+                if(!empty($dtr)){
+                    //EDIT MAIN DAILY TIME RECORD
+                    $daily_time_record = DailyTimeRecord::query()
+                        ->where('biometric_user_id','=',$dtr->user)
+                        ->where('date',Carbon::parse($dtr->timestamp)->format('Y-m-d'))
+                        ->first();
+                    $type = Helper::dtrIntToField()[$dtr->type];
+                    if(empty($daily_time_record)){
+//                    abort(503,'empty');
+                        $d = new DailyTimeRecord;
+                        $d->biometric_user_id = $dtr->user;
+                        $d->employee_no = $request->employee_no;
+                        $d->date = Carbon::parse($dtr->timestamp)->format('Y-m-d');
+                        $d->$type = Carbon::parse($dtr->timestamp)->format('H:i:s');
+                        $d->calculated = null;
+                        $d->save();
+
+                    }else{
+//                    abort(503,'not empty');
+                        $daily_time_record->$type = Carbon::parse($dtr->timestamp)->format('H:i:s');
+                        $daily_time_record->calculated = null;
+                        $daily_time_record->save();
+                    }
+                }
+
+                //abort(503,'TIME MUST NOT NULL.');
+            }else{
                 //EDIT MAIN DAILY TIME RECORD
                 $daily_time_record = DailyTimeRecord::query()
-                    ->where('biometric_user_id','=',$dtr->user)
-                    ->where('date',Carbon::parse($dtr->timestamp)->format('Y-m-d'))
+                    ->where('biometric_user_id','=',$request->biometric_user_id)
+                    ->where('date',$request->date)
                     ->first();
-                $type = Helper::dtrIntToField()[$dtr->type];
+                $type = $request->type;
                 if(empty($daily_time_record)){
-//                    abort(503,'empty');
                     $d = new DailyTimeRecord;
-                    $d->biometric_user_id = $dtr->user;
+                    $d->biometric_user_id = $request->biometric_user_id;
                     $d->employee_no = $request->employee_no;
-                    $d->date = Carbon::parse($dtr->timestamp)->format('Y-m-d');
-                    $d->$type = Carbon::parse($dtr->timestamp)->format('H:i:s');
+                    $d->date = $request->date;
+                    $d->$type = Carbon::parse($request->time)->format('H:i:s');
                     $d->calculated = null;
                     $d->save();
-
+                    $slug = $d->slug;
                 }else{
-//                    abort(503,'not empty');
-                    $daily_time_record->$type = Carbon::parse($dtr->timestamp)->format('H:i:s');
+                    $daily_time_record->$type = Carbon::parse($request->time)->format('H:i:s');
                     $daily_time_record->calculated = null;
                     $daily_time_record->save();
+                    $slug = $daily_time_record->slug;
                 }
-            }
 
-            //abort(503,'TIME MUST NOT NULL.');
+
+                //INSERT DATA TO DTR EDITS
+                $d_e = DTREdits::query()->where('slug','=',$slug)->first();
+                if(empty($d_e)){
+                    $a = new DTREdits;
+                    $a->dtr_slug = $slug;
+                    $a->biometric_user_id = $request->biometric_user_id;
+                    $a->time = $request->time;
+                    $a->type = $request->type;
+                    $a->date = $request->date;
+                    $a->save();
+                }
+                return [
+                    'element_id' => $request->element_id,
+                    'time' => Carbon::parse($request->time)->format('H:i'),
+                ];
+            }
         }else{
-            //EDIT MAIN DAILY TIME RECORD
-            $daily_time_record = DailyTimeRecord::query()
-                ->where('biometric_user_id','=',$request->biometric_user_id)
-                ->where('date',$request->date)
-                ->first();
-            $type = $request->type;
-            if(empty($daily_time_record)){
-                $d = new DailyTimeRecord;
-                $d->biometric_user_id = $request->biometric_user_id;
-                $d->employee_no = $request->employee_no;
-                $d->date = $request->date;
-                $d->$type = Carbon::parse($request->time)->format('H:i:s');
-                $d->calculated = null;
-                $d->save();
-                $slug = $d->slug;
-            }else{
-                $daily_time_record->$type = Carbon::parse($request->time)->format('H:i:s');
-                $daily_time_record->calculated = null;
-                $daily_time_record->save();
-                $slug = $daily_time_record->slug;
-            }
-
-
-            //INSERT DATA TO DTR EDITS
-            $d_e = DTREdits::query()->where('slug','=',$slug)->first();
-            if(empty($d_e)){
-                $a = new DTREdits;
-                $a->dtr_slug = $slug;
-                $a->biometric_user_id = $request->biometric_user_id;
-                $a->time = $request->time;
-                $a->type = $request->type;
-                $a->date = $request->date;
-                $a->save();
-            }
-            return [
-                'element_id' => $request->element_id,
-                'time' => Carbon::parse($request->time)->format('H:i'),
-            ];
+            abort(503, 'You are not allowed to edit other DTR');
         }
+
 
 
 
@@ -519,30 +521,32 @@ class DTRController extends  Controller
 
     public function updateRemarks(Request $request){
         $request->validate(['remark' => 'required|string|max:10']);
-        if(empty(\App\Swep\Helpers\Helper::checkRouteAccess('dashboard.dtr.store'))){
-            abort(503,'You are not allowed to perform this action.');
+        if(!empty(\App\Swep\Helpers\Helper::checkRouteAccess('dashboard.dtr.store')) || $request->biometric_user_id == \Illuminate\Support\Facades\Auth::user()->employee->biometric_user_id){
+            $dtr = DailyTimeRecord::query()
+                ->where('biometric_user_id','=',$request->biometric_user_id)
+                ->where('date','=',$request->date)
+                ->first();
+            if(!empty($dtr)){
+                $dtr->remarks = $request->remark;
+                $dtr->remarks_updated_at = Carbon::now();
+                $dtr->remarks_user_updated = Auth::user()->user_id;
+                $dtr->save();
+                return $request->only(['element_id','remark']);
+            }else{
+                $d = new DailyTimeRecord;
+                $d->employee_no = $request->employee_no;
+                $d->biometric_user_id = $request->biometric_user_id;
+                $d->date = $request->date;
+                $d->remarks = $request->remark;
+                $d->remarks_updated_at = Carbon::now();
+                $d->remarks_user_updated = Auth::user()->user_id;
+                $d->save();
+                return $request->only(['element_id','remark']);
+            }
         }
-        $dtr = DailyTimeRecord::query()
-            ->where('biometric_user_id','=',$request->biometric_user_id)
-            ->where('date','=',$request->date)
-            ->first();
-        if(!empty($dtr)){
-            $dtr->remarks = $request->remark;
-            $dtr->remarks_updated_at = Carbon::now();
-            $dtr->remarks_user_updated = Auth::user()->user_id;
-            $dtr->save();
-            return $request->only(['element_id','remark']);
-        }else{
-            $d = new DailyTimeRecord;
-            $d->employee_no = $request->employee_no;
-            $d->biometric_user_id = $request->biometric_user_id;
-            $d->date = $request->date;
-            $d->remarks = $request->remark;
-            $d->remarks_updated_at = Carbon::now();
-            $d->remarks_user_updated = Auth::user()->user_id;
-            $d->save();
-            return $request->only(['element_id','remark']);
-        }
+        abort(503,'You are not allowed to perform this action.');
+
+
 
     }
 
