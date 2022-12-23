@@ -28,7 +28,7 @@
     <table class="{{$document->qr_location ?? 'UPPER_RIGHT'}}">
         <tbody>
         <tr>
-            <td><img src="{{route('display_qr',$document->slug)}}" style="width: 60px"></td>
+            <td><img src="{{route('display_qr',$document->slug)}}" style="width: 55px"></td>
             <td style="font-family: Arial; font-size: 10px">
                 SUGAR REGULATORY ADMINISTRATION
                 <br>
