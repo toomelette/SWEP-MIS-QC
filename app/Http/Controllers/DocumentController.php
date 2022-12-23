@@ -230,6 +230,7 @@ class DocumentController extends Controller{
 
     private function stampPDFwithQR($request,$image1,$document_id){
         $pdf = new \setasign\Fpdi\Fpdi();
+
         $totalPages = $pdf->setSourceFile($request->file('doc_file')->path());
         for ($pageNo = 1;$pageNo <= $totalPages; $pageNo++){
             $pdf->AddPage();
@@ -240,15 +241,20 @@ class DocumentController extends Controller{
             $mainY = $this->getXY($request->qr_location,$page_width,$page_height)['mainY'];
             $pdf->useTemplate($tplIdx, 0, 0, null, null, true);
             $pdf->SetXY($mainX,$mainY);
+            if($pageNo < 2){
 
-            $pdf->SetFont('Arial', '', '8');
-            $pdf->Image($image1,$mainX-20,$mainY-15,15 , 15);
-            $pdf->SetFont('Arial', '', '8');
-            $pdf->SetXY($mainX-5,$mainY-7);
-            $pdf->Multicell(60,2    ,$document_id,0,"L");
-            $pdf->SetXY($mainX-5,$mainY-15);
-            $pdf->SetFont('Arial', '', '6');
-            $pdf->Multicell(60,2    ,"SUGAR REGULATORY ADMINISTRATION\nRECORDS SECTION\nDOCUMENT ARCHIVING SYSTEM",0,"L");
+
+                $pdf->SetFont('Arial', '', '8');
+                $pdf->Image($image1,$mainX-20,$mainY-15,15 , 15);
+                $pdf->SetFont('Arial', '', '8');
+                $pdf->SetXY($mainX-5,$mainY-7);
+                $pdf->Multicell(60,2    ,$document_id,0,"L");
+                $pdf->SetXY($mainX-5,$mainY-15);
+                $pdf->SetFont('Arial', '', '6');
+                $pdf->Multicell(60,2    ,"SUGAR REGULATORY ADMINISTRATION\nRECORDS SECTION\nDOCUMENT ARCHIVING SYSTEM",0,"L");
+
+            }
+
         }
         return  $output = $pdf->Output('S');
     }
