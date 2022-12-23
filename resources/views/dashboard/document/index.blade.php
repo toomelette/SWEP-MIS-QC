@@ -9,6 +9,9 @@
 @section('content2')
 
     <section class="content">
+        <iframe id="print_qr_iframe" src="" style="display: none">
+
+        </iframe>
         <div class="box box-success">
             <div class="box-header with-border">
                 <h3 class="box-title">List of Documents</h3>
@@ -600,6 +603,22 @@
             })
         })
 
+        $("body").on("click",".print_qr_btn",function () {
+            let btn = $(this);
+            let uri = '{{route('dashboard.document.print_qr','slug')}}';
+            uri = uri.replace('slug',btn.attr('data'));
+            $("#print_qr_iframe").attr('src',uri);
+            var swal = Swal.fire({
+                title: 'Preparing QR Code',
+                html: '<div style="height: 20px"><i class="fa fa-spinner fa-spin"></i> Please wait . . . </div>',
+                // timer: 3000,
+                // timerProgressBar: true,
+            })
+        })
 
+        $("#print_qr_iframe").on('load',function () {
+            $(this).get(0).contentWindow.print();
+            swal.close();
+        })
     </script>
 @endsection

@@ -295,7 +295,9 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
         $prefix = env('DOCUMENT_PREFIX','NULL-');
         $id = $prefix.'10000001';
 
-        $document = $this->document->select('document_id')->orderBy('document_id', 'desc')->first();
+        $document = $this->document->select('document_id')
+            ->where('document_id','like','SRA-DEV-%')
+            ->orderBy('document_id', 'desc')->first();
 
         if($document != null){
             if($document->document_id != null){
@@ -305,6 +307,7 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
             }
         
         }
+
         return $id;
     }
 

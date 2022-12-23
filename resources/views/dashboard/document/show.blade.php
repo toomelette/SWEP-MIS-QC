@@ -24,7 +24,7 @@
             <dt>Subject:</dt>
             <dd>{{$document->subject}}</dd>
             <dt>Type:</dt>
-            <dd>{{(isset(\App\Swep\Helpers\__static::document_types(true)[$document->type])? \App\Swep\Helpers\__static::document_types(true)[$document->type] : $document->type)}}</dd>
+            <dd>{{(isset(\App\Swep\Helpers\__static::document_types(true)[$document->type]) ? \App\Swep\Helpers\__static::document_types(true)[$document->type] : $document->type)}}</dd>
             <dt>Folder:</dt>
             <dd>{{$document->folder_code}} - {{$document->folder->description}}</dd>
             @if($document->folder_code2 != '')
@@ -42,12 +42,12 @@
             <dt>Filename:</dt>
             <dd>{{$document->filename}}</dd>
 
-                @if(\Illuminate\Support\Facades\Storage::exists($document->path.$document->filename))
+            @if(\Illuminate\Support\Facades\Storage::exists($document->path.$document->filename))
                 <dt>Size:</dt>
                 <dd>
                     {{\App\Swep\Helpers\Helper::formatBytes(\Illuminate\Support\Facades\Storage::size($document->path.$document->filename), 'MB')}}
                 </dd>
-                @endif
+            @endif
 
             <dt>Path:</dt>
             <dd>{{$document->path}}</dd>
@@ -58,11 +58,11 @@
         </dl>
     </div>
 
- @endsection
+@endsection
 
 @section('modal-footer')
     <div class="row">
-        {!! \App\Swep\ViewHelpers\__html::timestamp($document,'5') !!}
+        {!! \App\Swep\ViewHelpers\__html::timestamp($document ?? null,'5') !!}
         <div class="col-md-2">
             <button class="btn btn-default" data-dismiss="modal">Close</button>
         </div>

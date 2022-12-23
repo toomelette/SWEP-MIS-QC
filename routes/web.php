@@ -368,6 +368,7 @@ Route::group(['prefix'=>'dashboard', 'as' => 'dashboard.',
 
 
 	/** DOCUMENTS **/
+	Route::get('/document/print_qr/{slug}','DocumentController@printQr')->name('document.print_qr');
 	Route::get('/document/report', 'DocumentController@report')->name('document.report');
 	Route::get('/document/report_generate', 'DocumentController@report_generate')->name('document.report_generate');
 
@@ -587,19 +588,7 @@ Route::get('/phpinfo',function (){
 });
 
 
-Route::get('/item_employees',function (){
-    $emps = \App\Models\Employee::query()->where('item_no','!=',0)->where('item_no','!=',null)->get();
-    $itemsArr  = [];
-    foreach ($emps as $emp) {
-        array_push($itemsArr,[
-            'item_no' => $emp->item_no,
-            'employee_no' => $emp->employee_no,
-            'appointment_date' => $emp->appointment_date,
-        ]);
-    }
-    \App\Models\HrPayPlantillaEmployees::insert($itemsArr);
-    return 'dione';
-});
+
 
 Route::get('/sdd',function (){
    $employees = \App\Models\Employee::query()->get();
@@ -694,55 +683,7 @@ Route::get('/sdd',function (){
 
 });
 
-Route::get('/import_employees',function (){
-    $es = DB::connection('mysql_temp')->table('employees')->get();
-    $arr = [];
 
-    foreach ( $es as $e){
-        array_push($arr,[
-            'slug' => \Illuminate\Support\Str::random(),
-            'employee_no' => $e->employee_no,
-            'fullname' => strtoupper($e->lastname).', '. strtoupper($e->firstname).' '.substr(strtoupper($e->middlename),0,1).'.',
-            'lastname' => strtoupper($e->lastname),
-            'firstname' => strtoupper($e->firstname),
-            'middlename' => strtoupper($e->middlename),
-            'position' => $e->position,
-            'name_ext' => strtoupper($e->name_ext),
-            'sex' => strtoupper($e->sex),
-            'civil_status' => $e->civil_status,
-            'email' => $e->email,
-            'is_active' => 'ACTIVE',
-            'cell_no' => $e->phone,
-            'date_of_birth' => ($e->date_of_birth != '') ? \Illuminate\Support\Carbon::parse($e->date_of_birth)->format('Y-m-d') : null,
-            'salary_grade' => ($e->salary_grade != '') ? $e->salary_grade : null,
-            'locations' => $e->locations,
-            'place_of_assignment' => $e->place_of_assignment,
-            'remarks' => $e->remark,
-            'tin' => str_replace('-','',$e->tin),
-        ]);
-    }
-    return 'nononono';
-    \App\Models\Employee::insert($arr);
-    return $arr;
-    dd($arr);
-});
-
-Route::get('/rde_cos',function (){
-    dd('FORBIDDEN');
-   $coss = DB::connection('mysql_temp')->table('rde_cos')->where('date_of_birth','!=','')->get();
-   foreach ($coss as $cos){
-       $emp = \App\Models\Employee::query()->where('employee_no','=',$cos->employee_no)->first();
-       if(!empty($emp)){
-           $emp->civil_status = $cos->civil_status;
-           $emp->date_of_birth = \Illuminate\Support\Carbon::parse($cos->date_of_birth)->format('Y-m-d');
-           $emp->email = $cos->email;
-           $emp->cell_no = $cos->phone;
-
-           $emp->save();
-       }
-   }
-   dd('DOne');
-});
 
 Route::get('/getSerial',function (\Illuminate\Http\Request $request){
     if(!$request->has('ip')){
@@ -753,131 +694,11 @@ Route::get('/getSerial',function (\Illuminate\Http\Request $request){
     return $zk->serialNumber();
 });
 
-Route::get('/bridge',function (){
-    $server_location = \App\Models\SuSettings::query()->where('setting','server_location')->first()->string_value;
-    //UPDATE CLOUD
-    if($server_location == 'VISAYAS'){
-        //PUSH TO CLOUD
-//        $local_employees = \App\Models\Employee::query()->where('locations','like','%VIS%')->get();
-//        $array = [];
-//        $employee_table_columns = Schema::getColumnListing('hr_employees');
-//        array_splice($employee_table_columns,0,1);
-//
-//        foreach ($local_employees as $local_employee){
-//            $arr  = [];
-//            foreach ($employee_table_columns as $column){
-//                $arr[$column] = $local_employee->$column;
-//            }
-//            array_push($array,$arr);
-//        }
-//
-//        foreach (array_chunk($array,500) as $a){
-//            \App\Models\Bridge\B_Employees::upsert(
-//                $a,
-//                ['slug'],
-//                $employee_table_columns
-//            );
-//        }
-//        return 1;
 
-        //STEP 2 PULL UPDATES FROM CLOUD
 
-//        $cloud_employees = \App\Models\Bridge\B_Employees::query()->where('locations','like','%LUZ%')->get();
-//        $array = [];
-//        $employee_table_columns = Schema::getColumnListing('hr_employees');
-//        array_splice($employee_table_columns,0,1);
-//
-//        foreach ($cloud_employees as $cloud_employee){
-//            $arr  = [];
-//            foreach ($employee_table_columns as $column){
-//                $arr[$column] = $cloud_employee->$column;
-//            }
-//            array_push($array,$arr);
-//        }
-//
-//        foreach (array_chunk($array,500) as $a){
-//            \App\Models\Employee::upsert(
-//                $a,
-//                ['slug'],
-//                $employee_table_columns
-//            );
-//        }
-//        return 1;
-    }
 
-    //EDUCATIONAL BACKGROUND
 
-    $eb = \App\Models\Bridge\Employees\B_EducationalBg::query()->get();
-    return $eb;
-});
 
-Route::get('/eb',function (){
-    $server_location = \App\Models\SuSettings::query()->where('setting','server_location')->first()->string_value;
-
-        $ebs = \App\Models\EmployeeEducationalBackground::query()->where('slug','=',null)->get();
-        foreach ($ebs as $eb){
-            if(!empty($eb->employee)){
-                if($server_location == 'VISAYAS'){
-                    if($eb->employee->locations == 'VISAYAS' || $eb->employee->locations == 'COS-VISAYAS'){
-                        $eb->slug = \Illuminate\Support\Str::random();
-                        $eb->update();
-                    }
-                }
-                if($server_location == 'QC'){
-                    if($eb->employee->locations == 'LUZON/MINDANAO' || $eb->employee->locations == 'COS-LUZMIN'){
-                        $eb->slug = \Illuminate\Support\Str::random();
-                        $eb->update();
-                    }
-                }
-            }
-        }
-
-});
-Route::get('/elig',function (){
-    $server_location = \App\Models\SuSettings::query()->where('setting','server_location')->first()->string_value;
-
-    $items = \App\Models\EmployeeEligibility::query()->where('slug','=',null)->get();
-    foreach ($items as $item){
-
-        if(!empty($item->employee)){
-            if($server_location == 'VISAYAS'){
-                if($item->employee->locations == 'VISAYAS' || $item->employee->locations == 'COS-VISAYAS'){
-                    $item->slug = \Illuminate\Support\Str::random();
-                    $item->update();
-                }
-            }
-            if($server_location == 'QC'){
-                if($item->employee->locations == 'LUZON/MINDANAO' || $item->employee->locations == 'COS-LUZMIN'){
-                    $item->slug = \Illuminate\Support\Str::random();
-                    $item->update();
-                }
-            }
-        }
-    }
-});
-
-Route::get('/work',function (){
-    $server_location = \App\Models\SuSettings::query()->where('setting','server_location')->first()->string_value;
-
-    $items = \App\Models\EmployeeExperience::query()->where('slug','=',null)->get();
-    foreach ($items as $item){
-
-        if(!empty($item->employee)){
-            if($server_location == 'VISAYAS'){
-                if($item->employee->locations == 'VISAYAS' || $item->employee->locations == 'COS-VISAYAS'){
-                    $item->slug = \Illuminate\Support\Str::random();
-                    $item->update();
-                }
-            }
-            if($server_location == 'QC'){
-                if($item->employee->locations == 'LUZON/MINDANAO' || $item->employee->locations == 'COS-LUZMIN'){
-                    $item->slug = \Illuminate\Support\Str::random();
-                    $item->update();
-                }
-            }
-        }
-    }
-});
 
 Route::get('/post',function (){
         $server = \App\Models\SuSettings::query()->where('setting','=','server_location')->first()->string_value;
@@ -1013,19 +834,7 @@ Route::post('/insertDTR',function(){
 
 });
 
-Route::get('/updateee',function (){
 
-//    $temp_emps = DB::table('aaa_temp_employees')->get();
-//    foreach ($temp_emps as $temp_emp){
-//        $emp = \App\Models\Employee::query()->where('employee_no','=',$temp_emp->employee_no)->first();
-//        if(!empty($emp)){
-//            $emp->salary_grade = $temp_emp->salary_grade;
-//            $emp->step_inc = $temp_emp->step_inc;
-//            $emp->save();
-//        }
-//    }
-//    return 1;
-});
 
 
 Route::get('/acc',function (){
@@ -1035,3 +844,5 @@ Route::get('/acc',function (){
         ->first();
     return $a;
 });
+
+Route::get('qr/{slug}', 'DocumentController@getQr')->name('display_qr');

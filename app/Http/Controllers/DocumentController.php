@@ -108,7 +108,7 @@ class DocumentController extends Controller{
                                         <ul class="dropdown-menu dropdown-menu-right">
                                           <li><a href="'.route('dashboard.document.dissemination', $data->slug).'" target="_blank" class="service_records_btn" data="'.$data->slug.'"><i class="fa icon-service-record"></i> Disseminate</a></li>
                                           <li><a href="'.route('dashboard.document.dissemination', $data->slug).'?send_copy=1" target="_blank" class="trainings_btn" data="'.$data->slug.'"><i class="fa icon-seminar"></i> Send Copy</a></li>
-                                          <li><a href="#" data-toggle="modal" data-target="#matrix_modal" class="matrix_btn" data="'.$data->slug.'"><i class="fa fa-dashboard"></i> QR</a></li>
+                                          <li><a href="#" data-toggle="modal" data-target="#matrix_modal" class="print_qr_btn" data="'.$data->slug.'"><i class="fa fa-dashboard"></i>Print QR</a></li>
                                          </ul>
                                     </div>
                                 </div>';
@@ -520,5 +520,39 @@ class DocumentController extends Controller{
     public function rename_all(){
         //return 1;
         return $this->document->rename_all();
+    }
+
+    public function printQr($slug){
+
+        $document = $this->findBySlug($slug);
+        $storage = $this->getStorage();
+        $this->makeQR($document,$document->document_id);
+        $path = '/QRCODE_TEMP/'.$document->document_id.'.png';
+        $image1 = $storage->path($path);
+
+        return view('dashboard.document.print_qr')->with([
+            'document' => $document,
+        ]);
+    }
+    public function getQr($slug){
+        //    $path = storage_path('public/' . $filename);
+
+        if( Auth::user()->getAccessToDocuments() == 'QC'){
+            $storage =  Storage::disk('qc');
+        }elseif(  Auth::user()->getAccessToDocuments() == 'VIS'){
+            $storage = Storage::disk('local');
+        }
+        $document = \App\Models\Document::query()->where('slug','=',$slug)->first();
+        $path = '/QRCODE_TEMP/'.$document->document_id.'.png';
+        if($storage->exists($path)){
+            $file = $storage->get($path);
+            $type = $storage->getMimetype($path);
+            $response = \Response::make($file, 200);
+            $response->header("Content-Type", $type);
+            return $response;
+        }
+        abort(503,'FILE DOES NOT EXIST');
+
+
     }
 }

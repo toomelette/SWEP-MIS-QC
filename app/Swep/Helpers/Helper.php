@@ -226,7 +226,7 @@ class Helper
         $acronym = "";
 
         foreach ($words as $w) {
-            $acronym .= $w[0];
+            $acronym .= $w[0] ?? 'UNKNOWN';
         }
         return $acronym;
     }
