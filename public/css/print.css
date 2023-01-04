@@ -167,3 +167,20 @@ table.print-table th,table.print-table td{
 .text-bottom{
     vertical-align: bottom;
 }
+
+
+.b-left{
+    border-left: 1px solid black;
+}
+
+.b-right{
+    border-right: 1px solid black;
+}
+
+.b-bottom{
+    border-bottom: 1px solid black;
+}
+
+.b-top{
+    border-top: 1px solid black;
+}

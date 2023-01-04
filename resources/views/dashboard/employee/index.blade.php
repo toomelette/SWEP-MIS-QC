@@ -144,6 +144,14 @@
                        '6', 'cp', 'text', 'Certified Position:', 'Certified Position', old('cp'), $errors->has('cp'), $errors->first('cp'), 'data-transform="uppercase"'
                     ) !!}
 
+                    {!! __form::textbox(
+                       '6', 'an', 'text', 'Approved By:', 'Approved By', old('cn'), $errors->has('cn'), $errors->first('cn'), 'data-transform="uppercase"'
+                    ) !!}
+
+                    {!! __form::textbox(
+                       '6', 'ap', 'text', 'Approved Position:', 'Approved Position', old('cp'), $errors->has('cp'), $errors->first('cp'), 'data-transform="uppercase"'
+                    ) !!}
+
                 </div>
                 <div class="modal-footer" style="overflow: hidden;">
                     <button class="btn btn-default" data-dismiss="modal">Close</button>
