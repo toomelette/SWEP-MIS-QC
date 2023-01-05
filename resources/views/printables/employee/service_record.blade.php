@@ -112,8 +112,8 @@
                             <td>{{number_format($srArray[$key]->salary,2)}} / A</td>
                             <td class="text-center">{{$srArray[$key]->station}}</td>
                             <td class="text-center">{{$srArray[$key]->lwp}}</td>
-                            <td></td>
-                            <td></td>
+                            <td class="text-center">{{$srArray[$key]->spdate}}</td>
+                            <td class="text-center">{{$srArray[$key]->status}}</td>
                             <td class="text-center">{{$srArray[$key]->remarks}}</td>
                         </tr>
                     @endif
