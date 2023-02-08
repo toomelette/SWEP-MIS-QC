@@ -170,6 +170,7 @@ class DTRController extends  Controller
                 }
             }
         }
+
         return view('dashboard.dtr.my_dtr')->with([
             'employee' => $employee,
             'dtr_by_year' => $dtr_by_year,
@@ -545,9 +546,21 @@ class DTRController extends  Controller
             }
         }
         abort(503,'You are not allowed to perform this action.');
+    }
 
 
-
+    public function updateLateUndertime(Request $request){
+        $dtr = DailyTimeRecord::query()->find($request->id);
+        if(!empty($dtr)){
+            $type = $request->type;
+            $dtr->$type = $request->time;
+            if($dtr->save()){
+                return [
+                    'element_id' => $request->element_id ?? '',
+                    'time' => Helper::convertToHoursMins($request->time) ?? '',
+                ];
+            }
+        }
     }
 
 }

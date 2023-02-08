@@ -670,3 +670,18 @@ ol.example li.placeholder:before {
 }
 
 
+.editable-lt-ut{
+    cursor: pointer;
+    transition: 0.3s;
+    background-color: #fffef6;
+}
+
+.editable-lt-ut:hover{
+    background-color: darkseagreen;
+}
+
+.editable-lt-ut.active{
+    background-color: darkseagreen !important;
+}
+
+

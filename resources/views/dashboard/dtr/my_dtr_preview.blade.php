@@ -2,25 +2,21 @@
     $ud = \App\Models\UserData::query()->where('user_id','=',\Illuminate\Support\Facades\Auth::user()->user_id)
             ->where('data','=','dtr_edit_intro')
             ->first();
-    //if($employee->biometric_user_id !== \Illuminate\Support\Facades\Auth::user()->employee->biometric_user_id){
-    //    $editable_class = '';
-    //    $editable_remarks_class = '';
-    //}else{
-     //   $editable_class = 'editable-dtr';
-    //    $editable_remarks_class = 'editable-remarks';
-    //}
 
     if(empty(\App\Swep\Helpers\Helper::checkRouteAccess('dashboard.dtr.store'))){
         if($employee->biometric_user_id !== \Illuminate\Support\Facades\Auth::user()->employee->biometric_user_id){
             $editable_class = '';
             $editable_remarks_class = '';
+            $editable_lt_ut = '';
         }else{
             $editable_class = 'editable-dtr';
             $editable_remarks_class = 'editable-remarks';
+            $editable_lt_ut = 'editable-lt-ut';
         }
     }else{
         $editable_class = 'editable-dtr';
         $editable_remarks_class = 'editable-remarks';
+        $editable_lt_ut = 'editable-lt-ut';
     }
 
 @endphp
@@ -140,7 +136,8 @@
                                     <td>
                                         {!! __html::dtrTime($dtr_array[$month.'-'.$date]->ot_out) !!}
                                     </td>
-                                    <td>
+
+                                    <td id="{{\Illuminate\Support\Str::random(9)}}" class="{{$editable_lt_ut}}" data-type="late" data="{{$dtr_array[$month.'-'.$date]->id}}">
                                         @if($dtr_array[$month.'-'.$date]->date != \Carbon\Carbon::now()->format('Y-m-d'))
                                             {!! $italic_op !!}
                                             {{$dtr_array[$month.'-'.$date]->late == 0 ? '' : \App\Swep\Helpers\Helper::convertToHoursMins($dtr_array[$month.'-'.$date]->late)}}
@@ -148,7 +145,7 @@
                                         @endif
 
                                     </td>
-                                    <td>
+                                    <td id="{{\Illuminate\Support\Str::random(9)}}" class="{{$editable_lt_ut}}" data-type="undertime" data="{{$dtr_array[$month.'-'.$date]->id}}">
                                         @if($dtr_array[$month.'-'.$date]->date != \Carbon\Carbon::now()->format('Y-m-d'))
                                             {!! $italic_op !!}
                                             {{$dtr_array[$month.'-'.$date]->undertime == 0 ? '' : \App\Swep\Helpers\Helper::convertToHoursMins($dtr_array[$month.'-'.$date]->undertime)}}
@@ -185,8 +182,8 @@
                                         <td id="{{Str::random(8)}}" class="{{$editable_class}}" val="{{\Carbon::now()->format('H:i')}}" data="{{$month}}-{{$date}}" data-type="pm_out" title="Click to edit Time"></td>
                                         <td></td>
                                         <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td id="{{\Illuminate\Support\Str::random(9)}}" class="{{$editable_lt_ut}}"></td>
+                                        <td id="{{\Illuminate\Support\Str::random(9)}}" class="{{$editable_lt_ut}}"></td>
                                         <td class="text-left {{$editable_remarks_class}}" id="a{{\Illuminate\Support\Str::random(8)}}" data="{{$month}}-{{$date}}" title="Click to edit remark">
                                             @if(\Carbon\Carbon::parse($month.'-'.$date)->format('w') == 6)
                                                 @php($saturdays++)
@@ -204,7 +201,7 @@
                                     </tr>
                             @endif
                         @endfor
-                        </tb    ody>
+                        </tbody>
                     </table>
                 </div>
 
@@ -566,6 +563,70 @@
                 }
             })
         });
+
+
+        $(".editable-lt-ut").click(function () {
+            let btn = $(this);
+            let date = btn.attr('data');
+            btn.addClass('active');
+
+            Swal.fire({
+                title: 'Enter Time:',
+                html: '<span class="text-danger"><i class="fa fa-exclamation-triangle"></i> Note:<br></span>' +
+                    'An edited time record must be supported with a Permission Slip or Timekeeping Slip upon submission to the HR. ' +
+                    '<br><br><b class="text-danger">PLEASE ENTER UNIT IN MINUTES BELOW</b><br><input id="lt_ut_input" value="'+btn.attr('val')+'" type="number" class="form-control time_input_dtr" autofocus>',
+                inputAttributes: {
+                    autocapitalize: 'off'
+                },
+                backdrop : true,
+                showCancelButton: true,
+                confirmButtonText: '<i class="fa fa-check"></i> Save Changes',
+                showLoaderOnConfirm: true,
+                preConfirm: (login) => {
+                    return $.ajax({
+                        url : '{{route('dashboard.dtr.update_lt_ut')}}',
+                        type: 'POST',
+                        data: {
+                            'id':btn.attr('data'),
+                            'time' : $("#lt_ut_input").val(),
+                            'type' : btn.attr('data-type'),
+                            'element_id' : btn.attr('id'),
+                        },
+                        headers: {
+                            {!! __html::token_header() !!}
+                        },
+                        success: function (res) {
+                            console.log(res);
+                        }
+                    })
+                        .then(response => {
+                            $("#"+response.element_id).removeClass('active');
+                            $("#"+response.element_id).html('<span class="text-red">'+response.time+'</span>');
+                        })
+                        .catch(error => {
+                            console.log(error);
+                            Swal.showValidationMessage(
+                                'Error : '+ error.responseJSON.message,
+                            )
+                        })
+                },
+                allowOutsideClick: false,
+                didClose : function () {
+                    $(".editable-dtr").each(function () {
+                        $(this).removeClass('active');
+                    });
+                },
+            }).then((result) => {
+                $(".editable-dtr").each(function () {
+                    $(this).removeClass('active');
+                });
+                if (result.isConfirmed) {
+                    notify('Time record successfully updated.');
+                }
+            })
+        });
+
+
     @endif
 
         $('body').on('click','.swal2-cancel',function () {
@@ -574,6 +635,10 @@
                 $(this).removeClass('active');
             })
             $(".editable-remarks").each(function () {
+                $(this).removeClass('active');
+            });
+
+            $(".editable-lt-ut").each(function () {
                 $(this).removeClass('active');
             });
         })

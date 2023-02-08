@@ -200,6 +200,7 @@ Route::group(['prefix'=>'dashboard', 'as' => 'dashboard.',
     Route::post('/change_side_nav','SidenavController@change')->name('sidenav.change');
     Route::post('/dtr/update_time_record','DTRController@updateTimeRecord')->name('dtr.update_time_record');
     Route::post('/dtr/update_remarks','DTRController@updateRemarks')->name('dtr.update_remarks');
+    Route::post('/dtr/update_lt_ut','DTRController@updateLateUndertime')->name('dtr.update_lt_ut');
 
     /** MIS REQUESTS **/
     Route::get('/mis_requests/my_requests','MisRequestsController@myRequests')->name('mis_requests.my_requests');
@@ -845,4 +846,3 @@ Route::get('/acc',function (){
     return $a;
 });
 
-Route::get('qr/{slug}', 'DocumentController@getQr')->name('display_qr');
