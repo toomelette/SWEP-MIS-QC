@@ -217,7 +217,7 @@ class DocumentController extends Controller{
         return $this->document->store($request);
     }
 
-    private  function makeQR($document,$document_id){
+    public  function makeQR($document,$document_id){
         //Make QR Code
         $image = QrCode::size('200')
             ->format('png')

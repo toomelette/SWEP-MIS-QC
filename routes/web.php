@@ -482,7 +482,11 @@ Route::group(['prefix'=>'dashboard', 'as' => 'dashboard.',
     Route::resource('ppdo', 'PPU\PPDOController');
 });
 
-
+Route::get('display_qr/{slug}',function ($slug, \App\Http\Controllers\DocumentController $documentController){
+    $document = \App\Models\Document::query()->where('slug','=',$slug)->first();
+    $documentController->makeQR($document,$document->document_id);
+    return response()->file(\Illuminate\Support\Facades\Storage::path('/QRCODE_TEMP/'.$document->document_id.'.png'));
+})->name('display_qr');
 
 
 
