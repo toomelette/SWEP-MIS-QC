@@ -36,7 +36,9 @@ class DocumentFormRequest extends FormRequest{
                 'required',
                 'max:45',
                 'alpha_dash',
-                Rule::unique('rec_documents','reference_no')->ignore($this->get('slug'),'slug'),
+                Rule::unique('rec_documents','reference_no')
+                    ->ignore($this->get('slug'),'slug')
+                    ->where('deleted_at',null),
 
             ],
             'date' => 'required|date_format:"Y-m-d"',
