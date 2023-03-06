@@ -130,15 +130,19 @@ class DTRController extends  Controller
             $employee = $p_employee;
         }
 
+        $firstDtr = DailyTimeRecord::query()->orderBy('date')->first();
+        $start = Carbon::parse($firstDtr->date ?? null)->format('Y-m-01');
+        $end = Carbon::now()->format('Y-m-01');
+        $employee = $this->getCurrentUserEmployeeObj();
         $dtr_by_year = [];
-        if(!empty($employee->dtr_records)){
-            $dtr_records = $employee->dtr_records()->orderBy('date','desc')->get();
-            if($dtr_records->count() > 0){
-                foreach ($dtr_records as $dtr_record) {
-                    $dtr_by_year[Carbon::parse($dtr_record->date)->format('Y')][Carbon::parse($dtr_record->date)->format('Y-m')] = null;
-                }
-            }
+
+
+        while (Carbon::parse($start)->format('Y-m-d') <= Carbon::parse($end)->format('Y-m-d')){
+            $dtr_by_year[Carbon::parse($start)->format('Y')][Carbon::parse($start)->format('Y-m')] = null;
+            $start = Carbon::parse($start)->addMonth(1);
         }
+
+        krsort($dtr_by_year);
 
         if($p_employee->biometric_user_id == 1042){
             $cl = new CronLogs;
@@ -160,6 +164,7 @@ class DTRController extends  Controller
         ]);
     }
     public function myDtr(){
+
         $firstDtr = DailyTimeRecord::query()->orderBy('date')->first();
         $start = Carbon::parse($firstDtr->date ?? null)->format('Y-m-01');
         $end = Carbon::now()->format('Y-m-01');
