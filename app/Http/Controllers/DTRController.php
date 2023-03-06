@@ -130,10 +130,10 @@ class DTRController extends  Controller
             $employee = $p_employee;
         }
 
+        $dtr_by_year = [];
         $firstDtr = DailyTimeRecord::query()->orderBy('date')->first();
         $start = Carbon::parse($firstDtr->date ?? null)->format('Y-m-01');
         $end = Carbon::now()->format('Y-m-01');
-        $employee = $this->getCurrentUserEmployeeObj();
         $dtr_by_year = [];
 
 
@@ -142,6 +142,15 @@ class DTRController extends  Controller
             $start = Carbon::parse($start)->addMonth(1);
         }
 
+//        if(!empty($employee->dtr_records)){
+//            $dtr_records = $employee->dtr_records()->orderBy('date','desc')->get();
+//            if($dtr_records->count() > 0){
+//                foreach ($dtr_records as $dtr_record) {
+//                    $dtr_by_year[Carbon::parse($dtr_record->date)->format('Y')][Carbon::parse($dtr_record->date)->format('Y-m')] = null;
+//                }
+//            }
+//        }
+//        dd($dtr_by_year);
         krsort($dtr_by_year);
 
         if($p_employee->biometric_user_id == 1042){
