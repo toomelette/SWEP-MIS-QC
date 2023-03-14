@@ -1,5 +1,7 @@
 @extends('layouts.modal-content')
-@php($rand = \Illuminate\Support\Str::random(10))
+@php
+    $rand = \Illuminate\Support\Str::random(10);
+@endphp
 @section('modal-header')
     Other HR Actions
 @endsection
@@ -65,15 +67,15 @@
                                             <p class="page-header-sm text-info" style="border-bottom: 1px solid #cedbe1">
                                                 SIGNATORY
                                             </p>
-                                            <?php
-                                            $signatory = \App\Models\Signatory::query()->where('type','=',13)->first();
-                                            $s_name = '';
-                                            $s_position = '';
-                                            if(!empty($signatory)){
-                                                $s_name = $signatory->employee_name;
-                                                $s_position = $signatory->employee_position;
-                                            }
-                                            ?>
+                                            @php
+                                                $signatory = \App\Models\Signatory::query()->where('type','=',13)->first();
+                                                $s_name = '';
+                                                $s_position = '';
+                                                if(!empty($signatory)){
+                                                    $s_name = $signatory->employee_name;
+                                                    $s_position = $signatory->employee_position;
+                                                }
+                                            @endphp
 
                                             <div class="row">
                                                 {!! \App\Swep\ViewHelpers\__form2::textbox('signatory_name',[
@@ -129,12 +131,79 @@
                         </div>
                     </div>
 
-                    <div class="tab-pane" id="tab_2">
-                        COE with Compensation
+                    <div class="tab-pane " id="tab_2">
+                        <div class="box box-sm box-default box-solid">
+                            <div class="box-header with-border">
+                                <p class="box-title-sm no-margin">CERTIFICATE OF EMPLOYMENT with COMPENSATION</p>
+                            </div>
+                            <div class="box-body" style="">
+                                <form class="coec_form_{{$rand}}" id="coec_frame_form">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p class="page-header-sm text-info" style="border-bottom: 1px solid #cedbe1">
+                                                SIGNATORY
+                                            </p>
+                                            @php
+                                                $signatory = \App\Models\Signatory::query()->where('type','=',13)->first();
+                                                $s_name = '';
+                                                $s_position = '';
+                                                if(!empty($signatory)){
+                                                    $s_name = $signatory->employee_name;
+                                                    $s_position = $signatory->employee_position;
+                                                }
+                                            @endphp
 
-                        <div class="callout callout-default">
-                            <h4>We're working on it.</h4>
-                            <p>Hi. This page is currently under development. </p>
+                                            <div class="row">
+                                                {!! \App\Swep\ViewHelpers\__form2::textbox('signatory_name',[
+                                                    'label' => 'Name:',
+                                                    'cols' => 6,
+                                                    'class' => 'input-sm',
+                                                ],$s_name) !!}
+
+                                                {!! \App\Swep\ViewHelpers\__form2::textbox('signatory_position',[
+                                                    'label' => 'Position:',
+                                                    'cols' => 6,
+                                                    'class' => 'input-sm',
+                                                ],$s_position) !!}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div style="height: 101px">
+                                                <button type="submit" class="btn btn-success btn-sm" frame="coec_frame" style="position: absolute;bottom: 15px; right: 15px"><i class="fa fa-refresh generate_report_btn"></i> Generate COE</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading clearfix">
+                                <span style="font-weight: bold; font-size: 16px">Print Preview</span>
+                                <button id="coec_frame_print_btn" class="btn btn-success btn-sm pull-right print_button" disabled><i class="fa fa-print"></i> Print</button>
+                            </div>
+                            <div class="panel-body" style="height: 700px">
+                                <div id="coec_frame_placeholder" style="text-align: center; margin-top: 100px">
+                                    <i class="fa fa-print" style="font-size: 300px; color: grey; "></i>
+                                    <br>
+                                    <span class="text-info">Click <b>"Generate COE"</b> button to see print preview here</span>
+                                </div>
+
+
+                                <div id="coec_frame_loader" style="display: none">
+                                    <center>
+                                        <img style="width: 100px; margin: 140px 0;" src="{{asset('images/loader.gif')}}">
+                                    </center>
+                                </div>
+                                <div class="row" id="coec_frame_container"  style="height: 100%; display: none">
+                                    <div class="col-md-12" style="height: 100%">
+                                        <div class="embed-responsive embed-responsive-16by9">
+                                            <iframe id="coec_frame"  style="width: 100%; height: 100%;overflow:hidden; " class="embed-responsive" src=""></iframe>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
 
@@ -401,6 +470,35 @@
         $("#"+frame_id+"_print_btn").removeAttr('disabled');
     })
 
+
+    $(".coec_form_{{$rand}}").submit(function (e) {
+        e.preventDefault();
+        let form = $(this);
+        let submit_btn = form.find('button[type="submit"]');
+        let frame = submit_btn.attr('frame');
+        let src = '{{route("dashboard.employee.other_hr_actions_print",["slug"=>"slug","type" => "type"])}}';
+        src = src.replace('slug',"{{$employee->slug}}");
+        src = src.replace("type","coe_with_compensation");
+        $("#"+frame).attr('src',src+"?"+form.serialize());
+
+        $("#"+frame+"_placeholder").hide();
+        $("#"+frame+"_loader").fadeIn();
+
+        loading_btn(form);
+    })
+
+    $("#coec_frame").on("load",function () {
+        let frame_id = $(this).attr('id');
+        $("#"+frame_id+"_loader").hide();
+        $("#"+frame_id+"_container").fadeIn();
+        remove_loading_btn($(".coec_form_{{$rand}}"));
+        $("#"+frame_id+"_print_btn").removeAttr('disabled');
+    })
+
+
+
+
+
     $(".print_button").click(function(){
         let btn = $(this);
         let parent = btn.parent('div').parent('div');
@@ -430,6 +528,13 @@
         $("#"+frame_id+"_container").fadeIn();
         remove_loading_btn($("#nosa_form_{{$rand}}"));
         $("#"+frame_id+"_print_btn").removeAttr('disabled');
+    })
+
+    $(".nav-stacked li").click(function () {
+        $(".tab-pane").each(function () {
+            $(this).removeClass('active');
+        })
+        $(".tab-content "+$(this).find('a').attr('href')).addClass('active');
     })
 </script>
 @endsection

@@ -659,6 +659,12 @@ class EmployeeController extends Controller{
             ]);
         }
 
+        if($type == 'coe_with_compensation'){
+            return \view('printables.employee.coe_with_compensation')->with([
+                'employee' => $employee,
+            ]);
+        }
+
 
         return view('dashboard.employee.other_hr_actions.index')->with([
             'employee' => $employee,
