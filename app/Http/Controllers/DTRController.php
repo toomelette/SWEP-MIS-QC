@@ -133,7 +133,7 @@ class DTRController extends  Controller
         $dtr_by_year = [];
         $firstDtr = DailyTimeRecord::query()->orderBy('date')->first();
         $start = Carbon::parse($firstDtr->date ?? null)->format('Y-m-01');
-        $end = Carbon::now()->format('Y-m-01');
+        $end = Carbon::now()->lastOfYear()->format('Y-m-d');
         $dtr_by_year = [];
 
 
