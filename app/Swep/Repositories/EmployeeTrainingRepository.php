@@ -96,17 +96,8 @@ class EmployeeTrainingRepository extends BaseRepository implements EmployeeTrain
         $employee_trng->type = $request->type;
         $employee_trng->date_from = $this->__dataType->date_parse($request->date_from);
         $employee_trng->date_to = $this->__dataType->date_parse($request->date_to);
-        $detailed_period = '';
-        if($request->date_from != '' && $request->date_to != ''){
-            $detailed_period = Carbon::parse($request->date_from)->format('F d, Y').' - '.Carbon::parse($request->date_to)->format('F d, Y');
-        }
-        if($request->date_from != '' && $request->date_to == ''){
-            $detailed_period = Carbon::parse($request->date_from)->format('F d, Y');
-        }
-        if($request->detailed_period != ''){
-            $detailed_period = $request->detailed_period;
-        }
-        $employee_trng->detailed_period = $detailed_period;
+
+        $employee_trng->detailed_period = $request->detailed_period;
         $employee_trng->hours = $request->hours;
         $employee_trng->conducted_by = $request->conducted_by;
         $employee_trng->venue = $request->venue;
@@ -137,17 +128,8 @@ class EmployeeTrainingRepository extends BaseRepository implements EmployeeTrain
         $employee_trng->type = $request->type;
         $employee_trng->date_from = $this->__dataType->date_parse($request->date_from);
         $employee_trng->date_to = $this->__dataType->date_parse($request->date_to);
-        $detailed_period = '';
+        $employee_trng->detailed_period = $request->detailed_period;
 
-        if($request->date_from != '' && $request->date_to != ''){
-            $detailed_period = Carbon::parse($request->date_from)->format('F d, Y').' - '.Carbon::parse($request->date_to)->format('F d, Y');
-        }elseif($request->date_from != '' && $request->date_to == ''){
-            $detailed_period = Carbon::parse($request->date_from)->format('F d, Y');
-        }elseif($request->detailed_period != ''){
-            $detailed_period = $request->detailed_period;
-        }
-
-        $employee_trng->detailed_period = $detailed_period;
         $employee_trng->hours = $request->hours;
         $employee_trng->conducted_by = $request->conducted_by;
         $employee_trng->venue = $request->venue;

@@ -185,8 +185,10 @@
                         ) !!}
 
                     </div>
+
                 </div>
                 <div class="modal-footer">
+                    <iframe id="training_frame" src="" style="width: 1px;height: 1px; float: left"></iframe>
                     <button type="submit" class="btn btn-primary"><i class="fa fa-print"></i> Print</button>
                 </div>
             </form>
@@ -510,6 +512,11 @@
         })
     })
     // window.history.pushState({}, document.title, "/dashboard/employee");
+    $("#print_training_form").submit(function (e) {
+        e.preventDefault();
+        let form = $(this);
+        $("#training_frame").attr('src',form.attr('action')+'?'+form.serialize());
 
+    })
 </script>
 @endsection

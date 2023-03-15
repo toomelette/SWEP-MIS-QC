@@ -32,10 +32,17 @@ class PlantillaController extends Controller{
 
 
     
-    public function index(){
-        if(request()->ajax()){
+    public function index(Request $request){
+        if(request()->ajax() && $request->has('draw')){
             $plantilla = HRPayPlanitilla::query()->with('incumbentEmployee');
             return DataTables::of($plantilla)
+                ->editColumn('position',function($data){
+                    return $data->position.'
+                    <div class="table-subdetail" style="margin-top: 3px">
+                    '.$data->department.($data->division != 'NONE' ? ' <i class="fa fa-chevron-right"></i> '.$data->division : '').($data->section != 'NONE' ? ' <i class="fa fa-chevron-right"></i> '.$data->section : '').'
+                    </div>
+                    ';
+                })
                 ->addColumn('action',function ($data){
                     $uri = route('dashboard.plantilla.show',$data->id);
                     $uri_edit = route('dashboard.plantilla.edit',$data->id);
@@ -46,20 +53,35 @@ class PlantillaController extends Controller{
                                     <button type="button" uri ="'.$uri_edit.'" data="'.$data->slug.'" class="btn btn-default btn-sm edit_item_btn" data-toggle="modal" data-target="#edit_item_modal" title="Edit" data-placement="top">
                                         <i class="fa fa-edit"></i>
                                     </button>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                          <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                          <li><a href="#" class="mark_as_vacant_btn" data="'.$data->id.'"><i class="fa icon-service-record"></i> Mark as Vacant</a></li>
+                                        </ul>
+                                    </div>
                                 </div>';
                     return $button;
                 })
                 ->addColumn('orig_jg_si',function ($data){
                     return $data->original_job_grade.' - '.$data->original_job_grade_si;
                 })
-                ->addColumn('incumbent_employee',function ($data){
-                    if(!empty($data->incumbentEmployee)){
-                        return $data->incumbentEmployee->lastname.', '.$data->incumbentEmployee->firstname;
-                    }
-                })
                 ->escapeColumns([])
                 ->setRowId('id')
                 ->make(true);
+        }
+
+        if($request->has('mark_as_vacant') && $request->mark_as_vacant == 'true'){
+            $plantilla = HRPayPlanitilla::query()->find($request->id);
+            if(!empty($plantilla)){
+                $plantilla->employee_no = null;
+                $plantilla->employee_name = null;
+                if($plantilla->update()){
+                    return 1;
+                }
+            }
+            abort(503,'Error updating item.');
         }
         return view('dashboard.plantilla.index');
     
@@ -75,6 +97,11 @@ class PlantillaController extends Controller{
     }
 
     public function show($id){
+        if(request('typeahead') == true){
+            return $this->typeAhead(request());
+        }
+
+
         $pp = HRPayPlanitilla::query()->with(['occupants','occupants.employee'])->find($id);
         return view('dashboard.plantilla.show')->with([
             'pp' => $pp,

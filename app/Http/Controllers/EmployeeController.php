@@ -448,7 +448,40 @@ class EmployeeController extends Controller{
 
     public function trainingPrint(EmployeeTrainingPrintFilterForm $request, $slug){
 
-        return $this->employee_trng->print($request, $slug);
+        $emp = $this->findEmployeeBySlug($slug);
+        $trainingsArray = [];
+        $itemsPerPage = 10;
+        $allCount = $emp->employeeTraining()->count() ?? 0;
+        $counter = 0;
+        $arrayCounter = 0;
+        $employeeTraining = $emp->employeeTraining();
+        if(!empty($request->df)){
+            $employeeTraining = $employeeTraining->where('date_from','>=',$request->df);
+        }
+        if(!empty($request->dt)){
+            $employeeTraining =  $employeeTraining->where('date_to','<=',$request->dt);
+        }
+
+         $employeeTraining=$employeeTraining
+             ->orderBy('sequence_no','desc')
+             ->get();
+        foreach ($employeeTraining as $training){
+            if($counter < $itemsPerPage){
+                $trainingsArray[$arrayCounter][$training->slug] = $training;
+            }else{
+                $arrayCounter++;
+                $trainingsArray[$arrayCounter][$training->slug] = $training;
+                $counter = 0;
+            }
+            $counter++;
+        }
+
+
+        return \view('printables.employee.trainings')->with([
+            'employee' => $emp,
+            'trainingsArray' => $trainingsArray,
+        ]);
+
 
     }
 

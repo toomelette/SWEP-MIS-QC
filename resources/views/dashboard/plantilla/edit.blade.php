@@ -27,21 +27,7 @@
             'cols' => 4,
         ],$pp) !!}
     </div>
-    {!! \App\Swep\ViewHelpers\__html::line('Incumbent Employee') !!}
 
-        <div class="row">
-            {!! \App\Swep\ViewHelpers\__form2::textbox('fullname',[
-                'id' => 'fullname_'.$rand,
-                'label' => 'Fullname:',
-                'cols' => 8,
-                'autocomplete' => 'off',
-            ],(!empty($pp->incumbentEmployee) ? $pp->incumbentEmployee->lastname.', '.$pp->incumbentEmployee->firstname : '')) !!}
-            {!! \App\Swep\ViewHelpers\__form2::textbox('employee_no',[
-                'id' => 'employee_no_'.$rand,
-                'label' => 'Employee No.:*',
-                'cols' => 4,
-            ],(!empty($pp->incumbentEmployee) ? $pp->incumbentEmployee->employee_no : '')) !!}
-        </div>
 @endsection
 
 @section('modal-footer')

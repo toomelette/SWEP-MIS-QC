@@ -81,7 +81,7 @@
             { "data": "item_no" },
             { "data": "position" },
             { "data": "orig_jg_si" },
-            { "data": "incumbent_employee" },
+            { "data": "employee_name" },
             { "data": "action" }
         ],
         "buttons": [
@@ -93,9 +93,13 @@
                 "class" : 'w-8p',
             },
             {
+                "targets" : 3,
+                "class" : 'w-22p',
+            },
+            {
                 "targets" : 4,
                 "orderable" : false,
-                "class" : 'action2'
+                "class" : 'action3'
             },
         ],
         "responsive": false,
@@ -164,6 +168,50 @@
             },
             error: function (res) {
                 populate_modal2_error(res);
+            }
+        })
+    })
+
+    $("body").on("click",".mark_as_vacant_btn", function () {
+        btn = $(this);
+        var id = btn.attr('data');
+        Swal.fire({
+            title: 'Mark item as vacant?',
+            // input: 'text',
+            html: btn.attr('text'),
+            inputAttributes: {
+                autocapitalize: 'off'
+            },
+            showCancelButton: true,
+            confirmButtonText: '<i class="fa fa-check"></i> Mark',
+            showLoaderOnConfirm: true,
+            preConfirm: (email) => {
+                return $.ajax({
+                    url : '{{route('dashboard.plantilla.index')}}?mark_as_vacant=true',
+                    type: 'GET',
+                    data: {'id':id},
+                    headers: {
+                        {!! __html::token_header() !!}
+                    },
+                })
+                    .then(response => {
+                        return  response;
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        Swal.showValidationMessage(
+                            'Error : '+ error.responseJSON.message,
+                        )
+                    })
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                notify('Updated successfully');
+                active = id;
+                plantilla_tbl.draw(false);
+
             }
         })
     })

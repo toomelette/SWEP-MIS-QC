@@ -126,18 +126,18 @@
         <table style="width: 100%; font-size: 12px" class="bordered">
             <thead>
                 <tr>
-                    <th>Item No</th>
-                    <th>Position Title</th>
-                    <th>Name of Incumbents</th>
-                    <th>JG</th>
-                    <th>Step</th>
-                    <th>Actual</th>
-                    <th>GCG</th>
-                    <th>Highest Elegibility</th>
-                    <th>Hightest Educ Att</th>
-                    <th>Status of Appt</th>
-                    <th>Date of Orig Appt</th>
-                    <th>Date of Last Promotion</th>
+                    <th class="text-center">Item No</th>
+                    <th class="text-center">Position Title</th>
+                    <th class="text-center" style="width: 250px">Name of Incumbents</th>
+                    <th class="text-center">JG</th>
+                    <th class="text-center">Step</th>
+                    <th class="text-center">Actual</th>
+                    <th class="text-center">GCG</th>
+                    <th class="text-center">Highest Elegibility</th>
+                    <th class="text-center">Hightest Educ Att</th>
+                    <th class="text-center">Status of Appt</th>
+                    <th class="text-center">Date of Orig Appt</th>
+                    <th class="text-center">Date of Last Promotion</th>
                 </tr>
             </thead>
             <tbody>
@@ -153,8 +153,8 @@
                                 <td>{{$division->employee_name}}</td>
                                 <td class="text-center">{{$division->job_grade}}</td>
                                 <td class="text-center">{{$division->step_inc}}</td>
-                                <td class="text-right">{{number_format($division->actual_salary,2)}}</td>
-                                <td class="text-right">{{number_format($division->actual_salary_gcg,2)}}</td>
+                                <td class="text-right"  style="padding-right: 2px">{{number_format($division->actual_salary,2)}}</td>
+                                <td class="text-right" style="padding-right: 2px">{{number_format($division->actual_salary_gcg,2)}}</td>
                                 <td>{{$division->eligibility}}</td>
                                 <td>{{$division->educ_att}}</td>
                                 <td>{{$division->appointment_status}}</td>
@@ -173,8 +173,8 @@
                                         <td>{{$section->employee_name}}</td>
                                         <td class="text-center">{{$section->job_grade}}</td>
                                         <td class="text-center">{{$section->step_inc}}</td>
-                                        <td class="text-right">{{number_format($section->actual_salary,2)}}</td>
-                                        <td class="text-right">{{number_format($section->actual_salary_gcg,2)}}</td>
+                                        <td class="text-right" style="padding-right: 2px">{{number_format($section->actual_salary,2)}}</td>
+                                        <td class="text-right" style="padding-right: 2px">{{number_format($section->actual_salary_gcg,2)}}</td>
                                         <td>{{$section->eligibility}}</td>
                                         <td>{{$section->educ_att}}</td>
                                         <td>{{$section->appointment_status}}</td>
@@ -192,8 +192,8 @@
                                             <td>{{$item->employee_name}}</td>
                                             <td class="text-center">{{$item->job_grade}}</td>
                                             <td class="text-center">{{$item->step_inc}}</td>
-                                            <td class="text-right">{{number_format($item->actual_salary,2)}}</td>
-                                            <td class="text-right">{{number_format($item->actual_salary_gcg,2)}}</td>
+                                            <td class="text-right" style="padding-right: 2px">{{number_format($item->actual_salary,2)}}</td>
+                                            <td class="text-right" style="padding-right: 2px">{{number_format($item->actual_salary_gcg,2)}}</td>
                                             <td>{{$item->eligibility}}</td>
                                             <td>{{$item->educ_att}}</td>
                                             <td>{{$item->appointment_status}}</td>
