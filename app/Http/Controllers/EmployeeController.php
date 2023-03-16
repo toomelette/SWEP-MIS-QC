@@ -83,6 +83,9 @@ class EmployeeController extends Controller{
         if($request->has('locations') && $request->locations != ''){
             $employees = $employees->where('locations','=',$request->locations);
         }
+        if($request->has('assignment') && $request->assignment != null){
+            $employees = $employees->where('assignment','=',$request->assignment);
+        }
         return DataTables::of($employees)
             ->addColumn('action', function ($data){
                 $destroy_route = "'".route("dashboard.employee.destroy","slug")."'";
@@ -450,7 +453,7 @@ class EmployeeController extends Controller{
 
         $emp = $this->findEmployeeBySlug($slug);
         $trainingsArray = [];
-        $itemsPerPage = 10;
+        $itemsPerPage = $request->items_per_sheet ?? 15;
         $allCount = $emp->employeeTraining()->count() ?? 0;
         $counter = 0;
         $arrayCounter = 0;

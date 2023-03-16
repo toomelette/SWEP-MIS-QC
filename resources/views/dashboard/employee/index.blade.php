@@ -48,6 +48,14 @@
                                         {!! \App\Swep\Helpers\Helper::populateOptionsFromObject(\App\Models\SuOptions::employeeGroupings(),'option','value') !!}
                                     </select>
                                 </div>
+                                <div class="col-md-2 dt_filter-parent-div">
+                                    <label>Assignment:</label>
+                                    <select name="assignment"  class="form-control dt_filter filter_sex filters select22">
+                                        <option value="">Don't filter</option>
+                                        <option value="OFFICE-BASED">OFFICE-BASED</option>
+                                        <option value="FIELD">FIELD</option>
+                                    </select>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -184,6 +192,11 @@
                           '6 dt', 'dt', 'date', 'Date To', 'Date To', '', '', '', ''
                         ) !!}
 
+                        {!! \App\Swep\ViewHelpers\__form2::textbox('items_per_sheet',[
+                            'cols' => 3,
+                            'label' => 'Items per sheet',
+                            'type' => 'number',
+                        ],20) !!}
                     </div>
 
                 </div>

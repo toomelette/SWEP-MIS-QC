@@ -79,6 +79,10 @@ class DTRController extends  Controller
                 $query = $query->where('locations','=',$request->locations);
             }
 
+            if($request->has('assignment') && $request->assignment != null){
+                $query = $query->where('assignment','=',$request->assignment);
+            }
+
             return Datatables::of($query)
                 ->addColumn('last_attendance',function ($data){
                     $dtr = DTR::query()->where('user','=',$data->biometric_user_id)->orderBy('timestamp','desc')->first();
