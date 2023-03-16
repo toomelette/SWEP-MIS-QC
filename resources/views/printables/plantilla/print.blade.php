@@ -117,88 +117,137 @@
 
 {{--<body onload="window.print();" onafterprint="window.close()">--}}
 <body>
-
-    <div class="printable">
-        <h3 class="text-center no-margin">SUGAR REGULATORY ADMINISTRATION</h3>
-        <p class="text-center no-margin">PLANTILLA OF PERSONNEL</p>
-        <p class="text-center no-margin">As of {{\Illuminate\Support\Carbon::now()->format('F d, Y')}}</p>
-
-        <table style="width: 100%; font-size: 12px" class="bordered">
+    @foreach($planitillaArray as $k => $pls)
+    <div class="printable"
+         style="break-after: {{$request->separate_page_per_table == true ? 'page' : 'none'}};
+                {{($request->font != null ? 'font-family: '.\App\Swep\Helpers\Arrays::fonts()[$request->font] : '')}};
+         {{($request->font_size != null ? 'font-size: '.\App\Swep\Helpers\Arrays::fontSizes()[$request->font_size] : 'font-size: 12px')}};
+                 ">
+        @if($request->headers_per_table == true)
+            <h3 class="text-center no-margin">SUGAR REGULATORY ADMINISTRATION</h3>
+            <p class="text-center no-margin">PLANTILLA OF PERSONNEL</p>
+            <p class="text-center no-margin">As of {{\Illuminate\Support\Carbon::now()->format('F d, Y')}}</p>
+        @else
+            @if($loop->index == 0)
+                <h3 class="text-center no-margin">SUGAR REGULATORY ADMINISTRATION</h3>
+                <p class="text-center no-margin">PLANTILLA OF PERSONNEL</p>
+                <p class="text-center no-margin">As of {{\Illuminate\Support\Carbon::now()->format('F d, Y')}}</p>
+            @endif
+        @endif
+        <p>
+            @if($request->type == 'job_grade')
+                JOB GRADE: <b>{{$k}}</b>
+            @elseif($request->type == 'location')
+                LOCATION: <b>{{$k}}</b>
+            @elseif($request->type == 'department')
+                DEPARTMENT: <b>{{$k}}</b>
+            @endif
+        </p>
+        <table style="width: 100%;" class="bordered">
             <thead>
                 <tr>
-                    <th class="text-center">Item No</th>
-                    <th class="text-center">Position Title</th>
-                    <th class="text-center" style="width: 250px">Name of Incumbents</th>
-                    <th class="text-center">JG</th>
-                    <th class="text-center">Step</th>
-                    <th class="text-center">Actual</th>
-                    <th class="text-center">GCG</th>
-                    <th class="text-center">Highest Elegibility</th>
-                    <th class="text-center">Hightest Educ Att</th>
-                    <th class="text-center">Status of Appt</th>
-                    <th class="text-center">Date of Orig Appt</th>
-                    <th class="text-center">Date of Last Promotion</th>
+                    @foreach($columns as $column)
+                        @switch($column)
+                            @case('item_no')
+                                <th class="text-center" style="width: 20px">{{\App\Http\Controllers\PlantillaController::allColumnsForReport()[$column]['name']}}</th>
+                            @break
+                            @default
+                                <th class="text-center">{{\App\Http\Controllers\PlantillaController::allColumnsForReport()[$column]['name']}}</th>
+                            @break
+                        @endswitch
+                    @endforeach
                 </tr>
             </thead>
             <tbody>
                 @foreach($pls as $department => $divisions)
                     <tr>
-                        <td colspan="12" class="department">{{$department}}</td>
+                        <td colspan="{{count($columns)}}" class="department">{{$department}}</td>
                     </tr>
                     @foreach($divisions as $key => $division)
                         @if(is_numeric($key))
                             <tr>
-                                <td class="text-center">{{$division->item_no}}</td>
-                                <td>{{$division->position}}</td>
-                                <td>{{$division->employee_name}}</td>
-                                <td class="text-center">{{$division->job_grade}}</td>
-                                <td class="text-center">{{$division->step_inc}}</td>
-                                <td class="text-right"  style="padding-right: 2px">{{number_format($division->actual_salary,2)}}</td>
-                                <td class="text-right" style="padding-right: 2px">{{number_format($division->actual_salary_gcg,2)}}</td>
-                                <td>{{$division->eligibility}}</td>
-                                <td>{{$division->educ_att}}</td>
-                                <td>{{$division->appointment_status}}</td>
-                                <td>{{($division->appointment_date == '1900-01-01') ? '' :Carbon::parse($division->appointment_date)->format('M. d, Y')}}</td>
-                                <td>{{($division->last_promotion == '1900-01-01') ? '' : Carbon::parse($division->last_promotion)->format('M. d, Y')}}</td>
+                                @foreach($columns as $column)
+                                    @switch($column)
+                                        @case('numbering')
+                                            <td class="text-center"></td>
+                                        @break
+                                        @case('actual_salary')
+                                            <td class="text-right">{{number_format($division->$column,2)}}</td>
+                                        @break
+                                        @case('actual_salary_gcg')
+                                        <td class="text-right">{{number_format($division->$column,2)}}</td>
+                                        @break
+                                        @case('appointment_date')
+                                        <td class="text-right">{{$division->$column != null ? Carbon::parse($division->$column)->format('m/d/Y') : ''}}</td>
+                                        @break
+                                        @case('last_promotion')
+                                        <td class="text-right">{{$division->$column != null ? Carbon::parse($division->$column)->format('m/d/Y') : ''}}</td>
+                                        @break
+                                        @default
+                                            <td class="">{{$division->$column}}</td>
+                                        @break
+                                    @endswitch
+                                @endforeach
+
                             </tr>
                         @else
                             <tr>
-                                <td colspan="12" style="padding-left: 15px" class="division">{{$key}}</td>
+                                <td colspan="{{count($columns)}}" style="padding-left: 15px" class="division">{{$key}}</td>
                             </tr>
                             @foreach($division as $key2 => $section)
                                 @if(is_numeric($key2))
                                     <tr>
-                                        <td class="text-center">{{$section->item_no}}</td>
-                                        <td>{{$section->position}}</td>
-                                        <td>{{$section->employee_name}}</td>
-                                        <td class="text-center">{{$section->job_grade}}</td>
-                                        <td class="text-center">{{$section->step_inc}}</td>
-                                        <td class="text-right" style="padding-right: 2px">{{number_format($section->actual_salary,2)}}</td>
-                                        <td class="text-right" style="padding-right: 2px">{{number_format($section->actual_salary_gcg,2)}}</td>
-                                        <td>{{$section->eligibility}}</td>
-                                        <td>{{$section->educ_att}}</td>
-                                        <td>{{$section->appointment_status}}</td>
-                                        <td>{{($section->appointment_date == '1900-01-01') ? '' :Carbon::parse($section->appointment_date)->format('M. d, Y')}}</td>
-                                        <td>{{($section->last_promotion == '1900-01-01') ? '' : Carbon::parse($section->last_promotion)->format('M. d, Y')}}</td>
+                                        @foreach($columns as $column)
+                                            @switch($column)
+                                                @case('numbering')
+                                                <td class="text-center"></td>
+                                                @break
+                                                @case('actual_salary')
+                                                <td class="text-right">{{number_format($section->$column,2)}}</td>
+                                                @break
+                                                @case('actual_salary_gcg')
+                                                <td class="text-right">{{number_format($section->$column,2)}}</td>
+                                                @break
+                                                @case('appointment_date')
+                                                <td class="text-right">{{$section->$column != null ? Carbon::parse($section->$column)->format('m/d/Y') : ''}}</td>
+                                                @break
+                                                @case('last_promotion')
+                                                <td class="text-right">{{$section->$column != null ? Carbon::parse($section->$column)->format('m/d/Y') : ''}}</td>
+                                                @break
+                                                @default
+                                                <td class="">{{$section->$column}}</td>
+                                                @break
+                                            @endswitch
+                                        @endforeach
                                     </tr>
                                 @else
                                     <tr>
-                                        <td colspan="12" style="padding-left: 30px;" class="section">{{$key2}}</td>
+                                        <td colspan="{{count($columns)}}" style="padding-left: 30px;" class="section">{{$key2}}</td>
                                     </tr>
                                     @foreach($section as $item)
                                         <tr>
-                                            <td class="text-center">{{$item->item_no}}</td>
-                                            <td>{{$item->position}}</td>
-                                            <td>{{$item->employee_name}}</td>
-                                            <td class="text-center">{{$item->job_grade}}</td>
-                                            <td class="text-center">{{$item->step_inc}}</td>
-                                            <td class="text-right" style="padding-right: 2px">{{number_format($item->actual_salary,2)}}</td>
-                                            <td class="text-right" style="padding-right: 2px">{{number_format($item->actual_salary_gcg,2)}}</td>
-                                            <td>{{$item->eligibility}}</td>
-                                            <td>{{$item->educ_att}}</td>
-                                            <td>{{$item->appointment_status}}</td>
-                                            <td>{{($item->appointment_date == '1900-01-01') ? '' :Carbon::parse($item->appointment_date)->format('M. d, Y')}}</td>
-                                            <td>{{($item->last_promotion == '1900-01-01') ? '' : Carbon::parse($item->last_promotion)->format('M. d, Y')}}</td>
+                                            @foreach($columns as $column)
+                                                @switch($column)
+                                                    @case('numbering')
+                                                    <td class="text-center"></td>
+                                                    @break
+                                                    @case('actual_salary')
+                                                    <td class="text-right">{{number_format($item->$column,2)}}</td>
+                                                    @break
+                                                    @case('actual_salary_gcg')
+                                                    <td class="text-right">{{number_format($item->$column,2)}}</td>
+                                                    @break
+                                                    @case('appointment_date')
+                                                    <td class="text-right">{{$item->$column != null ? Carbon::parse($item->$column)->format('m/d/Y') : ''}}</td>
+                                                    @break
+                                                    @case('last_promotion')
+                                                    <td class="text-right">{{$item->$column != null ? Carbon::parse($item->$column)->format('m/d/Y') : ''}}</td>
+                                                    @break
+                                                    @default
+                                                    <td class="">{{$item->$column}}</td>
+                                                    @break
+                                                @endswitch
+                                            @endforeach
                                         </tr>
                                     @endforeach
                                 @endif
@@ -210,5 +259,6 @@
             </tbody>
         </table>
     </div>
+    @endforeach
 </body>
 </html>

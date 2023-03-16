@@ -211,6 +211,123 @@ class PlantillaController extends Controller{
         ]);
     }
 
+    public function report(){
+        return view('dashboard.plantilla.report');
+    }
 
+    public function reportGenerate(Request $request){
+
+        $pls = HRPayPlanitilla::query();
+
+        if($request->has('order_column') && $request->order_column != null){
+            $pls = $pls->orderBy($request->order_column,$request->direction ?? 'asc');
+        }
+        $pls = $pls
+            ->orderBy('control_no','asc')
+            ->orderBy('department_header','asc')
+            ->orderBy('division_header','asc')
+            ->orderBy('section_header','asc')
+            ->orderBy('item_no','asc')
+            ->get();
+        $plsArr = [];
+        foreach ($pls as $pl){
+            if($pl->section == 'NONE' && $pl->division== 'NONE'){
+                if($request->has('type') && $request->type == 'department'){
+                    $plsArr[$pl->department][$pl->department][$pl->item_no]= $pl;
+                }elseif($request->has('type') && $request->type == 'job_grade'){
+                    $plsArr[$pl->job_grade][$pl->department][$pl->item_no]= $pl;
+                }elseif($request->has('type') && $request->type == 'location'){
+                    $plsArr[$pl->location][$pl->department][$pl->item_no]= $pl;
+                }else{
+                    $plsArr['ALL'][$pl->department][$pl->item_no]= $pl;
+                }
+            }elseif($pl->division != 'NONE' && $pl->section == 'NONE'){
+                if($request->has('type') && $request->type == 'department'){
+                    $plsArr[$pl->department][$pl->department][$pl->division][$pl->item_no] = $pl;
+                }elseif($request->has('type') && $request->type == 'job_grade'){
+                    $plsArr[$pl->job_grade][$pl->department][$pl->division][$pl->item_no] = $pl;
+                }elseif($request->has('type') && $request->type == 'location'){
+                    $plsArr[$pl->location][$pl->department][$pl->division][$pl->item_no] = $pl;
+                }else{
+                    $plsArr['ALL'][$pl->department][$pl->division][$pl->item_no] = $pl;
+                }
+            }else{
+                if($request->has('type') && $request->type == 'department'){
+                    $plsArr[$pl->department][$pl->department][$pl->division][$pl->section][$pl->item_no] = $pl;
+                }elseif($request->has('type') && $request->type == 'job_grade'){
+                    $plsArr[$pl->job_grade][$pl->department][$pl->division][$pl->section][$pl->item_no] = $pl;
+                }elseif($request->has('type') && $request->type == 'location'){
+                    $plsArr[$pl->location][$pl->department][$pl->division][$pl->section][$pl->item_no] = $pl;
+                }else{
+                    $plsArr['ALL'][$pl->department][$pl->division][$pl->section][$pl->item_no] = $pl;
+                }
+            }
+
+        }
+        ksort($plsArr);
+        return view('printables.plantilla.print')->with([
+            'planitillaArray' => $plsArr,
+            'columns' => $request->columns,
+            'request' => $request,
+        ]);
+    }
+
+
+    public function allColumnsForReport(){
+        return [
+            'item_no' => [
+                'name' => 'Item No.',
+                'checked' => 1,
+            ],
+            'position' => [
+                'name' => 'Position',
+                'checked' => 1,
+            ],
+            'employee_name' => [
+                'name' => 'Name of Employee',
+                'checked' => 1,
+            ],
+            'employee_no' => [
+                'name' => 'Employee No.',
+                'checked' => 0,
+            ],
+            'job_grade' => [
+                'name' => 'Job Grade',
+                'checked' => 1,
+            ],
+            'step_inc' => [
+                'name' => 'Step Inc.',
+                'checked' => 1,
+            ],
+            'actual_salary' => [
+                'name' => 'Actual Salary',
+                'checked' => 1,
+            ],
+            'actual_salary_gcg' => [
+                'name' => 'Actual Salary (GCG)',
+                'checked' => 1,
+            ],
+            'eligibility' => [
+                'name' => 'Eligibility',
+                'checked' => 1,
+            ],
+            'educ_att' => [
+                'name' => 'Highest Educ Att',
+                'checked' => 1,
+            ],
+            'appointment_status' => [
+                'name' => 'Appt. Status',
+                'checked' => 1,
+            ],
+            'appointment_date' => [
+                'name' => 'Appt. Date',
+                'checked' => 1,
+            ],
+            'last_promotion' => [
+                'name' => 'Date of Last Promotion',
+                'checked' => 1,
+            ],
+        ];
+    }
     
 }
