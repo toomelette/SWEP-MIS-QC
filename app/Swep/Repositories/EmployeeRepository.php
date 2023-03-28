@@ -143,6 +143,8 @@ class EmployeeRepository extends BaseRepository implements EmployeeInterface {
         $employee->user_updated = $this->auth->user()->user_id;
         $employee->biometric_user_id = 0;
         $employee->locations = $request->locations;
+        $employee->assignment = $request->assignment;
+        $employee->assignment_details = $request->assignment_details;
         $employee->save();
 
         return $employee;
@@ -209,6 +211,8 @@ class EmployeeRepository extends BaseRepository implements EmployeeInterface {
         $employee->ip_updated = request()->ip();
         $employee->user_updated = $this->auth->user()->user_id;
         $employee->locations = $request->locations;
+        $employee->assignment = $request->assignment;
+        $employee->assignment_details = $request->assignment_details;
         $employee->save();
 
         $this->destroyDependencies($employee);

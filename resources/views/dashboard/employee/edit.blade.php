@@ -589,17 +589,30 @@
                         <div class="col-md-12"></div>
 
                         {!! __form::select_dynamic(
-                          '3 project_id', 'project_id', 'Station *', old('project_id') ? old('project_id') : $employee->project_id, $global_projects_all, 'project_id', 'project_address', $errors->has('project_id'), $errors->first('project_id'), '', ''
+                          '2 project_id', 'project_id', 'Station *', old('project_id') ? old('project_id') : $employee->project_id, $global_projects_all, 'project_id', 'project_address', $errors->has('project_id'), $errors->first('project_id'), '', ''
                         ) !!}
 
                         {!! __form::select_static(
-                          '3 is_active', 'is_active', 'Status *', old('is_active') ? old('is_active') : $employee->is_active, \App\Swep\Helpers\Helper::populateOptionsFromObjectAsArray(\App\Models\SuOptions::employeeStatus(),'option','value'), $errors->has('is_active'), $errors->first('is_active'), '', ''
+                          '2 is_active', 'is_active', 'Status *', old('is_active') ? old('is_active') : $employee->is_active, \App\Swep\Helpers\Helper::populateOptionsFromObjectAsArray(\App\Models\SuOptions::employeeStatus(),'option','value'), $errors->has('is_active'), $errors->first('is_active'), '', ''
                         ) !!}
 
                         {!! __form::select_static(
                           '3 locations', 'locations', 'Groupings *', old('locations') ? old('locations') : $employee->locations, \App\Swep\Helpers\Helper::populateOptionsFromObjectAsArray(\App\Models\SuOptions::employeeGroupings(),'option','value'), $errors->has('locations'), $errors->first('locations'), '', ''
                         ) !!}
 
+                        {!! \App\Swep\ViewHelpers\__form2::select('assignment',[
+                          'label' => 'Assignment:',
+                          'cols' => 2,
+                          'options' => [
+                            'OFFICE-BASED' => 'OFFICE-BASED',
+                            'FIELD' => 'FIELD',
+                          ]
+                        ], $employee ?? null) !!}
+                        {!! \App\Swep\ViewHelpers\__form2::textbox('assignment_details',[
+                          'label' => 'Assignment Details:',
+                          'cols' => 3,
+
+                        ], $employee ?? null) !!}
                       </div>
                     </div>
                   </div>

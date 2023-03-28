@@ -79,6 +79,10 @@ class DTRController extends  Controller
                 $query = $query->where('locations','=',$request->locations);
             }
 
+            if($request->has('assignment') && $request->assignment != null){
+                $query = $query->where('assignment','=',$request->assignment);
+            }
+
             return Datatables::of($query)
                 ->addColumn('last_attendance',function ($data){
                     $dtr = DTR::query()->where('user','=',$data->biometric_user_id)->orderBy('timestamp','desc')->first();
@@ -133,7 +137,7 @@ class DTRController extends  Controller
         $dtr_by_year = [];
         $firstDtr = DailyTimeRecord::query()->orderBy('date')->first();
         $start = Carbon::parse($firstDtr->date ?? null)->format('Y-m-01');
-        $end = Carbon::now()->format('Y-m-01');
+        $end = Carbon::now()->lastOfYear()->format('Y-m-d');
         $dtr_by_year = [];
 
 

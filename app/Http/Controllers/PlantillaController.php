@@ -32,10 +32,17 @@ class PlantillaController extends Controller{
 
 
     
-    public function index(){
-        if(request()->ajax()){
+    public function index(Request $request){
+        if(request()->ajax() && $request->has('draw')){
             $plantilla = HRPayPlanitilla::query()->with('incumbentEmployee');
             return DataTables::of($plantilla)
+                ->editColumn('position',function($data){
+                    return $data->position.'
+                    <div class="table-subdetail" style="margin-top: 3px">
+                    '.$data->department.($data->division != 'NONE' ? ' <i class="fa fa-chevron-right"></i> '.$data->division : '').($data->section != 'NONE' ? ' <i class="fa fa-chevron-right"></i> '.$data->section : '').'
+                    </div>
+                    ';
+                })
                 ->addColumn('action',function ($data){
                     $uri = route('dashboard.plantilla.show',$data->id);
                     $uri_edit = route('dashboard.plantilla.edit',$data->id);
@@ -46,20 +53,35 @@ class PlantillaController extends Controller{
                                     <button type="button" uri ="'.$uri_edit.'" data="'.$data->slug.'" class="btn btn-default btn-sm edit_item_btn" data-toggle="modal" data-target="#edit_item_modal" title="Edit" data-placement="top">
                                         <i class="fa fa-edit"></i>
                                     </button>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                          <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                          <li><a href="#" class="mark_as_vacant_btn" data="'.$data->id.'"><i class="fa icon-service-record"></i> Mark as Vacant</a></li>
+                                        </ul>
+                                    </div>
                                 </div>';
                     return $button;
                 })
                 ->addColumn('orig_jg_si',function ($data){
                     return $data->original_job_grade.' - '.$data->original_job_grade_si;
                 })
-                ->addColumn('incumbent_employee',function ($data){
-                    if(!empty($data->incumbentEmployee)){
-                        return $data->incumbentEmployee->lastname.', '.$data->incumbentEmployee->firstname;
-                    }
-                })
                 ->escapeColumns([])
                 ->setRowId('id')
                 ->make(true);
+        }
+
+        if($request->has('mark_as_vacant') && $request->mark_as_vacant == 'true'){
+            $plantilla = HRPayPlanitilla::query()->find($request->id);
+            if(!empty($plantilla)){
+                $plantilla->employee_no = null;
+                $plantilla->employee_name = null;
+                if($plantilla->update()){
+                    return 1;
+                }
+            }
+            abort(503,'Error updating item.');
         }
         return view('dashboard.plantilla.index');
     
@@ -75,6 +97,11 @@ class PlantillaController extends Controller{
     }
 
     public function show($id){
+        if(request('typeahead') == true){
+            return $this->typeAhead(request());
+        }
+
+
         $pp = HRPayPlanitilla::query()->with(['occupants','occupants.employee'])->find($id);
         return view('dashboard.plantilla.show')->with([
             'pp' => $pp,
@@ -184,6 +211,123 @@ class PlantillaController extends Controller{
         ]);
     }
 
+    public function report(){
+        return view('dashboard.plantilla.report');
+    }
 
+    public function reportGenerate(Request $request){
+
+        $pls = HRPayPlanitilla::query();
+
+        if($request->has('order_column') && $request->order_column != null){
+            $pls = $pls->orderBy($request->order_column,$request->direction ?? 'asc');
+        }
+        $pls = $pls
+            ->orderBy('control_no','asc')
+            ->orderBy('department_header','asc')
+            ->orderBy('division_header','asc')
+            ->orderBy('section_header','asc')
+            ->orderBy('item_no','asc')
+            ->get();
+        $plsArr = [];
+        foreach ($pls as $pl){
+            if($pl->section == 'NONE' && $pl->division== 'NONE'){
+                if($request->has('type') && $request->type == 'department'){
+                    $plsArr[$pl->department][$pl->department][$pl->item_no]= $pl;
+                }elseif($request->has('type') && $request->type == 'job_grade'){
+                    $plsArr[$pl->job_grade][$pl->department][$pl->item_no]= $pl;
+                }elseif($request->has('type') && $request->type == 'location'){
+                    $plsArr[$pl->location][$pl->department][$pl->item_no]= $pl;
+                }else{
+                    $plsArr['ALL'][$pl->department][$pl->item_no]= $pl;
+                }
+            }elseif($pl->division != 'NONE' && $pl->section == 'NONE'){
+                if($request->has('type') && $request->type == 'department'){
+                    $plsArr[$pl->department][$pl->department][$pl->division][$pl->item_no] = $pl;
+                }elseif($request->has('type') && $request->type == 'job_grade'){
+                    $plsArr[$pl->job_grade][$pl->department][$pl->division][$pl->item_no] = $pl;
+                }elseif($request->has('type') && $request->type == 'location'){
+                    $plsArr[$pl->location][$pl->department][$pl->division][$pl->item_no] = $pl;
+                }else{
+                    $plsArr['ALL'][$pl->department][$pl->division][$pl->item_no] = $pl;
+                }
+            }else{
+                if($request->has('type') && $request->type == 'department'){
+                    $plsArr[$pl->department][$pl->department][$pl->division][$pl->section][$pl->item_no] = $pl;
+                }elseif($request->has('type') && $request->type == 'job_grade'){
+                    $plsArr[$pl->job_grade][$pl->department][$pl->division][$pl->section][$pl->item_no] = $pl;
+                }elseif($request->has('type') && $request->type == 'location'){
+                    $plsArr[$pl->location][$pl->department][$pl->division][$pl->section][$pl->item_no] = $pl;
+                }else{
+                    $plsArr['ALL'][$pl->department][$pl->division][$pl->section][$pl->item_no] = $pl;
+                }
+            }
+
+        }
+        ksort($plsArr);
+        return view('printables.plantilla.print')->with([
+            'planitillaArray' => $plsArr,
+            'columns' => $request->columns,
+            'request' => $request,
+        ]);
+    }
+
+
+    public function allColumnsForReport(){
+        return [
+            'item_no' => [
+                'name' => 'Item No.',
+                'checked' => 1,
+            ],
+            'position' => [
+                'name' => 'Position',
+                'checked' => 1,
+            ],
+            'employee_name' => [
+                'name' => 'Name of Employee',
+                'checked' => 1,
+            ],
+            'employee_no' => [
+                'name' => 'Employee No.',
+                'checked' => 0,
+            ],
+            'job_grade' => [
+                'name' => 'Job Grade',
+                'checked' => 1,
+            ],
+            'step_inc' => [
+                'name' => 'Step Inc.',
+                'checked' => 1,
+            ],
+            'actual_salary' => [
+                'name' => 'Actual Salary',
+                'checked' => 1,
+            ],
+            'actual_salary_gcg' => [
+                'name' => 'Actual Salary (GCG)',
+                'checked' => 1,
+            ],
+            'eligibility' => [
+                'name' => 'Eligibility',
+                'checked' => 1,
+            ],
+            'educ_att' => [
+                'name' => 'Highest Educ Att',
+                'checked' => 1,
+            ],
+            'appointment_status' => [
+                'name' => 'Appt. Status',
+                'checked' => 1,
+            ],
+            'appointment_date' => [
+                'name' => 'Appt. Date',
+                'checked' => 1,
+            ],
+            'last_promotion' => [
+                'name' => 'Date of Last Promotion',
+                'checked' => 1,
+            ],
+        ];
+    }
     
 }

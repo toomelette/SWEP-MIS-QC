@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\SqlServer\EmpMaster;
+use App\Models\SqlServer\IncentiveTemplate;
 use Illuminate\Database\Eloquent\Model;
 use Kyslik\ColumnSortable\Sortable;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -262,5 +263,7 @@ class Employee extends Model{
         return $this->hasOne(EmpMaster::class,'EmpNo','employee_no');
     }
 
-
+    public function incentiveTemplate(){
+        return $this->hasMany(IncentiveTemplate::class,'EmpNo','employee_no');
+    }
 }

@@ -83,6 +83,9 @@ class EmployeeController extends Controller{
         if($request->has('locations') && $request->locations != ''){
             $employees = $employees->where('locations','=',$request->locations);
         }
+        if($request->has('assignment') && $request->assignment != null){
+            $employees = $employees->where('assignment','=',$request->assignment);
+        }
         return DataTables::of($employees)
             ->addColumn('action', function ($data){
                 $destroy_route = "'".route("dashboard.employee.destroy","slug")."'";
@@ -448,7 +451,40 @@ class EmployeeController extends Controller{
 
     public function trainingPrint(EmployeeTrainingPrintFilterForm $request, $slug){
 
-        return $this->employee_trng->print($request, $slug);
+        $emp = $this->findEmployeeBySlug($slug);
+        $trainingsArray = [];
+        $itemsPerPage = $request->items_per_sheet ?? 15;
+        $allCount = $emp->employeeTraining()->count() ?? 0;
+        $counter = 0;
+        $arrayCounter = 0;
+        $employeeTraining = $emp->employeeTraining();
+        if(!empty($request->df)){
+            $employeeTraining = $employeeTraining->where('date_from','>=',$request->df);
+        }
+        if(!empty($request->dt)){
+            $employeeTraining =  $employeeTraining->where('date_to','<=',$request->dt);
+        }
+
+         $employeeTraining=$employeeTraining
+             ->orderBy('sequence_no','desc')
+             ->get();
+        foreach ($employeeTraining as $training){
+            if($counter < $itemsPerPage){
+                $trainingsArray[$arrayCounter][$training->slug] = $training;
+            }else{
+                $arrayCounter++;
+                $trainingsArray[$arrayCounter][$training->slug] = $training;
+                $counter = 0;
+            }
+            $counter++;
+        }
+
+
+        return \view('printables.employee.trainings')->with([
+            'employee' => $emp,
+            'trainingsArray' => $trainingsArray,
+        ]);
+
 
     }
 
@@ -655,6 +691,12 @@ class EmployeeController extends Controller{
 
         if($type == 'coe'){
             return \view('printables.employee.coe')->with([
+                'employee' => $employee,
+            ]);
+        }
+
+        if($type == 'coe_with_compensation'){
+            return \view('printables.employee.coe_with_compensation')->with([
                 'employee' => $employee,
             ]);
         }

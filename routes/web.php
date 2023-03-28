@@ -424,9 +424,10 @@ Route::group(['prefix'=>'dashboard', 'as' => 'dashboard.',
 
 
 	/** Plantilla **/
-
+    Route::get('/plantilla/report', 'PlantillaController@report')->name('plantilla.report');
+    Route::get('/plantilla/report_generate', 'PlantillaController@reportGenerate')->name('plantilla.report_generate');
 	Route::resource('plantilla', 'PlantillaController');
-
+    Route::resource('plantilla_employees', 'HrPayPlantillaEmployeesController');
 
     /** Activity Logs **/
     Route::get('/activity_logs/fetch_properties', 'ActivityLogsController@fetch_properties')->name('activity_logs_fetch_properties');
