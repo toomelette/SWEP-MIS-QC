@@ -685,3 +685,7 @@ ol.example li.placeholder:before {
 }
 
 
+tr.child li {
+    width: auto;
+}
+

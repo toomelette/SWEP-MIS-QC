@@ -850,3 +850,10 @@ Route::get('/acc',function (){
     return $a;
 });
 
+Route::get('grab',function (){
+    if(!request()->has('date')){
+        return view('dashboard.gj.pre_grab');
+    }
+    return view('dashboard.gj.grab');
+});
+
