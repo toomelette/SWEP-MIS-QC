@@ -391,7 +391,7 @@
                                                                                                                                                 @php($subtotal = 0)
                                                                                                                                                 @foreach(request()->get('qty') as $key =>  $qty)
                                                                                                                                                     @if($qty != '')
-                                                                                                                                                        @php($subtotal = $subtotal + request()->get('amount')[$key])
+                                                                                                                                                        @php($subtotal = $subtotal + request()->get('amount')[$key] * request()->get('qty')[$key])
                                                                                                                                                     <tr style="color:#000000">
                                                                                                                                                         <td align="left" width="15"></td>
                                                                                                                                                         <td align="left" style="font-family:Helvetica,&#39;Arial&#39;,sans-serif;font-weight:normal">
@@ -399,7 +399,7 @@
                                                                                                                                                             <span style="font-size:11px;font-weight:bold">{{request()->get('item')[$key]}}</span>
                                                                                                                                                         </td>
                                                                                                                                                         <td align="left" style="font-family:Helvetica,&#39;Arial&#39;,sans-serif;font-weight:normal">
-                                                                                                                                                            <span style="font-size:11px;line-height:18px">&nbsp;&nbsp;₱ {{number_format(request()->get('amount')[$key],2)}}</span>
+                                                                                                                                                            <span style="font-size:11px;line-height:18px">&nbsp;&nbsp;₱ {{number_format(request()->get('amount')[$key] * request()->get('qty')[$key],2)}}</span>
                                                                                                                                                         </td>
                                                                                                                                                         <td align="right" width="15"></td>
                                                                                                                                                     </tr>

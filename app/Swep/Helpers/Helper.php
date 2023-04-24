@@ -585,14 +585,12 @@ class Helper
             ->first();
         return $a;
     }
-    public static function wrapForSelect2($array){
+    public static function wrapForSelect2($array,$paginate = true){
         return [
             'results' => $array,
             "pagination" => [
-                "more" => (count($array) > 1) ? true : false ,
+                "more" => $paginate ,
             ]
-
-
         ];
     }
 

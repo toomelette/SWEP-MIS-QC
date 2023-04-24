@@ -364,10 +364,10 @@ class Arrays
 
     public static function orsFunds(){
         return [
-            '01' => '01',
-            '02' => '02',
+            '01' => '01 - Personnel Services',
+            '02' => '02 - MOOE',
             '04' => '04',
-            '06' => '06',
+            '06' => '06 - Special Projects',
             '20' => '20',
             '69' => '69',
         ];

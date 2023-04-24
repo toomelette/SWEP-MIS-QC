@@ -122,8 +122,11 @@ class AjaxController extends Controller
                     ->orWhere('pap_title','like',$like);
                 })
                 ->orderBy('pap_code','asc')
-                ->limit(10)
-                ->get();
+                ->limit(10);
+            if(request()->has('page')){
+                $paps = $paps->offset((request('page')-1)*10);
+            }
+            $paps = $paps->get();
 
             if(!empty($paps)){
                 foreach ($paps as $pap){
@@ -137,7 +140,12 @@ class AjaxController extends Controller
                     ]);
                 }
             }
-            return Helper::wrapForSelect2($arr);
+            if($paps->count() >= 10){
+                return Helper::wrapForSelect2($arr);
+            }else{
+                return Helper::wrapForSelect2($arr,false);
+            }
+
         }
 
     }

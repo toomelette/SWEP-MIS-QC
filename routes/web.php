@@ -873,11 +873,19 @@ Route::get('summaryOfOrsWithProjects',function (\Illuminate\Http\Request $reques
         ->with('BURDetails')
         ->whereBetween('BURDate',[
             $start,$end
-        ])
-        ->orderBy('BURDate','asc')
-//        ->limit(100)
-        ->get();
+        ]);
 
+    if(!empty($request->funds)){
+        $funds = $request->funds;
+        $burs = $burs->where(function ($q) use ($funds){
+            foreach ($funds as $fund){
+                $q = $q->orWhere('Funds','=',$fund);
+            }
+        });
+    }
+
+    $burs = $burs->orderBy('BURDate','asc')
+        ->get();
     $cols = \App\Models\SqlServer\BURDet::query()
         ->whereHas('BURParentData',function ($q) use ($start,$end){
             return $q->whereBetween('BURDate',[

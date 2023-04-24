@@ -26,7 +26,22 @@
                             'required' => 'required',
                             'type'=>'date'
                         ]) !!}
+
+                        <div class="form-group  col-md-12 end">
+                            <label for="end">Fund:*</label>
+                            <select id="mult" multiple="" name="funds[]" class="form-control select_multiple" size="6">
+                                @foreach(\App\Swep\Helpers\Arrays::orsFunds() as $id => $fund)
+                                    <option value="{{$id}}">
+                                        {{$fund}}
+                                    </option>
+                                @endforeach
+
+                            </select>
+                            <small>* Choose multiple items by pressing CTRL key while selecting an item.</small>
+                        </div>
+
                     </div>
+
                     <button type="submit" class="btn btn-primary btn-block btn-flat">
                         <i class="fa fa-search"> </i> FIND
                     </button>
@@ -47,6 +62,6 @@
 
 @section('scripts')
     <script type="text/javascript">
-
+        $('#mult').select2('destroy');
     </script>
 @endsection
