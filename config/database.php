@@ -208,6 +208,16 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
         ],
+
+        'sqlsrv_accounting2017' => [
+            'driver' => 'sqlsrv',
+            'host' => env('DB_HOST_MSSQL_ACCOUNTING2017', 'localhost'),
+            'database' => env('DB_DATABASE_MSSQL_ACCOUNTING2017', 'forge'),
+            'username' => env('DB_USERNAME_MSSQL_ACCOUNTING2017', 'forge'),
+            'password' => env('DB_PASSWORD_MSSQL_ACCOUNTING2017', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+        ],
 //
 
     ],

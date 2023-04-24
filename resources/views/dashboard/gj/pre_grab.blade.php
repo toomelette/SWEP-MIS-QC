@@ -128,6 +128,14 @@
                 'label' => 'Del',
                 'cols' => 2,
             ]) !!}
+            {!! \App\Swep\ViewHelpers\__form2::textbox('rider',[
+                'label' => 'Rider',
+                'cols' => 2,
+            ]) !!}
+            {!! \App\Swep\ViewHelpers\__form2::textbox('drop_off',[
+                'label' => 'Drop Off',
+                'cols' => 2,
+            ]) !!}
         </div>
         <button class="btn btn-primary" type="submit"> Submit</button>
     </form>

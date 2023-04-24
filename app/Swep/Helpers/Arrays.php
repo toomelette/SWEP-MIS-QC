@@ -7,6 +7,9 @@ namespace App\Swep\Helpers;
 use App\Models\Applicant;
 use App\Models\ApplicantPositionApplied;
 use App\Models\HRPayPlanitilla;
+use App\Models\PPU\PPURespCodes;
+use Auth;
+use Illuminate\Support\Carbon;
 
 class Arrays
 {
@@ -359,4 +362,63 @@ class Arrays
         return $arr;
     }
 
+    public static function orsFunds(){
+        return [
+            '01' => '01',
+            '02' => '02',
+            '04' => '04',
+            '06' => '06',
+            '20' => '20',
+            '69' => '69',
+        ];
+    }
+
+    public static function orsBooks(){
+        return [
+            'TEV' => 'TEV',
+            'PAY' => 'PAY',
+            'DV' => 'DV',
+            'PO' => 'PO',
+            'JO' => 'JO',
+        ];
+    }
+
+
+    public static function groupedRespCodes($all = null){
+
+        $rcs = PPURespCodes::query()->with(['description'])
+            ->get();
+        $arr = [];
+
+        if(!empty($rcs)){
+            foreach ($rcs as $rc){
+                $arr[$rc->description->name][$rc->rc_code] = $rc->desc;
+            }
+        }
+
+        return $arr;
+    }
+
+    public static function years($past = 8, $future = 10){
+        $years = [];
+        $now_year = Carbon::now()->format('Y');
+        for ( $x = $now_year - $past ; $x <= $now_year + $future; $x++){
+            $years[$x] = $x;
+        }
+        return $years;
+    }
+
+    public static function respCodeList(){
+        $rcs = PPURespCodes::query()->get();
+        $arr = [];
+        foreach ($rcs as $rc){
+            $arr[$rc->rc_code] = [
+                'dept_alias' => $rc->description->name,
+                'dept' => $rc->department,
+                'div' => $rc->division,
+                'sec' => $rc->section,
+            ];
+        }
+        return $arr;
+    }
 }

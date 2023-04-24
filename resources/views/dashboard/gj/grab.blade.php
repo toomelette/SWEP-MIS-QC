@@ -194,6 +194,22 @@
                                                                                                                                             <img style="display:block" src="./Gmail - Your Grab E-Receipt_files/unnamed.gif" alt="" width="20" height="3" border="0">
                                                                                                                                         </td>
                                                                                                                                     </tr>
+                                                                                                                                    @if(\Illuminate\Support\Facades\Request::get('rider') != '')
+                                                                                                                                    <tr>
+                                                                                                                                        <td align="left" valign="top">
+                                                                                                                                            <table border="0" cellspacing="0" cellpadding="0" width="100%">
+                                                                                                                                                <tbody>
+                                                                                                                                                <tr>
+                                                                                                                                                    <td align="left" style="font-family:Helvetica,&#39;Arial&#39;,sans-serif;font-weight:normal;font-size:12px;line-height:16px;color:#000000">
+                                                                                                                                                        <span style="font-size:10px;color:#9e9e9e;line-height:16px">Issued by driver</span><br>
+                                                                                                                                                        <span style="font-size:12px;line-height:16px;font-weight:bold">{{\Illuminate\Support\Facades\Request::get('rider')}}</span>
+                                                                                                                                                    </td>
+                                                                                                                                                </tr>
+                                                                                                                                                </tbody>
+                                                                                                                                            </table>
+                                                                                                                                        </td>
+                                                                                                                                    </tr>
+                                                                                                                                    @endif
                                                                                                                                     <tr>
                                                                                                                                         <td align="left" valign="top">
                                                                                                                                             <table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -246,6 +262,24 @@
                                                                                                                                             </table>
                                                                                                                                         </td>
                                                                                                                                     </tr>
+                                                                                                                                    @if(\Illuminate\Support\Facades\Request::get('drop_off') != '')
+                                                                                                                                    <tr>
+                                                                                                                                        <td align="left" valign="top">
+                                                                                                                                            <table border="0" cellspacing="0" cellpadding="0" width="100%">
+                                                                                                                                                <tbody>
+                                                                                                                                                <tr>
+                                                                                                                                                    <td align="left" style="font-family:Helvetica,&#39;Arial&#39;,sans-serif;font-weight:normal;color:#000000">
+                                                                                                                                                        <span style="font-size:10px;color:#9e9e9e;line-height:16px">Drop off up location:</span><br>
+                                                                                                                                                        <span style="font-size:12px;line-height:16px;font-weight:bold">{{\Illuminate\Support\Facades\Request::get('drop_off')}}</span>
+                                                                                                                                                    </td>
+                                                                                                                                                </tr>
+                                                                                                                                                </tbody>
+                                                                                                                                            </table>
+                                                                                                                                        </td>
+                                                                                                                                    </tr>
+                                                                                                                                    @endif
+
+
                                                                                                                                     <tr>
                                                                                                                                         <td height="3"><img style="display:block" src="./Gmail - Your Grab E-Receipt_files/unnamed.gif" alt="" width="20" height="5" border="0"></td>
                                                                                                                                     </tr>

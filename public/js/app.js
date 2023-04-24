@@ -423,3 +423,23 @@ function delete_data(slug,url){
 const formatToCurrency = amount => {
     return "" + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
 };
+
+$("body").on("click",".add_button",function () {
+    let btn = $(this);
+    $.ajax({
+        url : btn.attr('uri'),
+        type: 'GET',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        },
+        success: function (res) {
+            $(btn.attr('data-target')+' tbody').append(res);
+        },
+        error: function (res) {
+        }
+    })
+});
+
+$("body").on("click",".remove_row_btn",function () {
+    $(this).parents('tr').remove();
+})

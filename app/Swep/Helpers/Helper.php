@@ -585,4 +585,22 @@ class Helper
             ->first();
         return $a;
     }
+    public static function wrapForSelect2($array){
+        return [
+            'results' => $array,
+            "pagination" => [
+                "more" => (count($array) > 1) ? true : false ,
+            ]
+
+
+        ];
+    }
+
+    public static function toNumber($number,$places = 2,$placeholder = ''){
+        if($number == null || $number == 0){
+            return $placeholder;
+        }else{
+            return number_format($number,$places);
+        }
+    }
 }

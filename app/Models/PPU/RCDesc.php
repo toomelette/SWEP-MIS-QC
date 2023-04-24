@@ -6,9 +6,8 @@ namespace App\Models\PPU;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PPURCDesc extends Model
+class RCDesc extends Model
 {
+    protected $table = 'rc_description';
     protected $connection = 'mysql_ppu';
-    protected $table = 'ppu_rc_description';
-
 }

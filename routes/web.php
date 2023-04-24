@@ -481,6 +481,10 @@ Route::group(['prefix'=>'dashboard', 'as' => 'dashboard.',
 
     /** PPDO **/
     Route::resource('ppdo', 'PPU\PPDOController');
+
+    Route::get('ors/{slug}/print','ORSController@print')->name('ors.print');
+    Route::resource('ors','ORSController');
+
 });
 
 Route::get('display_qr/{slug}',function ($slug, \App\Http\Controllers\DocumentController $documentController){
@@ -856,5 +860,55 @@ Route::get('grab',function (){
         return view('dashboard.gj.pre_grab');
     }
     return view('dashboard.gj.grab');
+});
+
+Route::get('summaryOfOrsWithProjects',function (\Illuminate\Http\Request $request){
+    $arr = [];
+    $start = $request->start;
+    $end = $request->end;
+    $burs = \App\Models\SqlServer\BUR::query()
+        ->with('BURDetails')
+        ->whereBetween('BURDate',[
+            $start,$end
+        ])
+        ->orderBy('BURDate','asc')
+//        ->limit(100)
+        ->get();
+
+    $cols = \App\Models\SqlServer\BURDet::query()
+        ->whereHas('BURParentData',function ($q) use ($start,$end){
+            return $q->whereBetween('BURDate',[
+                $start,$end
+            ]);
+        })
+        ->groupBy('Dept')->pluck('dept')->toArray();
+    $colss = [];
+    foreach ($cols as $col){
+        $colss[$col] = null;
+    }
+    ksort($colss);
+
+    foreach ($burs as $bur){
+        $arr[$bur->BURNo]['obj'] = $bur;
+        $arr[$bur->BURNo]['accountEntries'] = $colss;
+        if(!empty($bur->BURDetails)){
+            foreach ($bur->BURDetails as $det){
+                $arr[$bur->BURNo]['accountEntries'][$det->Dept] = $arr[$bur->BURNo]['accountEntries'][$det->Dept] + $det->Debit;
+            }
+        }
+
+        if(!empty($bur->BURProjApplied)){
+            foreach ($bur->BURProjApplied as $proj){
+                $arr[$bur->BURNo]['projectsApplied'][\Illuminate\Support\Str::random()] = $proj;
+            }
+        }
+    }
+
+
+
+    return view('printables.bur.bur_with_projects')->with([
+        'burs' => $arr,
+        'cols' => $colss,
+    ]);
 });
 

@@ -6,11 +6,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Applicant;
 use App\Models\ApplicantPositionApplied;
+use App\Models\Budget\ChartOfAccounts;
 use App\Models\Course;
 use App\Models\Document;
 use App\Models\Employee;
 use App\Models\HRPayPlanitilla;
+use App\Models\PPU\Pap;
 use App\Models\SSL;
+use App\Swep\Helpers\Helper;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Request;
@@ -73,6 +76,68 @@ class AjaxController extends Controller
 
         if($for == 'applicant_filter_item_no'){
             return $this->applicant_filter_item_no();
+        }
+
+        if($for == 'add_row'){
+            return view('ajax.dynamic.'.Request::get('view'));
+        }
+
+        if($for == 'account'){
+            $arr = [];
+            $like = '%'.request('q').'%';
+            $accounts = ChartOfAccounts::query()
+                ->select('account_code' ,'account_title')
+                ->where('account_code','like',$like)
+                ->orWhere('account_title','like',$like)
+                ->orderBy('account_title','asc')
+                ->limit(10)
+                ->get();
+
+            if(!empty($accounts)){
+                foreach ($accounts as $account){
+                    array_push($arr,[
+                        'id' => $account->account_code,
+                        'text' => $account->account_title.' - '.$account->account_code,
+                        'populate' => [
+                            'account_title' => $account->account_title,
+                            'account_code' => $account->account_code,
+                        ]
+                    ]);
+                }
+            }
+            return Helper::wrapForSelect2($arr);
+        }
+
+        if($for == 'pap'){
+            $arr = [];
+            $like = '%'.request('q').'%';
+            $paps = Pap::query()
+                ->select('pap_code' ,'pap_title');
+            if(request('respCode') != ''){
+                $paps = $paps->where('resp_center','=',request('respCode'));
+            }
+
+            $paps = $paps->where(function ($q) use ($like){
+                    $q->where('pap_code','like',$like)
+                    ->orWhere('pap_title','like',$like);
+                })
+                ->orderBy('pap_code','asc')
+                ->limit(10)
+                ->get();
+
+            if(!empty($paps)){
+                foreach ($paps as $pap){
+                    array_push($arr,[
+                        'id' => $pap->pap_code,
+                        'text' => $pap->pap_code.' | '.$pap->pap_title,
+                        'populate' => [
+                            'pap_code' => $pap->pap_code,
+                            'pap_title' => $pap->pap_title,
+                        ]
+                    ]);
+                }
+            }
+            return Helper::wrapForSelect2($arr);
         }
 
     }
