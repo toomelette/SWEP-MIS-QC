@@ -863,6 +863,9 @@ Route::get('grab',function (){
 });
 
 Route::get('summaryOfOrsWithProjects',function (\Illuminate\Http\Request $request){
+    if(!$request->has('start') || !$request->has('end')){
+        return view('dashboard.budget.ors.pre');
+    }
     $arr = [];
     $start = $request->start;
     $end = $request->end;
