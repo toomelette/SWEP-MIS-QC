@@ -199,6 +199,9 @@ $span_failed = '<span class="badge bg-red">Failed</span>';
 @section('scripts')
 
   <script type="text/javascript">
+      $(function () {
+          CKEDITOR.replace('editor');
+      });
 
     $('select[multiple]').select2({
         closeOnSelect: true,
