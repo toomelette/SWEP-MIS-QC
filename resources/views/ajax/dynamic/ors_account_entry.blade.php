@@ -8,14 +8,17 @@
             'options' => [
                 'ORS' => 'ORS',
                 'DV' => 'DV',
-            ]
-        ],$data->type ?? null) !!}
+            ],
+            'for' => 'type',
+        ],($data->type ?? $data['type'] ?? null) == 'ORS' ? 'DV' : '') !!}
     </td>
     <td>
         {!! \App\Swep\ViewHelpers\__form2::selectOnly('account_entries['.$rand.'][resp_center]',[
-            'class' => 'input-sm',
+            'class' => 'input-sm select2_respCenter',
+            'container_class' => 'select2-sm',
             'options' => \App\Swep\Helpers\Arrays::groupedRespCodes(),
-        ],$data->resp_center ?? null) !!}
+            'for' => 'resp_center',
+        ],$data->resp_center ?? $data['resp_center'] ?? null) !!}
     </td>
 
     <td>
@@ -23,7 +26,8 @@
             'class' => 'input-sm',
             'readonly' => 'readonly',
             'for' => 'account_code',
-        ],$data->account_code ?? null) !!}
+        ],$data->account_code ?? $data['account_code'] ?? null) !!}
+        <input for="text-value" hidden>
     </td>
 
     @if(request()->ajax())
@@ -31,41 +35,52 @@
             {!! \App\Swep\ViewHelpers\__form2::selectOnly('account_entries['.$rand.'][account_title]',[
                 'class' => 'input-sm select2_account_'.$rand,
                 'options' => [],
-            ],$data->account_title ?? null) !!}
+                'container_class' => 'select2-sm',
+                'for' => 'account_title',
+                'select2_preSelected' => (!empty($data['select2_text'])) ?  $data['select2_text'] : '',
+            ],$data->account_title ?? $data['account_code'] ?? null) !!}
         </td>
         <td>
             {!! \App\Swep\ViewHelpers\__form2::textboxOnly('account_entries['.$rand.'][debit]',[
                 'class' => 'input-sm text-right autonum_'.$rand,
-            ],$data->debit ?? null) !!}
+                'for' => 'debit',
+            ],$data->debit ?? (!empty($data['debit'])) ? \App\Swep\Helpers\Helper::sanitizeAutonum($data['debit']) : '' ) !!}
         </td>
         <td>
             {!! \App\Swep\ViewHelpers\__form2::textboxOnly('account_entries['.$rand.'][credit]',[
                 'class' => 'input-sm text-right autonum_'.$rand,
-            ],$data->credit ?? null) !!}
+                'for' => 'credit',
+            ],$data->credit ?? (!empty($data['credit'])) ? \App\Swep\Helpers\Helper::sanitizeAutonum($data['credit']) : '' ) !!}
         </td>
     @else
         <td>
             {!! \App\Swep\ViewHelpers\__form2::selectOnly('account_entries['.$rand.'][account_title]',[
                 'class' => 'input-sm select2_account',
                 'options' => [],
+                'for' => 'account_title',
                 'select2_preSelected' => (!empty($data->chartOfAccount)) ?  ($data->chartOfAccount->account_title.' | '.$data->account_code) : '',
             ],$data->account_code ?? null) !!}
         </td>
         <td>
             {!! \App\Swep\ViewHelpers\__form2::textboxOnly('account_entries['.$rand.'][debit]',[
                 'class' => 'input-sm text-right autonum',
+                'for' => 'debit',
             ],$data->debit ?? null) !!}
         </td>
         <td>
             {!! \App\Swep\ViewHelpers\__form2::textboxOnly('account_entries['.$rand.'][credit]',[
                 'class' => 'input-sm text-right autonum',
+                'for' => 'credit',
             ],$data->credit ?? null) !!}
         </td>
     @endif
 
 
     <td>
-        <button class="btn btn-danger btn-sm remove_row_btn" type="button"><i class="fa fa-times"></i> </button>
+        <div class="btn-group">
+            <button class="btn btn-default btn-sm clone_btn" type="button" title="Clone this row"><i class="fa fa-clone"></i> </button>
+            <button class="btn btn-danger btn-sm remove_row_btn" type="button"><i class="fa fa-times"></i> </button>
+        </div>
     </td>
 </tr>
 
@@ -85,12 +100,15 @@
             placeholder: 'Select item',
         });
 
+        $(".select2_respCenter").select2();
+
         $('.select2_account_{{$rand}}').on('select2:select', function (e) {
             let t = $(this);
             let parentTrId = t.parents('tr').attr('id');
             let data = e.params.data;
 
             $("#"+parentTrId+" [for='account_code']").val(data.id);
+            $("#"+parentTrId+" [for='text-value']").val(data.text);
         });
     @endif
 

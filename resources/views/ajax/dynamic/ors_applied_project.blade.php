@@ -4,15 +4,17 @@ $rand = \Illuminate\Support\Str::random();
 <tr  id="ap{{$rand}}">
     <td>
         {!! \App\Swep\ViewHelpers\__form2::selectOnly('applied_projects['.$rand.'][resp_center]',[
-            'class' => 'input-sm resp_center_clear',
+            'class' => 'input-sm resp_center_clear select2_respCenter',
             'options' => \App\Swep\Helpers\Arrays::groupedRespCodes(),
             'for' => 'resp_center',
+            'container_class' => 'select2-sm',
         ],$data->pap->responsibilityCenter->rc_code ?? null) !!}
     </td>
     @if(request()->ajax())
         <td>
             {!! \App\Swep\ViewHelpers\__form2::selectOnly('applied_projects['.$rand.'][pap_code]',[
                 'class' => 'input-sm select2_clear select2_pap_code_'.$rand,
+                'container_class' => 'select2-sm',
                 'options' => [],
                 'id' => 'select2_id_ap'.$rand,
             ],$data->pap_code ?? null) !!}
@@ -20,11 +22,13 @@ $rand = \Illuminate\Support\Str::random();
         <td>
             {!! \App\Swep\ViewHelpers\__form2::textboxOnly('applied_projects['.$rand.'][mooe]',[
                 'class' => 'input-sm text-right autonum_'.$rand,
+                'for' => 'mooe',
             ],$data->mooe ?? null) !!}
         </td>
         <td>
             {!! \App\Swep\ViewHelpers\__form2::textboxOnly('applied_projects['.$rand.'][co]',[
                 'class' => 'input-sm text-right autonum_'.$rand,
+                'for' => 'co',
             ],$data->co ?? null) !!}
         </td>
         <td>
@@ -41,11 +45,13 @@ $rand = \Illuminate\Support\Str::random();
         <td>
             {!! \App\Swep\ViewHelpers\__form2::textboxOnly('applied_projects['.$rand.'][mooe]',[
                 'class' => 'input-sm text-right autonum',
+                'for' => 'mooe',
             ],$data->mooe ?? null) !!}
         </td>
         <td>
             {!! \App\Swep\ViewHelpers\__form2::textboxOnly('applied_projects['.$rand.'][co]',[
                 'class' => 'input-sm text-right autonum',
+                'for' => 'co',
             ],$data->co ?? null) !!}
         </td>
         <td>
@@ -69,7 +75,7 @@ $rand = \Illuminate\Support\Str::random();
         },
         placeholder: 'Select item',
     });
-
+    $(".select2_respCenter").select2();
     $('.select2_pap_code_{{$rand}}').on('select2:select', function (e) {
         let t = $(this);
         let parentTrId = t.parents('tr').attr('id');

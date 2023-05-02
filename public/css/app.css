@@ -688,4 +688,13 @@ ol.example li.placeholder:before {
 tr.child li {
     width: auto;
 }
-
+.select2-results__options{
+    font-size: 12px;
+}
+.select2-sm .select2-selection--single{
+    height: 30px;
+    padding-top: 4px;
+}
+.select2-sm .select2-selection__rendered{
+    font-size: 12px;
+}

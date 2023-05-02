@@ -115,7 +115,7 @@
 					<p class="no-margin">
 						Email content: 
 						<strong>
-							{{$email['content']}}
+							{!! $email['content']  !!}
 						</strong>
 					</p>
 					@php

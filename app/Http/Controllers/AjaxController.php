@@ -148,6 +148,13 @@ class AjaxController extends Controller
 
         }
 
+        if($for == 'orsAccountEntry'){
+            $r = Request::all();
+            return view('ajax.dynamic.ors_account_entry')->with([
+                'data' => $r,
+            ]);
+        }
+
     }
     private function applicant_filter_item_no(){
         $arr['results'] = [];

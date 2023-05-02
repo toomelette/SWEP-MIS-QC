@@ -102,7 +102,7 @@ $span_failed = '<span class="badge bg-red">Failed</span>';
 
 
                       {!! __form::textarea(
-                         '12', 'content', 'Content', old('content'), $errors->has('content'), $errors->first('content'), ''
+                         '12', 'content', 'Content', old('content'), $errors->has('content'), $errors->first('content'), '',''
                       ) !!}
 
 
@@ -183,7 +183,7 @@ $span_failed = '<span class="badge bg-red">Failed</span>';
                               </td>
                               <td>{{ $data->email }}</td>
                               <td>{{ $data->subject }}</td>
-                              <td>{{ Str::limit($data->content, 30) }}</td>
+                              <td>{!!  Str::limit($data->content, 30)  !!}</td>
                               <td style="width: 10%">{{date("M. d, 'y | h:i A",strtotime($data->sent_at))}}</td>
                               <td style="width: 5%">{!! $data->status == 'SENT' ? $span_sent : $span_failed !!}</td>
                             </tr>
@@ -233,7 +233,9 @@ $span_failed = '<span class="badge bg-red">Failed</span>';
 @section('scripts')
 
   <script type="text/javascript">
-
+    $(function () {
+      CKEDITOR.replace('editor');
+    });
     
     $('select[multiple]').select2({
         closeOnSelect: true,
