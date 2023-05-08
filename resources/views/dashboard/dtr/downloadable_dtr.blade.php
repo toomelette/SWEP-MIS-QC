@@ -1,27 +1,6 @@
 @php($days_in_this_month = \Carbon\Carbon::parse($month)->daysInMonth)
 <head>
     <style type="text/css">
-        {{--@font-face {--}}
-        {{--    font-family: 'HunDin';--}}
-        {{--    src: url({{ storage_path('fonts/HunDin.ttf') }}) format('truetype');--}}
-        {{--    font-weight: 400;--}}
-        {{--    font-style: normal;--}}
-        {{--}--}}
-
-
-        {{--@font-face {--}}
-        {{--    font-family: 'OS-Condenesed-Bold';--}}
-        {{--    src: url({{ storage_path('fonts/OpenSansCondensed-Bold.ttf') }}) format('truetype');--}}
-        {{--    font-weight: 400;--}}
-        {{--    font-style: normal;--}}
-
-        {{--}--}}
-
-        {{--@font-face {--}}
-        {{--    font-family: 'OS-Condenesed-Light';--}}
-        {{--    src: url({{ storage_path('fonts/OpenSansCondensed-Light.ttf') }}) format('truetype');--}}
-        {{--    font-style: normal;--}}
-        {{--}--}}
 
         @font-face {
             font-family: 'HunDin';
@@ -286,11 +265,20 @@
                 <p class="text-center" style="margin-top: 0">Signature of Employee</p>
             </div>
             <br><br><br>
-            <div style="padding-right: 10px; margin-top: 15px">
-                ___________________________
-                <p style="margin-top: 0; padding-left: 50px">Authorized Official</p>
-            </div>
-
+            <table style="width: 100%;  border-collapse: collapse; border-spacing: 0; margin-bottom: 14px ">
+                <tr>
+                    <td class="text-center" style=" font-size: 14px;font-family: Arial !important;padding: 0px;">{{request()->get('official_name')}}</td>
+                    <td style="width: 40%;padding: 0px;"></td>
+                </tr>
+                <tr>
+                    <td class="text-center" style="font-family: Arial !important;padding: 0px; font-weight: normal; font-style: italic; font-size: 8px">{{request()->get('official_position')}}</td>
+                    <td style="width: 40%;padding: 0px;"></td>
+                </tr>
+                <tr>
+                    <td class="text-center" style="border-top: 1px solid black;padding: 0px;font-family: Arial; font-weight: normal; font-size: 14px">Authorized Official</td>
+                    <td style="padding: 0px;"></td>
+                </tr>
+            </table>
         </div>
         <div>
             <p style="font-size: 10px;float: left">2022/PPSPD/MIS | {{Auth::user()->username}} | {{request()->ip()}}</p>
@@ -479,10 +467,20 @@
                 <p class="text-center" style="margin-top: 0">Signature of Employee</p>
             </div>
             <br><br><br>
-            <div style="padding-right: 10px; margin-top: 15px">
-                ___________________________
-                <p style="margin-top: 0; padding-left: 50px">Authorized Official</p>
-            </div>
+            <table style="width: 100%;  border-collapse: collapse; border-spacing: 0; margin-bottom: 14px ">
+                <tr>
+                    <td class="text-center" style=" font-size: 14px;font-family: Arial !important;padding: 0px;">{{request()->get('official_name')}}</td>
+                    <td style="width: 40%;padding: 0px;"></td>
+                </tr>
+                <tr>
+                    <td class="text-center" style="font-family: Arial !important;padding: 0px; font-weight: normal; font-style: italic; font-size: 8px">{{request()->get('official_position')}}</td>
+                    <td style="width: 40%;padding: 0px;"></td>
+                </tr>
+                <tr>
+                    <td class="text-center" style="border-top: 1px solid black;padding: 0px;font-family: Arial; font-weight: normal; font-size: 14px">Authorized Official</td>
+                    <td style="padding: 0px;"></td>
+                </tr>
+            </table>
 
         </div>
         <div>

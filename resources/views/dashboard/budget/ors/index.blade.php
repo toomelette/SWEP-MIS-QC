@@ -15,11 +15,12 @@
                     <table class="table table-bordered table-striped table-hover" id="ors_table" style="width: 100%">
                         <thead>
                         <tr class="">
-                            <th >ORS No/</th>
+                            <th >ORS No.</th>
                             <th class="th-20">Date</th>
                             <th class="th-20">Payee</th>
                             <th >Particulars</th>
-                            <th >Details</th>
+                            <th >Applied Projects</th>
+                            <th >Amount</th>
                             <th >Action</th>
                         </tr>
                         </thead>
@@ -42,7 +43,7 @@
 
 
 @section('modals')
-
+{!! \App\Swep\ViewHelpers\__html::blank_modal('show_ors_modal','lg') !!}
 @endsection
 
 @section('scripts')
@@ -66,6 +67,7 @@
                 { "data": "payee" },
                 { "data": "particulars" },
                 { "data": "details" },
+                { "data": "amount"},
                 { "data": "action"},
 
             ],
@@ -74,7 +76,7 @@
             ],
             "columnDefs":[
                 {
-                    "targets" : 5,
+                    "targets" : 6,
                     "class" : 'action4'
                 },
                 {
@@ -82,10 +84,17 @@
                     "class" : 'w-10p',
                 },
                 {
-                    'targets' : 1,
+                    'targets' : [1],
                     'class' : 'w-8p',
                 },
-
+                {
+                    'targets' : 5,
+                    'class' : 'w-8p text-right',
+                },
+                {
+                    'targets' : 4,
+                    'class' : 'w-16p',
+                },
 
             ],
             "order" : [[1, 'desc'],[2,'desc']],
@@ -154,5 +163,25 @@
                 ors_tbl.search(this.value).draw();
             }
         });
+
+        $("body").on("click",".show_ors_btn",function () {
+            let btn = $(this);
+            load_modal2(btn);
+            let uri = '{{route("dashboard.ors.show","slug")}}';
+            uri = uri.replace('slug',btn.attr('data'));
+            $.ajax({
+                url : uri,
+                type: 'GET',
+                headers: {
+                    {!! __html::token_header() !!}
+                },
+                success: function (res) {
+                    populate_modal2(btn,res);
+                },
+                error: function (res) {
+                    populate_modal2_error(res);
+                }
+            })
+        })
     </script>
 @endsection

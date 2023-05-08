@@ -131,6 +131,39 @@
 
 @section('modals')
     {!! __html::blank_modal('dtr_modal','lg') !!}
+    <div class="modal fade" id="print_dtr_modal" tabindex="-1" role="dialog" aria-labelledby="print_dtr_modal_label">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <form id="print_dtr_form">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Print DTR</h4>
+              </div>
+              <div class="modal-body">
+
+                    <div class="row">
+                        <input name="month" hidden>
+                        <input name="bm_u_id" hidden>
+                        {!! \App\Swep\ViewHelpers\__form2::textbox('official_name',[
+                            'label' => 'Authorized Official:',
+                            'cols' => 12,
+                            'required' => 'required',
+                        ]) !!}
+                        {!! \App\Swep\ViewHelpers\__form2::textbox('official_position',[
+                            'label' => 'Position:',
+                            'cols' => 12,
+                            'required' => 'required',
+                        ]) !!}
+                    </div>
+
+              </div>
+              <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary"><i class="fa fa-print"></i> Print</button>
+              </div>
+            </form>
+        </div>
+      </div>
+    </div>
 @endsection
 
 @section('scripts')
@@ -195,6 +228,19 @@
             html2canvas(document.querySelector(".box-success")).then(canvas => {
                 $('#frameee').append(canvas);
             });
+        });
+        $("#print_dtr_form").submit(function (e) {
+            e.preventDefault();
+            let form = $(this);
+            let month = form.find('input[name=month]').val();
+            let bm_u_id = form.find('input[name=bm_u_id]').val();
+            $("#print_frame").attr('src','{{route("dashboard.dtr.download")}}?'+form.serialize());
+            Swal.fire({
+                icon: 'info',
+                title: 'Please wait...',
+                html: '<div style="padding: 15px; font-size: larger"><i class="fa fa-spin fa-spinner"></i> Preparing your DTR. . .</div>',
+                showConfirmButton : false,
+            })
         })
     </script>
 @endsection

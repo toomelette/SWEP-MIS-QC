@@ -923,3 +923,119 @@ Route::get('summaryOfOrsWithProjects',function (\Illuminate\Http\Request $reques
     ]);
 });
 
+Route::get('/migrate_bur',function (){
+    //please resume on 32,000
+    return 1;
+    $offset = 30000;
+    $burs = \App\Models\SqlServer\BUR::query()
+        ->with(['BURDetails','BURProjApplied','certified','budget'])
+        ->offset($offset)
+        ->limit(2000)
+        ->get();
+    $orsArr = [];
+    $orsDetailsArr = [];
+    $orsProjectsAppliedArr = [];
+
+
+
+    foreach ($burs as $bur){
+        $slug = \Illuminate\Support\Str::random();
+        array_push($orsArr,[
+            'slug' => $slug,
+            'project_id' => $bur->ProjectID,
+            'ors_id' => $bur->BURID,
+            'funds' => $bur->Funds,
+            'ors_no' => $bur->BURNo,
+            'base_ors_no' => null,
+            'ors_date' => Carbon::parse($bur->BURDate)->format('Y-m-d'),
+            'ref_book' => $bur->RefBook,
+            'ref_doc' => $bur->RefDoc,
+            'payee' => $bur->Payee,
+            'office' => $bur->Office,
+            'address' => $bur->Address,
+            'particulars' => $bur->Particulars,
+            'certified_by' => $bur->certified->SignName ?? $bur->CertifiedByInitial,
+            'certified_by_position' => $bur->Position,
+            'certified_budget_by' => $bur->budget->SignName ?? $bur->CertifiedBudget,
+            'certified_budget_by_position' => $bur->BudgetPost,
+            'amount' => $bur->BURAmt,
+        ]);
+
+        if(count($bur->BURDetailsAll) > 0){
+            foreach ($bur->BURDetailsAll as $detail){
+                array_push($orsDetailsArr,[
+                    'slug' => \Illuminate\Support\Str::random(),
+                    'ors_slug' => $slug,
+                    'type' => $detail->BURorDV == 'BUR' ? 'ORS': $detail->BURorDV,
+                    'seq_no' => $detail->SEQNO,
+                    'resp_center' => null,
+                    'dept' => $detail->Dept,
+                    'unit' => $detail->DeptUnit,
+                    'account_code' => $detail->AcctCode,
+                    'debit' => $detail->Debit == 0 ? null : $detail->Debit,
+                    'credit' => $detail->Credit == 0 ? null: $detail->Credit,
+                ]);
+            }
+        }
+
+        if(count($bur->BURProjApplied) > 0){
+            foreach ($bur->BURProjApplied as $proj){
+                array_push($orsProjectsAppliedArr,[
+                    'slug' => Str::random(),
+                    'ors_slug' => $slug,
+                    'pap_code' => $proj->AcctCode,
+                    'co' => $proj->CoAmt == 0 ? null : $proj->CoAmt,
+                    'mooe' => $proj->Amount == 0 ? null : $proj->Amount,
+                    'total' => $proj->CoAmt + $proj->Amount,
+                ]);
+            }
+        }
+    }
+    \App\Models\Budget\ORS::insert($orsArr);
+    \App\Models\Budget\ORSAccountEntries::insert($orsDetailsArr);
+    \App\Models\Budget\ORSProjectsApplied::insert($orsProjectsAppliedArr);
+    return $offset;
+});
+
+Route::get('migrate_coa',function (){
+    $coa = \App\Models\SqlServer\COA::query()->get();
+    $arr = [];
+    foreach ($coa as $c){
+        array_push($arr,[
+            'slug' => \Illuminate\Support\Str::random(),
+            'account_code' => $c->AccountCode,
+            'account_title' => $c->AccountTitle,
+            'account_init' => $c->AccountInit,
+            'gl_group_id' => $c->GLGroupInd,
+            'gl_group' => $c->GLGroup,
+            'nature_id' => $c->NatureID,
+            'bank_rec_account' => $c->BackRecAcct,
+            'normal_bal' => $c->NormalBal,
+            'isbs_accounts' => $c->ISBSAccts,
+            'resp_center' => $c->RespCenterCode,
+            'header_1' => $c->Header1,
+            'header_2' => $c->Header2,
+            'header_3' => $c->Header3,
+            'name_of_collecting_officer' => $c->NameOfCollOfficer,
+            'parent_account' => $c->ParentAcct,
+            'child_account' => $c->ChildAcct,
+            'has_sched' => $c->HasSched,
+            'auto_dv' => $c->AUTODV,
+            'fa_account' => $c->FAACCT,
+            'for_or' => $c->ForOR,
+            'taxable' => $c->Taxable,
+            'bur_per_account' => $c->BURPERACCT,
+            'bur_oblig' => $c->BUR_OBLIG,
+            'bur_oblig_group' => $c->BUR_OBLIG_GROUP,
+            'g1' => $c->G1,
+            'g2' => $c->G2,
+            'g4' => $c->G4,
+            'treas_account' => $c->TREASACCT,
+            'tax' => $c->TAX,
+            'account_number' => $c->ACCOUNTNUMBER,
+
+        ]);
+    }
+    \App\Models\Budget\ChartOfAccounts::insert($arr);
+});
+

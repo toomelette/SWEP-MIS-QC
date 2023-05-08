@@ -38,6 +38,7 @@ $rand = \Illuminate\Support\Str::random();
         <td>
             {!! \App\Swep\ViewHelpers\__form2::selectOnly('applied_projects['.$rand.'][pap_code]',[
                 'class' => 'input-sm select2_clear select2_pap_code',
+                'container_class' => 'select2-sm',
                 'options' => [],
                 'select2_preSelected' => (!empty($data->pap)) ? $data->pap_code.' | '.$data->pap->pap_title : '' ,
             ],$data->pap_code ?? null) !!}

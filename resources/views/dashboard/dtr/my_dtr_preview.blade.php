@@ -38,7 +38,7 @@
         <input value="{{$bm_u_id}}" id="" name="bm_u_id" hidden>
         <input value="{{$month}}" name="month" hidden>
     </form>
-    <button data-step="1" data-intro="Create Disbursement Voucher by using this button." class="btn btn-primary pull-right" id="print_dtr_btn"><i class="fa fa-print"></i> Print</button>
+    <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#print_dtr_modal" id="print_dtr_btn"><i class="fa fa-print"></i> Print</button>
 {{--    <button type="submit" class="btn btn-primary pull-right download_btn" style="margin-bottom: 1rem"><i class="fa fa-download"></i> Download PDF </button>--}}
     <div class="nav-tabs-custom">
         <ul class="nav nav-tabs">
@@ -424,17 +424,10 @@
     })
     $('#print_dtr_btn').click(function () {
 
-        Swal.fire({
-            icon: 'info',
-            title: 'Please wait...',
-            html: '<div style="padding: 15px; font-size: larger"><i class="fa fa-spin fa-spinner"></i> Preparing your DTR. . .</div>',
-            showConfirmButton : false,
-        })
+        {{--$("#print_frame").attr('src','{{route("dashboard.dtr.download")}}?month={{$month}}&bm_u_id={{$bm_u_id}}');--}}
 
-
-
-        $("#print_frame").attr('src','{{route("dashboard.dtr.download")}}?month={{$month}}&bm_u_id={{$bm_u_id}}');
-
+        $("#print_dtr_form input[name=month]").val('{{$month}}');
+        $("#print_dtr_form input[name=bm_u_id]").val('{{$bm_u_id}}');
     })
 
 </script>
@@ -442,6 +435,7 @@
     <script type="text/javascript">
         function loaded(){
             Swal.close();
+            $('#print_dtr_modal').modal('hide');
             $('#print_frame').get(0).contentWindow.print();
         }
 

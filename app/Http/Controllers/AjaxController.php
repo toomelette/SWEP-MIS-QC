@@ -89,8 +89,12 @@ class AjaxController extends Controller
                 ->select('account_code' ,'account_title')
                 ->where('account_code','like',$like)
                 ->orWhere('account_title','like',$like)
-                ->orderBy('account_title','asc')
-                ->limit(10)
+                ->orderBy('account_title','asc');
+
+            if(request()->has('page')){
+                $accounts = $accounts->offset((request('page')-1)*10);
+            }
+            $accounts = $accounts->limit(10)
                 ->get();
 
             if(!empty($accounts)){

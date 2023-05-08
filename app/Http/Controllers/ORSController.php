@@ -12,6 +12,7 @@ use App\Swep\Helpers\Arrays;
 use App\Swep\Helpers\Helper;
 use App\Swep\Services\Budget\ORSService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -25,7 +26,7 @@ class ORSController extends Controller
 
     public function index(Request $request){
         if($request->ajax() && $request->has('draw')){
-            $ors = ORS::query();
+            $ors = ORS::query()->with(['projectsApplied']);
             return DataTables::of($ors)
                 ->addColumn('action',function($data){
                     return view('dashboard.budget.ors.dtActions')->with([
@@ -33,7 +34,15 @@ class ORSController extends Controller
                     ]);
                 })
                 ->addColumn('details',function($data){
-                    
+                    return view('dashboard.budget.ors.dtDetails')->with([
+                        'data' => $data,
+                    ]);
+                })
+                ->editColumn('amount',function($data){
+                    return number_format($data->amount,2);
+                })
+                ->editColumn('ors_date',function($data){
+                    return $data->ors_date != null ? Carbon::parse($data->ors_date)->format('M. d, Y') : '';
                 })
                 ->escapeColumns([])
                 ->setRowId('slug')
@@ -117,8 +126,7 @@ class ORSController extends Controller
         ]);
     }
 
-    public function update(Request $request,$slug){
-
+    public function update(ORSFormRequest $request,$slug){
         $ors = $this->orsService->findBySlug($slug);
         $ors->ors_date = $request->ors_date;
         $ors->funds = $request->funds;
@@ -173,5 +181,12 @@ class ORSController extends Controller
                 ORSProjectsApplied::insert($arr);
             }
         }
+    }
+
+    public function show($slug){
+        $ors = $this->orsService->findBySlug($slug);
+        return view('dashboard.budget.ors.show')->with([
+            'ors' => $ors,
+        ]);
     }
 }

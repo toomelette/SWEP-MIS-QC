@@ -10,7 +10,7 @@
                 'DV' => 'DV',
             ],
             'for' => 'type',
-        ],($data->type ?? $data['type'] ?? null) == 'ORS' ? 'DV' : '') !!}
+        ],($data->type ?? $data['type'] ?? null) == 'ORS' ? 'DV' : 'ORS') !!}
     </td>
     <td>
         {!! \App\Swep\ViewHelpers\__form2::selectOnly('account_entries['.$rand.'][resp_center]',[
@@ -58,6 +58,7 @@
                 'class' => 'input-sm select2_account',
                 'options' => [],
                 'for' => 'account_title',
+                'container_class' => 'select2-sm',
                 'select2_preSelected' => (!empty($data->chartOfAccount)) ?  ($data->chartOfAccount->account_title.' | '.$data->account_code) : '',
             ],$data->account_code ?? null) !!}
         </td>
