@@ -16,8 +16,7 @@
         SERVICE RECORD
     </title>
 </head>
-{{--<body onload="window.print();" onafterprint="window.close()">--}}
-<body>
+<body onload="window.print();">
     @php
         $srArray = [];
         if(!empty($employee->employeeServiceRecord)){
