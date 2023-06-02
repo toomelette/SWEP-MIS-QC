@@ -14,6 +14,7 @@ use App\Models\HRPayPlanitilla;
 use App\Models\PPU\Pap;
 use App\Models\SSL;
 use App\Swep\Helpers\Helper;
+use App\Swep\Services\Budget\PapService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Request;
@@ -22,6 +23,13 @@ use Illuminate\Support\Str;
 
 class AjaxController extends Controller
 {
+
+    protected $papService;
+    public function __construct(PapService $papService)
+    {
+        $this->papService = $papService;
+    }
+
     public function get($for){
 
         if($for == 'compute_monthly_salary'){
@@ -116,7 +124,7 @@ class AjaxController extends Controller
             $arr = [];
             $like = '%'.request('q').'%';
             $paps = Pap::query()
-                ->select('pap_code' ,'pap_title');
+                ->select('pap_code' ,'pap_title', 'slug');
             if(request('respCode') != ''){
                 $paps = $paps->where('resp_center','=',request('respCode'));
             }
@@ -136,7 +144,8 @@ class AjaxController extends Controller
                 foreach ($paps as $pap){
                     array_push($arr,[
                         'id' => $pap->pap_code,
-                        'text' => $pap->pap_code.' | '.$pap->pap_title,
+                        'text' => $pap->pap_code.' | '.Str::limit($pap->pap_title,80,'...'),
+                        'slug' => $pap->slug,
                         'populate' => [
                             'pap_code' => $pap->pap_code,
                             'pap_title' => $pap->pap_title,
@@ -149,7 +158,13 @@ class AjaxController extends Controller
             }else{
                 return Helper::wrapForSelect2($arr,false);
             }
+        }
 
+        //check for pap balances;
+
+        if($for == 'ors_pap_balances'){
+            $request = \Illuminate\Http\Request::capture();
+            return $this->papService->getBalancesBySlug($request->slug);
         }
 
         if($for == 'orsAccountEntry'){
@@ -160,6 +175,7 @@ class AjaxController extends Controller
         }
 
     }
+
     private function applicant_filter_item_no(){
         $arr['results'] = [];
         array_push($arr['results'],['id'=>'','text' => "Don't Filter"]);

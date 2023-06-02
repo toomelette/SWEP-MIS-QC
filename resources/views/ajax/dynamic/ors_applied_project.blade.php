@@ -24,12 +24,18 @@ $rand = \Illuminate\Support\Str::random();
                 'class' => 'input-sm text-right autonum_'.$rand,
                 'for' => 'mooe',
             ],$data->mooe ?? null) !!}
+            <small>
+                Balance: <span class="balance_mooe text-info pull-right"></span>
+            </small>
         </td>
         <td>
             {!! \App\Swep\ViewHelpers\__form2::textboxOnly('applied_projects['.$rand.'][co]',[
                 'class' => 'input-sm text-right autonum_'.$rand,
                 'for' => 'co',
             ],$data->co ?? null) !!}
+            <small>
+                Balance: <span class="balance_co text-info pull-right"></span>
+            </small>
         </td>
         <td>
             <button class="btn btn-danger btn-sm remove_row_btn" type="button"><i class="fa fa-times"></i> </button>
@@ -81,7 +87,21 @@ $rand = \Illuminate\Support\Str::random();
         let t = $(this);
         let parentTrId = t.parents('tr').attr('id');
         let data = e.params.data;
-
+        console.log(parentTrId);
         $("#"+parentTrId+" [for='account_code']").val(data.id);
+        $.ajax({
+            url : '{{route('dashboard.ajax.get','ors_pap_balances')}}',
+            data: {
+                slug : data.slug,
+            },
+            type : 'GET',
+            success: function (res) {
+                $("#"+parentTrId+" .balance_mooe").html($.number(res.balance.mooe,2));
+                $("#"+parentTrId+" .balance_co").html($.number(res.balance.co,2));
+            },
+            error: function (res) {
+                console.log(res);
+            }
+        })
     });
 </script>

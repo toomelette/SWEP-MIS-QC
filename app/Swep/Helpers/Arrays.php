@@ -8,6 +8,7 @@ use App\Models\Applicant;
 use App\Models\ApplicantPositionApplied;
 use App\Models\HRPayPlanitilla;
 use App\Models\PPU\PPURespCodes;
+use App\Models\PPU\RCDesc;
 use Auth;
 use Illuminate\Support\Carbon;
 
@@ -383,6 +384,19 @@ class Arrays
         ];
     }
 
+    public static function oldOrsBooks(){
+        $arr =[
+            3 => 'TEV',
+            0 => 'DV',
+            1 => 'PO',
+            2 => 'JO',
+            'PAY' => 'PAY',
+        ];
+        ksort($arr);
+
+        return $arr;
+    }
+
 
     public static function groupedRespCodes($all = null){
 
@@ -418,6 +432,17 @@ class Arrays
                 'div' => $rc->division,
                 'sec' => $rc->section,
             ];
+        }
+        return $arr;
+    }
+
+    public static function departmentList(){
+        $depts = RCDesc::query()->get();
+        $arr = [];
+        if(count($depts) > 0){
+            foreach ($depts as $dept) {
+                $arr[$dept->rc] = $dept->descriptive_name ;
+            }
         }
         return $arr;
     }

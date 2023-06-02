@@ -483,6 +483,8 @@ Route::group(['prefix'=>'dashboard', 'as' => 'dashboard.',
     Route::resource('ppdo', 'PPU\PPDOController');
 
     Route::get('ors/{slug}/print','ORSController@print')->name('ors.print');
+    Route::get('ors/reports','ORSController@reports')->name('ors.reports');
+    Route::get('ors/report_generate/{type}','ORSController@reportGenerate')->name('ors.report_generate');
     Route::resource('ors','ORSController');
 
 });
@@ -924,9 +926,9 @@ Route::get('summaryOfOrsWithProjects',function (\Illuminate\Http\Request $reques
 });
 
 Route::get('/migrate_bur',function (){
-    //please resume on 32,000
+    //please resume on 44,000
     return 1;
-    $offset = 30000;
+    $offset = 42000;
     $burs = \App\Models\SqlServer\BUR::query()
         ->with(['BURDetails','BURProjApplied','certified','budget'])
         ->offset($offset)

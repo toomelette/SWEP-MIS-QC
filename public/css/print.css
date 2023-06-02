@@ -82,6 +82,10 @@ table.print-table th,table.print-table td{
     padding: 2px 2px;
 }
 
+.tbl-bordered-grey>thead>tr>th, .tbl-bordered-grey>tbody>tr>th, .tbl-bordered-grey>tfoot>tr>th, .tbl-bordered-grey>thead>tr>td, .tbl-bordered-grey>tbody>tr>td, .tbl-bordered-grey>tfoot>tr>td{
+    border: 1px solid #d4d4d4;
+}
+
 .text-right{
     text-align: right;
 }
@@ -183,4 +187,8 @@ table.print-table th,table.print-table td{
 
 .b-top{
     border-top: 1px solid black;
+}
+
+.text-red{
+    color: red;
 }

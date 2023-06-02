@@ -30,7 +30,14 @@ class ORS extends Model
     public function accountEntries(){
         return $this->hasMany(ORSAccountEntries::class,'ors_slug','slug');
     }
+
+    public function orsEntries(){
+        return $this->hasMany(ORSAccountEntries::class,'ors_slug','slug')->where('type','=','ORS');
+    }
+
+
     public function projectsApplied(){
         return $this->hasMany(ORSProjectsApplied::class,'ors_slug','slug');
     }
+
 }

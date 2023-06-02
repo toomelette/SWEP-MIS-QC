@@ -61,7 +61,7 @@
         </td>
         <td class="text-strong">{{$ors->address}}</td>
     </table>
-    <table style="font-size: 14px; width: 100%" class="tbl-padded">
+    <table style="font-size: 14px; width: 100%" class="tbl-padded" id="reference_table">
         <thead>
         <tr style="font-size: 12px">
             <th class="text-center b-left b-bottom" style="width: 120px">Responsibility Center</th>
@@ -71,16 +71,52 @@
             <th style="width: 10%" class="text-center b-left b-bottom b-right">Amount</th>
         </tr>
         <tr>
-            <td></td>
-            <td>{{$ors->particulars}}</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td class="b-left"></td>
+            <td class="b-left">
+                {{$ors->particulars}}
+                <p class="no-margin text-strong" style="font-size: 15px">
+                    {{
+                    \App\Swep\Helpers\Arrays::orsBooks()[$ors->ref_book] ??
+                    \App\Swep\Helpers\Arrays::oldOrsBooks()[$ors->ref_book] ??
+                    $ors->ref_book
+                    }}
+                    No. {{ $ors->ref_doc }} <br><br>
+                </p>
+            </td>
+            <td class="b-left"></td>
+            <td class="b-left"></td>
+            <td class="b-left b-right"></td>
         </tr>
+        @if(\Illuminate\Support\Facades\Request::get('withOrsEntries') == true)
+        @if(count($ors->orsEntries) > 0)
+            @php
+            $total = 0;
+            @endphp
+            @foreach($ors->orsEntries as $orsEntry)
+                @php
+                    $total = $total + $orsEntry->debit;
+                @endphp
+                <tr>
+                    <td style="padding: 0px 2px !important; font-size: 12px" class="b-left">{{$orsEntry->resp_center ?? ($orsEntry->dept.' '.$orsEntry->unit)}}</td>
+                    <td style="padding: 0px 2px !important; font-size: 12px" class="b-left">{{$orsEntry->chartOfAccount->account_title ?? '-'}}</td>
+                    <td style="padding: 0px 2px !important; font-size: 12px" class="b-left"></td>
+                    <td style="padding: 0px 2px !important; font-size: 12px" class="b-left">{{$orsEntry->account_code}}</td>
+                    <td style="padding: 0px 2px !important; font-size: 12px" class="text-right b-left b-right">{{\App\Swep\Helpers\Helper::toNumber($orsEntry->debit,2)}}</td>
+                </tr>
+            @endforeach
+            <tr style=" font-size: 12px">
+                <td class="b-left"></td>
+                <td class="b-left"></td>
+                <td class="b-left"></td>
+                <td class="text-right b-top b-left">TOTAL</td>
+                <td class="text-right b-top text-strong b-left b-right">{{\App\Swep\Helpers\Helper::toNumber($total,2)}}</td>
+            </tr>
+        @endif
+        @endif
         <tr>
-            <td></td>
-            <td>
-                <table style="width: 100%; margin-left: 25px; margin-right: 25px" class="tbl-padded">
+            <td class="b-left"></td>
+            <td class="b-left">
+                <table style="width: 90%; margin-left: 25px; margin-right: 25px" class="tbl-padded">
                     <thead>
                     <tr>
                         <th class="b-bottom">PROJECT</th>
@@ -99,19 +135,25 @@
                     </tbody>
                 </table>
             </td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td class="b-left"></td>
+            <td class="b-left"></td>
+            <td class="b-left b-right"></td>
         </tr>
         </thead>
         <tbody>
-
+            <tr id="adjuster">
+                <td class="b-left"></td>
+                <td class="b-left"></td>
+                <td class="b-left"></td>
+                <td class="b-left"></td>
+                <td class="b-left b-right"></td>
+            </tr>
         </tbody>
     </table>
     <table style="width: 100%; font-size: 12px" class="tbl-padded">
         <tr>
-            <td style="width: 48%" class="text-top b-left">A. Certified: Charges to appropriation/allotment are necessary, lawful and under my direct supervision; and supporting documents valid, proper and legal.</td>
-            <td class="text-top b-left b-right">B. Certified: Allotment available and obligated for the purpose/adjustment necessary as indicated above.</td>
+            <td style="width: 48%" class="text-top b-left b-top text-justify">A. Certified: Charges to appropriation/allotment are necessary, lawful and under my direct supervision; and supporting documents valid, proper and legal.</td>
+            <td class="text-top b-left b-right b-top text-justify">B. Certified: Allotment available and obligated for the purpose/adjustment necessary as indicated above.</td>
         </tr>
     </table>
     <table style="width: 100%; font-size: 14px" class="tbl-padded">
@@ -184,6 +226,16 @@
             <td class="text-center text-strong">(a-b)</td>
             <td class="text-center text-strong">(b-c)</td>
         </tr>
+        <tr>
+            <td><br><br><br><br><br></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
     </table>
     <table style="width: 100%;">
         <tr>
@@ -198,6 +250,14 @@
 
 @section('scripts')
     <script type="text/javascript">
-
+        let height = 450;
+        $(document).ready(function () {
+            let set = height;
+            if($("#reference_table").height() < set){
+                let rem = set - $("#reference_table").height();
+                $("#adjuster").css('height',rem);
+                print();
+            }
+        })
     </script>
 @endsection

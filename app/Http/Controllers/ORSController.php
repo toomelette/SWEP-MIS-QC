@@ -127,6 +127,7 @@ class ORSController extends Controller
     }
 
     public function update(ORSFormRequest $request,$slug){
+
         $ors = $this->orsService->findBySlug($slug);
         $ors->ors_date = $request->ors_date;
         $ors->funds = $request->funds;
@@ -188,5 +189,89 @@ class ORSController extends Controller
         return view('dashboard.budget.ors.show')->with([
             'ors' => $ors,
         ]);
+    }
+
+    public function reports(){
+        return view('dashboard.budget.ors.reports');
+    }
+
+    public function reportGenerate($type){
+        $request = Request::capture();
+
+        switch ($type){
+            case 'summary_of_ors':
+                $baseSql = ORS::query()
+                    ->with('projectsApplied.pap.responsibilityCenter.description')
+                    ->whereBetween('ors_date',[
+                        $request->date_from, $request->date_to
+                    ]);
+                if(!empty($request->resp_center) && $request->resp_center != ''){
+                    $baseSql = $baseSql->whereHas('projectsApplied.pap.responsibilityCenter.description',function ($q) use ($request){
+                        $q->where('rc','=',$request->resp_center);
+                    });
+                }
+
+                if(!empty($request->fund_source) && $request->fund_source != ''){
+                    $baseSql = $baseSql->where('funds','=',$request->fund_source);
+                }
+
+
+                $baseSql = $baseSql->orderBy('ors_no','asc');
+                $ors = $baseSql->get();
+
+                $groupedProjects = ORSProjectsApplied::with([
+                        'ors',
+                        'pap' => function($query){
+                            $query->groupBy('resp_center');
+                        },
+                        'pap.responsibilityCenter.description',
+                    ])
+                    ->whereHas('ors',function ($q) use ($request){
+                        $q->whereBetween('ors_date',[
+                            $request->date_from, $request->date_to
+                        ]);
+                    })
+                    ->get();
+
+                $groupedProjectsArray = [];
+                $groupedProjectsArrayNull = [];
+                foreach ($groupedProjects as $groupedProject){
+                    if(!empty($groupedProject->pap->responsibilityCenter->description)){
+                        $groupedProjectsArray[$groupedProject->pap->responsibilityCenter->description->rc] = $groupedProject->pap->responsibilityCenter->description->name;
+                        $groupedProjectsArrayNull[$groupedProject->pap->responsibilityCenter->description->rc] = ['mooe' => null,'co' => null, 'total' => null];
+                    }
+                }
+
+
+//                asort($groupedProjectsArray);
+//                asort($groupedProjectsArrayNull);
+                $orsArray = [];
+                foreach ($ors as $or){
+                    $orsArray[$or->slug]['obj'] = $or;
+                    $orsArray[$or->slug]['projectsApplied'] = $groupedProjectsArrayNull;
+                    if(count($or->projectsApplied) > 0){
+                        foreach ($or->projectsApplied as $projectApplied) {
+                            if(!empty($projectApplied->pap->responsibilityCenter)){
+                                $department = $projectApplied->pap->responsibilityCenter->description;
+
+                                $orsArray[$or->slug]['projectsApplied'][$department->rc ?? 'N/A']['mooe'] = $orsArray[$or->slug]['projectsApplied'][$department->rc ?? 'N/A']['mooe'] + $projectApplied->mooe;
+                                $orsArray[$or->slug]['projectsApplied'][$department->rc ?? 'N/A']['co'] = $orsArray[$or->slug]['projectsApplied'][$department->rc ?? 'N/A']['co'] + $projectApplied->co;
+                                $orsArray[$or->slug]['projectsApplied'][$department->rc ?? 'N/A']['total'] = $orsArray[$or->slug]['projectsApplied'][$department->rc ?? 'N/A']['total'] + $projectApplied->total;
+                            }
+                        }
+                    }
+                }
+
+                return view('printables.ors.reports.summary_of_ors')->with([
+                    'ors' => $ors,
+                    'groupedProjects' => $groupedProjectsArray,
+                    'groupedProjectsNull' => $groupedProjectsArrayNull,
+                    'orsArray' => $orsArray,
+                ]);
+                break;
+            default:
+                return 1;
+                break;
+        }
     }
 }

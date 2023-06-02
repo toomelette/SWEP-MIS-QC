@@ -136,29 +136,37 @@
             </div>
             <form id="print_sr_form" method="GET" target="_blank">
                 <div class="modal-body">
-                    {!! __form::textbox(
+                    <div class="row">
+                        {!! __form::textbox(
                        '6', 'pn', 'text', 'Prepared By:', 'Prepared By', old('pn'), $errors->has('pn'), $errors->first('pn'), 'data-transform="uppercase"'
                     ) !!}
 
-                    {!! __form::textbox(
-                       '6', 'pp', 'text', 'Prepared Position:', 'Prepared Position', old('pp'), $errors->has('pp'), $errors->first('pp'), 'data-transform="uppercase"'
-                    ) !!}
+                        {!! __form::textbox(
+                           '6', 'pp', 'text', 'Prepared Position:', 'Prepared Position', old('pp'), $errors->has('pp'), $errors->first('pp'), 'data-transform="uppercase"'
+                        ) !!}
 
-                    {!! __form::textbox(
-                       '6', 'cn', 'text', 'Certified By:', 'Certified By', old('cn'), $errors->has('cn'), $errors->first('cn'), 'data-transform="uppercase"'
-                    ) !!}
+                        {!! __form::textbox(
+                           '6', 'cn', 'text', 'Certified By:', 'Certified By', old('cn'), $errors->has('cn'), $errors->first('cn'), 'data-transform="uppercase"'
+                        ) !!}
 
-                    {!! __form::textbox(
-                       '6', 'cp', 'text', 'Certified Position:', 'Certified Position', old('cp'), $errors->has('cp'), $errors->first('cp'), 'data-transform="uppercase"'
-                    ) !!}
+                        {!! __form::textbox(
+                           '6', 'cp', 'text', 'Certified Position:', 'Certified Position', old('cp'), $errors->has('cp'), $errors->first('cp'), 'data-transform="uppercase"'
+                        ) !!}
 
-                    {!! __form::textbox(
-                       '6', 'an', 'text', 'Approved By:', 'Approved By', old('cn'), $errors->has('cn'), $errors->first('cn'), 'data-transform="uppercase"'
-                    ) !!}
+                        {!! __form::textbox(
+                           '6', 'an', 'text', 'Approved By:', 'Approved By', old('cn'), $errors->has('cn'), $errors->first('cn'), 'data-transform="uppercase"'
+                        ) !!}
 
-                    {!! __form::textbox(
-                       '6', 'ap', 'text', 'Approved Position:', 'Approved Position', old('cp'), $errors->has('cp'), $errors->first('cp'), 'data-transform="uppercase"'
-                    ) !!}
+                        {!! __form::textbox(
+                           '6', 'ap', 'text', 'Approved Position:', 'Approved Position', old('cp'), $errors->has('cp'), $errors->first('cp'), 'data-transform="uppercase"'
+                        ) !!}
+
+                        {!! \App\Swep\ViewHelpers\__form2::textbox('no_of_items',[
+                            'cols' => 6,
+                            'label' => 'No. of items per page:',
+                            'type' => 'number',
+                        ],35) !!}
+                    </div>
 
                 </div>
                 <div class="modal-footer" style="overflow: hidden;">

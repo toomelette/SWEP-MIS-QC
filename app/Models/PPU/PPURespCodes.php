@@ -10,6 +10,11 @@ class PPURespCodes extends Model
 {
     protected $table = 'resp_codes';
     protected $connection = 'mysql_ppu';
+
+    public function __construct() {
+        $this->table = \DB::connection($this->connection)->getDatabaseName() . '.' . $this->table;
+    }
+
     public function description(){
         return $this->belongsTo(RCDesc::class,'rc','rc');
     }

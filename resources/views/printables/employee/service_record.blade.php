@@ -16,7 +16,8 @@
         SERVICE RECORD
     </title>
 </head>
-<body onload="window.print();" onafterprint="window.close()">
+{{--<body onload="window.print();" onafterprint="window.close()">--}}
+<body>
     @php
         $srArray = [];
         if(!empty($employee->employeeServiceRecord)){
@@ -26,7 +27,7 @@
         }
 
     @endphp
-    @php($numberOfItems = 25)
+    @php($numberOfItems = \Illuminate\Support\Facades\Request::get('no_of_items') ?? 30)
     @if(count($employee->employeeServiceRecord)  % $numberOfItems == 0)
         @php($pages = $employee->employeeServiceRecord->count() / $numberOfItems)
     @else
@@ -34,21 +35,52 @@
     @endif
 
     @for($i = 0; $i < $pages; $i++)
+        <table style="width: 100%" cellpadding="0" cellspacing="0">
+            <tbody>
+            <tr>
+                <td  rowspan="3" class="" style="width: 27%">
+                    <div style=" width: 100%">
+                        <div style="width: 100%; float: left">
+                            <center>
+                                <img src="{{ asset('images/sra.png') }}" style="width:80px; float: right">
+                            </center>
+                        </div>
+
+                    </div>
+                </td>
+                <td rowspan="3" class="text-center no no-border-bottom no-border-left" style="width: 35%">
+                    <p class="no-margin">Republic of the Philippines</p>
+                    <p class="no-margin text-strong">SUGAR REGULATORY ADMINISTRATION</p>
+                    <p class="no-margin">Araneta Street, Singcang, Bacolod City</p>
+                </td>
+                <td style="width: 20%; vertical-align: top; text-align: right">
+                    <p class="no-margin" style="font-size: 11px">Page {{$i+1}} of {{$pages}}</p>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+
+
         <div {!! ($i+1 == $pages) ? '' : 'style="break-after: page"' !!}>
             <table style="width: 100%; font-size: 11px">
                 <tbody>
                 <tr>
-                    <td>BP Number: <span class="text-strong b-bottom">{{$employee->gsis}}</span></td>
+                    <td>
+                        @if(env('SERVER_LOCATION','VIS') == 'VIS')
+                            BP Number: <span class="text-strong b-bottom">{{$employee->gsis}}</span>
+                        @else
+
+                        @endif
+                    </td>
                     <td></td>
-                    <td><td class="text-right">Page {{$i+1}} of {{$pages}}</td></td>
+
                 </tr>
                 <tr>
                     <td>Emp No.: <span class="text-strong b-bottom">{{$employee->employee_no}}</span> </td>
                     <td></td>
-                    <td></td>
                 </tr>
                 <tr>
-                    <td></td>
                     <td class="text-center" >
                         <p class="no-margin text-strong" style="font-size: 28px"> SERVICE RECORD</p>
                         <p class="no-margin">(To Be Accomplished By Employer)</p>
