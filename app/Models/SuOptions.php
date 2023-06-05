@@ -22,5 +22,9 @@ class SuOptions extends Model
         return SuOptions::query()->where('for','=','employee_groupings')->get();
     }
 
+    public static function ipAddressLocations(){
+        return SuOptions::query()->where('for','=','ip_address_location')->get();
+    }
+
 
 }

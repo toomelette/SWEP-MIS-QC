@@ -471,6 +471,9 @@ Route::group(['prefix'=>'dashboard', 'as' => 'dashboard.',
     Route::get('mis_requests','MisRequestsController@index')->name('mis_requests.index');
     Route::get('mis_requests/{slug}/edit','MisRequestsController@edit')->name('mis_requests.edit');
     Route::put('mis_requests/{request_slug}/update','MisRequestsController@update')->name('mis_requests.update');
+    Route::resource('ip_address','IpAddressController');
+
+
     Route::resource('mis_requests_status','MisRequestsStatusController');
 
     /** Budget Proposal**/
