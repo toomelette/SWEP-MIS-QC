@@ -103,4 +103,24 @@ class IpAddressController extends Controller
         }
         return true;
     }
+
+    public function show($slug){
+        if($slug == 'map'){
+            $ips = IpAddress::query()->get();
+            $ipsArray = [];
+            $duplicates = [];
+            foreach ($ips as $ip){
+                if(isset($ipsArray[$ip->octet_1][$ip->octet_2][$ip->octet_3][$ip->octet_4])){
+                    $duplicates[$ip->ip_address] = $ip;
+                }else{
+                    $ipsArray[$ip->octet_1][$ip->octet_2][$ip->octet_3][$ip->octet_4] = $ip;
+                }
+            }
+
+            return view('dashboard.ip_address.map')->with([
+                'ips' => $ipsArray,
+                'duplicates' => $duplicates,
+            ]);
+        }
+    }
 }

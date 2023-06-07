@@ -11,7 +11,11 @@
     <section class="content">
         <div class="box box-solid">
             <div class="box-header">
-                <button class="btn btn-primary btn-sm pull-right" type="button" data-target="#add_ip_modal" data-toggle="modal"><i class="fa fa-plus"></i> Add</button>
+                <div class="btn-group pull-right">
+                    <a href="{{route('dashboard.ip_address.show','map')}}" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-table"></i> IP Table</a>
+                    <button class="btn btn-primary btn-sm" type="button" data-target="#add_ip_modal" data-toggle="modal"><i class="fa fa-plus"></i> Add</button>
+
+                </div>
             </div>
             <div class="box-body">
                 <div id="ip_table_container" style="display: none">
