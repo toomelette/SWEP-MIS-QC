@@ -110,8 +110,10 @@ class ORSController extends Controller
             }
             ORSProjectsApplied::insert($arr);
         }
-        $ors->save();
-        abort(503,1);
+        if($ors->save()){
+            return $ors->only('slug');
+        }
+        abort(503,'Error saving ORS');
     }
 
     public function print($slug){

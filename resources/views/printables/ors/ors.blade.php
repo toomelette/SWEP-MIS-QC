@@ -88,20 +88,20 @@
             <td class="b-left b-right"></td>
         </tr>
         @if(\Illuminate\Support\Facades\Request::get('withOrsEntries') == true)
-        @if(count($ors->orsEntries) > 0)
+        @if(count($ors->dvEntries) > 0)
             @php
             $total = 0;
             @endphp
-            @foreach($ors->orsEntries as $orsEntry)
+            @foreach($ors->dvEntries as $dvEntry)
                 @php
-                    $total = $total + $orsEntry->debit;
+                    $total = $total + $dvEntry->debit;
                 @endphp
                 <tr>
-                    <td style="padding: 0px 2px !important; font-size: 12px" class="b-left">{{$orsEntry->resp_center ?? ($orsEntry->dept.' '.$orsEntry->unit)}}</td>
-                    <td style="padding: 0px 2px !important; font-size: 12px" class="b-left">{{$orsEntry->chartOfAccount->account_title ?? '-'}}</td>
+                    <td style="padding: 0px 2px !important; font-size: 12px" class="b-left">{{$dvEntry->resp_center ?? ($dvEntry->dept.' '.$dvEntry->unit)}}</td>
+                    <td style="padding: 0px 2px !important; font-size: 12px" class="b-left">{{$dvEntry->chartOfAccount->account_title ?? '-'}}</td>
                     <td style="padding: 0px 2px !important; font-size: 12px" class="b-left"></td>
-                    <td style="padding: 0px 2px !important; font-size: 12px" class="b-left">{{$orsEntry->account_code}}</td>
-                    <td style="padding: 0px 2px !important; font-size: 12px" class="text-right b-left b-right">{{\App\Swep\Helpers\Helper::toNumber($orsEntry->debit,2)}}</td>
+                    <td style="padding: 0px 2px !important; font-size: 12px" class="b-left">{{$dvEntry->account_code}}</td>
+                    <td style="padding: 0px 2px !important; font-size: 12px" class="text-right b-left b-right">{{\App\Swep\Helpers\Helper::toNumber($dvEntry->debit,2)}}</td>
                 </tr>
             @endforeach
             <tr style=" font-size: 12px">

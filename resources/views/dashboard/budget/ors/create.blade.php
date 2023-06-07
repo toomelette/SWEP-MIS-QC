@@ -297,6 +297,14 @@
                 },
                 success: function (res) {
                     succeed(form,true,true);
+                    notify('ORS Successfully saved','success');
+                    $(".remove_row_btn").each(function () {
+                        $(this).trigger('click');
+                    })
+                    $(".add_button").each(function () {
+                        $(this).trigger('click');
+                    })
+
                 },
                 error: function (res) {
                     errored(form,res);

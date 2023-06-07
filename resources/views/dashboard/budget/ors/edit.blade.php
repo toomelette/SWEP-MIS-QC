@@ -14,7 +14,15 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">ORS</h3>
                     <div class="btn-group pull-right">
-                        <a href="{{route('dashboard.ors.print',$ors->slug)}}" target="_blank" type="button" class="btn btn-default btn-sm "><i class="fa fa-print"></i> Print</a>
+                        <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-print"></i> Print
+                                <span class="fa fa-caret-down"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{route('dashboard.ors.print',$ors->slug)}}" target="_blank">Print</a></li>
+                                <li><a href="{{route('dashboard.ors.print',$ors->slug)}}?withOrsEntries=true" target="_blank">Print with ORS Entries</a></li>
+
+                            </ul>
+
                         <button type="submit" class="btn btn-primary btn-sm "><i class="fa fa-check"></i> Save</button>
                     </div>
 
