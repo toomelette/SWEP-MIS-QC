@@ -120,9 +120,9 @@
                 @endphp
                 <tr>
                     <td><span class="text-strong">
-                        {{$projectApplied->pap_code}}</span> - <small>{{$projectApplied->pap->pap_title}}</small>
+                        {{$projectApplied->pap_code}}</span> - <small>{{$projectApplied->pap->pap_title ?? 'N/A'}}</small>
                         <div class="table-subdetail" style="margin-top: 3px">
-                            {{$projectApplied->pap->responsibilityCenter->desc}}
+                            {{$projectApplied->pap->responsibilityCenter->desc ?? 'N/A'}}
                         </div>
                     </td>
                     <td class="text-right">{{\App\Swep\Helpers\Helper::toNumber($projectApplied->mooe)}}</td>
