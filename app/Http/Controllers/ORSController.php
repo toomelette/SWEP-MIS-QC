@@ -52,9 +52,11 @@ class ORSController extends Controller
                     'data' => $data,
                 ]);
             })
-            ->addColumn('details',function($data){
+            ->addColumn('details',function($data) use($request){
                 return view('dashboard.budget.ors.dtDetails')->with([
                     'data' => $data,
+                ])->with([
+                    'request' => $request,
                 ]);
             })
             ->editColumn('amount',function($data){
