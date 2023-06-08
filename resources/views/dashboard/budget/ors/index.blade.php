@@ -11,6 +11,50 @@
     <section class="content">
         <div class="box box-solid">
             <div class="box-body">
+                <div class="panel">
+                    <div class="box box-sm box-default box-solid collapsed-box">
+                        <div class="box-header with-border">
+                            <p class="no-margin"><i class="fa fa-filter"></i> Advanced Filters <small id="filter-notifier" class="label bg-blue blink"></small></p>
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool advanced_filters_toggler" data-widget="collapse"><i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <div class="box-body" style="display: none">
+                            <form id="filter_form">
+                                <div class="row">
+                                    <div class="col-md-2 dt_filter-parent-div">
+                                        <label>Fund Source:</label>
+                                        <select name="funds"  class="form-control dt_filter filters">
+                                            <option value="">Don't filter</option>
+                                            {!! \App\Swep\Helpers\Helper::populateOptionsFromArray(\App\Swep\Helpers\Arrays::orsFunds()) !!}
+                                        </select>
+                                    </div>
+{{--                                    <div class="col-md-1 dt_filter-parent-div">--}}
+{{--                                        <label>Ref Book:</label>--}}
+{{--                                        <select name="ref_book"  class="form-control dt_filter filter_sex filters select22">--}}
+{{--                                            <option value="">Don't filter</option>--}}
+{{--                                            {!! \App\Swep\Helpers\Helper::populateOptionsFromArray(\App\Swep\Helpers\Arrays::orsBooks()) !!}--}}
+{{--                                        </select>--}}
+{{--                                    </div>--}}
+                                    <div class="col-md-4 dt_filter-parent-div">
+                                        <label>Applied Projects:</label>
+                                        {!! \App\Swep\ViewHelpers\__form2::selectOnly('applied_projects',[
+                                            'class' => 'select2_clear select2_pap_code dt_filter filters',
+                                            'container_class' => 'select2-md',
+                                            'options' => [],
+                                            'select2_preSelected' => '' ,
+                                        ],$data->pap_code ?? null) !!}
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+
                 <div id="ors_table_container" style="display: none">
                     <table class="table table-bordered table-striped table-hover" id="ors_table" style="width: 100%">
                         <thead>
@@ -156,6 +200,10 @@
 
         style_datatable("#ors_table");
 
+        $(".dt_filter").change(function () {
+            filterDT(ors_tbl);
+        })
+
         //Need to press enter to search
         $('#ors_table_filter input').unbind();
         $('#ors_table_filter input').bind('keyup', function (e) {
@@ -183,5 +231,12 @@
                 }
             })
         })
+
+        $(".select2_pap_code").select2({
+            ajax: {
+                url: "{{route('dashboard.ajax.get','pap')}}",
+            },
+            placeholder: 'Select item',
+        });
     </script>
 @endsection

@@ -26,29 +26,46 @@ class ORSController extends Controller
 
     public function index(Request $request){
         if($request->ajax() && $request->has('draw')){
-            $ors = ORS::query()->with(['projectsApplied']);
-            return DataTables::of($ors)
-                ->addColumn('action',function($data){
-                    return view('dashboard.budget.ors.dtActions')->with([
-                        'data' => $data,
-                    ]);
-                })
-                ->addColumn('details',function($data){
-                    return view('dashboard.budget.ors.dtDetails')->with([
-                        'data' => $data,
-                    ]);
-                })
-                ->editColumn('amount',function($data){
-                    return number_format($data->amount,2);
-                })
-                ->editColumn('ors_date',function($data){
-                    return $data->ors_date != null ? Carbon::parse($data->ors_date)->format('M. d, Y') : '';
-                })
-                ->escapeColumns([])
-                ->setRowId('slug')
-                ->toJson();
+            return $this->dataTable($request);
         }
         return view('dashboard.budget.ors.index');
+    }
+
+    public function dataTable(Request $request){
+        $ors = ORS::query()->with(['projectsApplied']);
+        if($request->has('funds') && $request->funds != ''){
+            $ors = $ors->where('funds','=',$request->funds);
+        }
+        if($request->has('ref_book') && $request->ref_book != ''){
+            $ors = $ors->where('ref_book','=',$request->ref_book);
+        }
+
+        if($request->has('applied_projects') && $request->applied_projects != ''){
+            $ors = $ors->whereHas('projectsApplied',function ($q) use($request){
+                return $q->where('pap_code','=',$request->applied_projects);
+            });
+        }
+
+        return DataTables::of($ors)
+            ->addColumn('action',function($data){
+                return view('dashboard.budget.ors.dtActions')->with([
+                    'data' => $data,
+                ]);
+            })
+            ->addColumn('details',function($data){
+                return view('dashboard.budget.ors.dtDetails')->with([
+                    'data' => $data,
+                ]);
+            })
+            ->editColumn('amount',function($data){
+                return number_format($data->amount,2);
+            })
+            ->editColumn('ors_date',function($data){
+                return $data->ors_date != null ? Carbon::parse($data->ors_date)->format('M. d, Y') : '';
+            })
+            ->escapeColumns([])
+            ->setRowId('slug')
+            ->toJson();
     }
 
     public function create(){
