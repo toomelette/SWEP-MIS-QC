@@ -111,10 +111,10 @@
                             </div>
                         </div>
 
-                        <div class="nav-tabs-custom">
+                        <div class="nav-tabs-custom tabs-">
                             <ul class="nav nav-tabs">
-                                <li class="active"><a href="#tab_1" data-toggle="tab">Account Entries</a></li>
-                                <li><a href="#tab_2" data-toggle="tab">Applied Projects</a></li>
+                                <li class="active text-strong"><a href="#tab_1" data-toggle="tab">Account Entries</a></li>
+                                <li class="text-strong"><a href="#tab_2" data-toggle="tab">Applied Projects</a></li>
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane active" id="tab_1">
@@ -182,11 +182,8 @@
                                         </table>
                                     </fieldset>
                                 </div>
-
                             </div>
-
                         </div>
-
                 </div>
             </form>
         </div>

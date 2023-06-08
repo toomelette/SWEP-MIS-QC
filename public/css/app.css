@@ -698,3 +698,11 @@ tr.child li {
 .select2-sm .select2-selection__rendered{
     font-size: 12px;
 }
+
+.nav-tabs-custom>.nav-tabs>li>a{
+    background-color: #f5faff;
+}
+
+.nav-tabs-custom>.nav-tabs>li.active>a{
+    background-color: #e7f4ff;
+}
