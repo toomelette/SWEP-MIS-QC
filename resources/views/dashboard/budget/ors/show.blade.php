@@ -42,10 +42,10 @@
 
     <table class="table table-condensed table-striped table-bordered">
         <thead>
-            <th>Resp Center</th>
-            <th>Account Code | Title</th>
-            <th>Debit</th>
-            <th>Credit</th>
+            <th class="bg-green">Resp Center</th>
+            <th class="bg-green">Account Code | Title</th>
+            <th class="bg-green">Debit</th>
+            <th class="bg-green">Credit</th>
         </thead>
         <tbody>
             @php
@@ -85,9 +85,9 @@
                     </tr>
                 @endforeach
                 <tr>
-                    <th colspan="2">TOTAL {{$type}}</th>
-                    <th class="text-right">{{number_format($total['debit'],2)}}</th>
-                    <th class="text-right">{{number_format($total['credit'],2)}}</th>
+                    <th colspan="2" class="bg-success">TOTAL {{$type}}</th>
+                    <th class="text-right bg-success">{{number_format($total['debit'],2)}}</th>
+                    <th class="text-right bg-success">{{number_format($total['credit'],2)}}</th>
                 </tr>
             @endforeach
 
@@ -97,6 +97,47 @@
 
         </tfoot>
     </table>
+
+    <p class="page-header-sm text-info" style="border-bottom: 1px solid #cedbe1">
+        Applied Projects
+    </p>
+    <table class="table table-condensed table-striped table-bordered">
+        <thead>
+        <th class="bg-primary">PAP</th>
+        <th style="min-width: 80px" class="bg-primary">MOOE</th>
+        <th style="min-width: 80px" class="bg-primary">CO</th>
+        </thead>
+        <tbody>
+        @php
+            $totalMooe = 0;
+            $totalCo = 0;
+        @endphp
+        @if(count($ors->projectsApplied) > 0)
+            @foreach($ors->projectsApplied as $projectApplied)
+                @php
+                    $totalMooe = $totalMooe + $projectApplied->mooe;
+                    $totalCo = $totalCo + $projectApplied->co;
+                @endphp
+                <tr>
+                    <td><span class="text-strong">
+                        {{$projectApplied->pap_code}}</span> - <small>{{$projectApplied->pap->pap_title}}</small>
+                        <div class="table-subdetail" style="margin-top: 3px">
+                            {{$projectApplied->pap->responsibilityCenter->desc}}
+                        </div>
+                    </td>
+                    <td class="text-right">{{\App\Swep\Helpers\Helper::toNumber($projectApplied->mooe)}}</td>
+                    <td class="text-right">{{\App\Swep\Helpers\Helper::toNumber($projectApplied->co)}}</td>
+                </tr>
+            @endforeach
+        @endif
+        <tr>
+            <td class="text-strong bg-success">TOTAL</td>
+            <td class="text-strong text-right bg-success">{{number_format($totalMooe,2)}}</td>
+            <td class="text-strong text-right bg-success">{{number_format($totalCo,2)}}</td>
+        </tr>
+        </tbody>
+    </table>
+
 @endsection
 
 @section('modal-footer')

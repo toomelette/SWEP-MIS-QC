@@ -931,9 +931,10 @@ Route::get('summaryOfOrsWithProjects',function (\Illuminate\Http\Request $reques
 Route::get('/migrate_bur',function (){
     //please resume on 44,000
     return 1;
-    $offset = 42000;
+    $offset = 0;
     $burs = \App\Models\SqlServer\BUR::query()
         ->with(['BURDetails','BURProjApplied','certified','budget'])
+        ->where('BURDate','>=','2023-01-01')
         ->offset($offset)
         ->limit(2000)
         ->get();

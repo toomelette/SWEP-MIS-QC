@@ -276,4 +276,14 @@ class ORSController extends Controller
                 break;
         }
     }
+
+    public function destroy($slug){
+        $ors = $this->orsService->findBySlug($slug);
+        if($ors->delete()){
+            $ors->accountEntries()->delete();
+            $ors->projectsApplied()->delete();
+            return 1;
+        }
+        abort(503,'Error deleting ORS.');
+    }
 }
