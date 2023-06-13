@@ -19,7 +19,7 @@
                                     <ul class="nav nav-pills nav-stacked">
                                         <li role="presentation" class="active"><a href="#ors_summary" data-toggle="tab" aria-expanded="true">ORS Summary</a></li>
                                         <li role="presentation" class=""><a href="#ors_summary_with_projects" data-toggle="tab" aria-expanded="true">ORS Summary with projects</a></li>
-
+                                        <li role="presentation" class=""><a href="#budget_monitoring" data-toggle="tab" aria-expanded="true">Budget Monitoring</a></li>
 
                                     </ul>
                                 </div>
@@ -36,6 +36,11 @@
                                     <div class="row">
 
                                     </div>
+                                </div>
+
+                                <div class="tab-pane active" id="budget_monitoring">
+
+                                    @include('dashboard.budget.ors.reports.budget_monitoring')
                                 </div>
                             </div>
                         </div>

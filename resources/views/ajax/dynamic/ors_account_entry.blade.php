@@ -4,7 +4,7 @@
 <tr id="{{$rand}}">
     <td>
         {!! \App\Swep\ViewHelpers\__form2::selectOnly('account_entries['.$rand.'][type]',[
-            'class' => 'input-sm',
+            'class' => 'input-sm ors_dv',
             'options' => [
                 'ORS' => 'ORS',
                 'DV' => 'DV',
@@ -112,6 +112,6 @@
             $("#"+parentTrId+" [for='text-value']").val(data.text);
         });
     @endif
-
+    $(".ors_dv").change();
 
 </script>

@@ -601,4 +601,31 @@ class Helper
             return number_format($number,$places);
         }
     }
+
+    public static function quarters(){
+        return [
+            1 => ['01' => null,'02' => null,'03' => null],
+            2 => ['04' => null,'05' => null,'06' => null],
+            3 => ['07' => null,'08' => null,'09' => null],
+            4 => ['10' => null,'11' => null,'12' => null],
+        ];
+    }
+
+    public static function ordinal($number) {
+        $ends = array('th','st','nd','rd','th','th','th','th','th','th');
+        if ((($number % 100) >= 11) && (($number%100) <= 13))
+            return $number. 'th';
+        else
+            return $number. $ends[$number % 10];
+    }
+
+    public static function ordinalWords(){
+        $arr = [
+            1 => 'FIRST',
+            2 => 'SECOND',
+            3 => 'THIRD',
+            4 => 'FOURTH',
+        ];
+        return $arr;
+    }
 }

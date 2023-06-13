@@ -706,3 +706,28 @@ tr.child li {
 .nav-tabs-custom>.nav-tabs>li.active>a{
     background-color: #e7f4ff;
 }
+
+
+.select2-selection--single {
+    height: 100% !important;
+
+}
+.select2-selection__rendered{
+    word-wrap: break-word !important;
+    text-overflow: inherit !important;
+    white-space: normal !important;
+    line-height: 20px !important;
+    padding-top: 4px !important;
+}
+.row-{
+    background-color: #ffeee8 !important;
+}
+
+.row-ORS{
+    background-color: #e8ffe9 !important;
+}
+
+.row-DV{
+    background-color: #e8f7ff !important;
+}
+

@@ -192,3 +192,36 @@ table.print-table th,table.print-table td{
 .text-red{
     color: red;
 }
+
+.indent{
+    text-indent: 10px;
+}
+
+.indent-2{
+    text-indent: 20px;
+}
+
+.text-italic{
+    font-style: italic;
+}
+
+.td-indent{
+    padding-left: 10px !important;
+}
+.td-indent-2{
+    padding-left: 20px !important;
+}
+
+.bg-lightgreen{
+    background-color: #eeffee;
+}
+.bg-lightblue{
+    background-color: #eef6ff;
+}
+
+.bg-lightred{
+    background-color: #ffeeee;
+}
+.bg-lightyellow{
+    background-color: #fffcee;
+}

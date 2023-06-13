@@ -144,7 +144,7 @@ class AjaxController extends Controller
                 foreach ($paps as $pap){
                     array_push($arr,[
                         'id' => $pap->pap_code,
-                        'text' => $pap->pap_code.' | '.Str::limit($pap->pap_title,80,'...'),
+                        'text' => $pap->pap_code.' | '.$pap->pap_title,
                         'slug' => $pap->slug,
                         'populate' => [
                             'pap_code' => $pap->pap_code,

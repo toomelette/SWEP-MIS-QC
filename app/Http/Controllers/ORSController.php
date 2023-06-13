@@ -9,6 +9,7 @@ use App\Models\Budget\ORS;
 use App\Models\Budget\ORSAccountEntries;
 use App\Models\Budget\ORSProjectsApplied;
 use App\Swep\Helpers\Arrays;
+use App\Swep\Helpers\Get;
 use App\Swep\Helpers\Helper;
 use App\Swep\Services\Budget\ORSService;
 use Illuminate\Http\Request;
@@ -263,9 +264,6 @@ class ORSController extends Controller
                     }
                 }
 
-
-//                asort($groupedProjectsArray);
-//                asort($groupedProjectsArrayNull);
                 $orsArray = [];
                 foreach ($ors as $or){
                     $orsArray[$or->slug]['obj'] = $or;
@@ -288,6 +286,53 @@ class ORSController extends Controller
                     'groupedProjects' => $groupedProjectsArray,
                     'groupedProjectsNull' => $groupedProjectsArrayNull,
                     'orsArray' => $orsArray,
+                ]);
+                break;
+            case 'quarterly_budget_monitoring':
+                if(!$request->has('quarter') || $request->quarter == '' || !$request->has('year') || $request->year == ''){
+                    abort(504,'Required fields: YEAR, QUARTER');
+                }
+                $appliedProjects = ORSProjectsApplied::query()->with(['pap.responsibilityCenter.description','ors']);
+                if($request->has('resp_center') & $request->resp_center != ''){
+                    $appliedProjects = $appliedProjects->whereHas('pap.responsibilityCenter.description',function ($q) use ($request){
+                        return $q->where('rc','=',$request->resp_center);
+                    });
+                }
+                if($request->has('fund_source') & $request->fund_source != ''){
+                    $appliedProjects = $appliedProjects->whereHas('ors',function ($q) use ($request){
+                        return $q->where('funds','=',$request->fund_source);
+                    });
+                }
+                if($request->has('quarter') & $request->quarter != ''){
+                    $year = $request->year;
+                    $quarter = $request->quarter;
+                    $appliedProjects = $appliedProjects->whereHas('ors',function ($q) use ($quarter, $year){
+                       return $q->whereBetween('ors_date',[
+                           Get::startAndEndOfQuarter($quarter, $year)['startOfQuarter'],
+                           Get::startAndEndOfQuarter($quarter, $year)['endOfQuarter'],
+                       ]);
+                    });
+                }
+                $appliedProjects = $appliedProjects->get();
+                $orsArray = [];
+
+                foreach ($appliedProjects as $appliedProject){
+                    $department = $appliedProject->pap->responsibilityCenter->description->name ?? '';
+                    $papCode = $appliedProject->pap->pap_code ?? '';
+                    $ors = $appliedProject->ors;
+                    $orsArray[$department][$papCode]['pap_obj'] = $appliedProject->pap;
+                    $orsArray[$department][$papCode]['ors'][$ors->slug ?? '']['ors_obj'] = $ors;
+                    $orsArray[$department][$papCode]['ors'][$ors->slug ?? '']['months'] = Helper::quarters()[$quarter];
+                    $orsArray[$department][$papCode]['ors'][$ors->slug ?? '']['months'][Carbon::parse($ors->ors_date)->format('m')] = $appliedProject;
+                    $orsArray[$department][$papCode]['ors'][$ors->slug ?? '']['applied_project_obj'] = $appliedProject;
+
+//                    dd($appliedProject->pap);
+//                    dd($appliedProject->pap->responsibilityCenter->description->name);
+                }
+                ksort($orsArray);
+                return view('printables.ors.reports.quarterly_budget_monitoring')->with([
+                    'orsArray' => $orsArray,
+                    'quarter' => $quarter,
                 ]);
                 break;
             default:

@@ -441,9 +441,19 @@ class Arrays
         $arr = [];
         if(count($depts) > 0){
             foreach ($depts as $dept) {
-                $arr[$dept->rc] = $dept->descriptive_name ;
+                $arr[$dept->rc] = $dept->name.' | '.$dept->descriptive_name ;
             }
         }
+        return $arr;
+    }
+
+    public static function quartersArray(){
+        $arr = [
+            1 => 'FIRST',
+            2 => 'SECOND',
+            3 => 'THIRD',
+            4 => 'FOURTH',
+        ];
         return $arr;
     }
 }

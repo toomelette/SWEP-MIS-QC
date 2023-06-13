@@ -338,6 +338,17 @@
         });
 
 
+        $(document).on('focus', '.select2.select2-container', function (e) {
+            // only open on original attempt - close focus event should not fire open
+            if (e.originalEvent && $(this).find(".select2-selection--single").length > 0) {
+                $(this).siblings('select').select2('open');
+            }
+        });
 
+        $("body").on('change','.ors_dv',function () {
+            $(this).parents('tr').removeClass('row-ORS');
+            $(this).parents('tr').removeClass('row-DV');
+            $(this).parents('tr').addClass('row-'+$(this).val());
+        })
     </script>
 @endsection
