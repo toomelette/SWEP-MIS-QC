@@ -37,7 +37,7 @@ class ORSService
     }
 
     public function findBySlug($slug){
-        $ors = ORS::query()->with(['accountEntries','projectsApplied'])->where('slug','=',$slug)->first();
+        $ors = ORS::query()->with(['accountEntries.chartOfAccount','projectsApplied'])->where('slug','=',$slug)->first();
         return $ors ?? abort(503,'ORS not found.');
     }
 }

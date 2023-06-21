@@ -4,7 +4,7 @@
 <tr id="{{$rand}}">
     <td>
         {!! \App\Swep\ViewHelpers\__form2::selectOnly('account_entries['.$rand.'][type]',[
-            'class' => 'input-sm ors_dv',
+            'class' => 'input-sm ors_dv account_entries_'.$rand.'_type',
             'options' => [
                 'ORS' => 'ORS',
                 'DV' => 'DV',
@@ -14,7 +14,7 @@
     </td>
     <td>
         {!! \App\Swep\ViewHelpers\__form2::selectOnly('account_entries['.$rand.'][resp_center]',[
-            'class' => 'input-sm select2_respCenter',
+            'class' => 'input-sm select2_respCenter account_entries_'.$rand.'_resp_center',
             'container_class' => 'select2-sm',
             'options' => \App\Swep\Helpers\Arrays::groupedRespCodes(),
             'for' => 'resp_center',
@@ -23,9 +23,11 @@
 
     <td>
         {!! \App\Swep\ViewHelpers\__form2::textboxOnly('account_entries['.$rand.'][account_code]',[
-            'class' => 'input-sm',
+            'class' => 'input-sm account_entries_'.$rand.'_account_code',
             'readonly' => 'readonly',
             'for' => 'account_code',
+            'tab_index' => '-1',
+
         ],$data->account_code ?? $data['account_code'] ?? null) !!}
         <input for="text-value" hidden>
     </td>
@@ -33,7 +35,7 @@
     @if(request()->ajax())
         <td>
             {!! \App\Swep\ViewHelpers\__form2::selectOnly('account_entries['.$rand.'][account_title]',[
-                'class' => 'input-sm select2_account_'.$rand,
+                'class' => 'input-sm select2_account_'.$rand.' account_entries_'.$rand.'_account_title',
                 'options' => [],
                 'container_class' => 'select2-sm',
                 'for' => 'account_title',
@@ -42,13 +44,13 @@
         </td>
         <td>
             {!! \App\Swep\ViewHelpers\__form2::textboxOnly('account_entries['.$rand.'][debit]',[
-                'class' => 'input-sm text-right autonum_'.$rand,
+                'class' => 'input-sm text-right autonum_'.$rand.' account_entries_'.$rand.'_debit',
                 'for' => 'debit',
             ],$data->debit ?? (!empty($data['debit'])) ? \App\Swep\Helpers\Helper::sanitizeAutonum($data['debit']) : '' ) !!}
         </td>
         <td>
             {!! \App\Swep\ViewHelpers\__form2::textboxOnly('account_entries['.$rand.'][credit]',[
-                'class' => 'input-sm text-right autonum_'.$rand,
+                'class' => 'input-sm text-right autonum_'.$rand.' account_entries_'.$rand.'_credit',
                 'for' => 'credit',
             ],$data->credit ?? (!empty($data['credit'])) ? \App\Swep\Helpers\Helper::sanitizeAutonum($data['credit']) : '' ) !!}
         </td>
@@ -66,13 +68,13 @@
             {!! \App\Swep\ViewHelpers\__form2::textboxOnly('account_entries['.$rand.'][debit]',[
                 'class' => 'input-sm text-right autonum',
                 'for' => 'debit',
-            ],$data->debit ?? null) !!}
+            ],($data->debit == 0 || $data->debit == null || $data->debit == '') ? '' : $data->debit) !!}
         </td>
         <td>
             {!! \App\Swep\ViewHelpers\__form2::textboxOnly('account_entries['.$rand.'][credit]',[
                 'class' => 'input-sm text-right autonum',
                 'for' => 'credit',
-            ],$data->credit ?? null) !!}
+            ],($data->credit == 0 || $data->credit == null || $data->credit == '') ? '' : $data->credit) !!}
         </td>
     @endif
 
@@ -80,7 +82,7 @@
     <td>
         <div class="btn-group">
             <button class="btn btn-default btn-sm clone_btn" type="button" title="Clone this row"><i class="fa fa-clone"></i> </button>
-            <button class="btn btn-danger btn-sm remove_row_btn" type="button"><i class="fa fa-times"></i> </button>
+            <button tabindex="-1" class="btn btn-danger btn-sm remove_row_btn" type="button"><i class="fa fa-times"></i> </button>
         </div>
     </td>
 </tr>

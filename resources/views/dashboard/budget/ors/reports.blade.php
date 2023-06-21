@@ -20,7 +20,7 @@
                                         <li role="presentation" class="active"><a href="#ors_summary" data-toggle="tab" aria-expanded="true">ORS Summary</a></li>
                                         <li role="presentation" class=""><a href="#ors_summary_with_projects" data-toggle="tab" aria-expanded="true">ORS Summary with projects</a></li>
                                         <li role="presentation" class=""><a href="#budget_monitoring" data-toggle="tab" aria-expanded="true">Budget Monitoring</a></li>
-
+                                        <li role="presentation" class=""><a href="#statement_of_budget_and_actual_expenditures" data-toggle="tab" aria-expanded="true">Statement of Budget and Actual Expenditures</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -38,9 +38,13 @@
                                     </div>
                                 </div>
 
-                                <div class="tab-pane active" id="budget_monitoring">
+                                <div class="tab-pane" id="budget_monitoring">
 
                                     @include('dashboard.budget.ors.reports.budget_monitoring')
+                                </div>
+                                <div class="tab-pane" id="statement_of_budget_and_actual_expenditures">
+
+                                    @include('dashboard.budget.ors.reports.statement_of_budget_and_actual_expenditures')
                                 </div>
                             </div>
                         </div>

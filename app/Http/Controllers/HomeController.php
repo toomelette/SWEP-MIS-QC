@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Applicant;
+use App\Models\Budget\ORS;
 use App\Models\Course;
 use App\Models\Document;
 use App\Models\DocumentDisseminationLog;
@@ -185,6 +186,15 @@ class HomeController extends Controller{
                 'avg_sent_by_week' => $avg_sent_by_week,
                 'emails_per_contact' => $emails_per_contact,
                 'documents_per_month' => $documents_per_month_arr,
+            ]);
+        }
+
+        if(Auth::user()->dash == 'budget'){
+            $orsNoErrors = ORS::query()
+                ->where(DB::raw('length(ors_no)'),'!=',13)
+                ->get();
+            return view('dashboard.home.budget_index')->with([
+                'orsNoErrors' => $orsNoErrors,
             ]);
         }
 

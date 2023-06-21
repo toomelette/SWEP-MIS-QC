@@ -22,6 +22,7 @@
                                 'label' => 'Funds:',
                                 'cols' => 1,
                                 'options' => \App\Swep\Helpers\Arrays::orsFunds(),
+                                'id' => 'select_funds',
                             ]) !!}
 
                             {!! \App\Swep\ViewHelpers\__form2::textbox('ors_date',[
@@ -32,6 +33,7 @@
                             {!! \App\Swep\ViewHelpers\__form2::textbox('ors_no',[
                                 'label' => 'ORS No:',
                                 'cols' => 2,
+                                'id' => 'ors_no',
                             ]) !!}
 
                             {!! \App\Swep\ViewHelpers\__form2::textbox('payee',[
@@ -87,10 +89,12 @@
                                     {!! \App\Swep\ViewHelpers\__form2::textbox('certified_by',[
                                         'label' => 'Certified by:',
                                         'cols' => 6,
+                                        'list' => 'certified_by',
                                     ]) !!}
                                     {!! \App\Swep\ViewHelpers\__form2::textbox('certified_by_position',[
                                         'label' => 'Position:',
                                         'cols' => 6,
+                                        'list' => 'certified_by_position'
                                     ]) !!}
                                 </div>
                             </div>
@@ -102,10 +106,12 @@
                                     {!! \App\Swep\ViewHelpers\__form2::textbox('certified_budget_by',[
                                         'label' => 'Budget Cert.:',
                                         'cols' => 6,
+                                        'list' => 'certified_budget_by',
                                     ]) !!}
                                     {!! \App\Swep\ViewHelpers\__form2::textbox('certified_budget_by_position',[
                                         'label' => 'Position:',
                                         'cols' => 6,
+                                        'list' => 'certified_budget_by_position',
                                     ]) !!}
                                 </div>
                             </div>
@@ -126,11 +132,11 @@
                                             <tr>
                                                 <th style="width: 100px">Type</th>
                                                 <th style="width: 25%">Resp Center</th>
-                                                <th style="width: 200px;">Account Code</th>
+                                                <th style="width:120px;">Account Code</th>
                                                 <th>Account Title</th>
-                                                <th style="width: 200px">Debit</th>
-                                                <th style="width: 200px">Credit</th>
-                                                <th style="width: 80px"></th>
+                                                <th style="width: 130px">Debit</th>
+                                                <th style="width: 130px">Credit</th>
+                                                <th style="width: 90px"></th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -190,7 +196,10 @@
 
     </section>
 
-
+    {!! \App\Swep\Helpers\Helper::listingToDatalist('certified_by',\App\Swep\Helpers\Listing::ors('certified_by')) !!}
+    {!! \App\Swep\Helpers\Helper::listingToDatalist('certified_by_position',\App\Swep\Helpers\Listing::ors('certified_by_position')) !!}
+    {!! \App\Swep\Helpers\Helper::listingToDatalist('certified_budget_by',\App\Swep\Helpers\Listing::ors('certified_budget_by')) !!}
+    {!! \App\Swep\Helpers\Helper::listingToDatalist('certified_budget_by_position',\App\Swep\Helpers\Listing::ors('certified_budget_by_position')) !!}
 @endsection
 
 
@@ -294,17 +303,19 @@
                 },
                 success: function (res) {
                     succeed(form,true,true);
-                    notify('ORS Successfully saved','success');
+                    toast('success','ORS successfully saved.','Success');
                     $(".remove_row_btn").each(function () {
                         $(this).trigger('click');
                     })
                     $(".add_button").each(function () {
                         $(this).trigger('click');
                     })
-
+                    $("a[href='#tab_1']").trigger('click');
+                    $("select[name='funds']").show().focus().click();
                 },
                 error: function (res) {
                     errored(form,res);
+
                 }
             })
         })
@@ -349,6 +360,27 @@
             $(this).parents('tr').removeClass('row-ORS');
             $(this).parents('tr').removeClass('row-DV');
             $(this).parents('tr').addClass('row-'+$(this).val());
+        })
+
+        //get next ors number based on fund
+        $("#select_funds").change(function () {
+            let fund = $(this).val();
+            $(document.body).css({'cursor' : 'wait'});
+            $.ajax({
+                url : '{{route("dashboard.ajax.get","nextOrsNo")}}',
+                data : {fund: fund},
+                type: 'GET',
+                headers: {
+                    {!! __html::token_header() !!}
+                },
+                success: function (res) {
+                    $("#ors_no").val(res.newOrsNumber);
+                    $(document.body).css({'cursor' : 'default'});
+                },
+                error: function (res) {
+                    $(document.body).css({'cursor' : 'default'});
+                }
+            })
         })
     </script>
 @endsection

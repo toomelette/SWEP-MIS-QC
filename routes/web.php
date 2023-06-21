@@ -485,11 +485,15 @@ Route::group(['prefix'=>'dashboard', 'as' => 'dashboard.',
     /** PPDO **/
     Route::resource('ppdo', 'PPU\PPDOController');
 
-    Route::get('ors/{slug}/print','ORSController@print')->name('ors.print');
-    Route::get('ors/reports','ORSController@reports')->name('ors.reports');
-    Route::get('ors/report_generate/{type}','ORSController@reportGenerate')->name('ors.report_generate');
-    Route::resource('ors','ORSController');
 
+    /** ORS **/
+    Route::get('ors/{slug}/print','Budget\ORSController@print')->name('ors.print');
+    Route::get('ors/reports','Budget\ORSController@reports')->name('ors.reports');
+    Route::get('ors/report_generate/{type}','Budget\ORSController@reportGenerate')->name('ors.report_generate');
+    Route::resource('ors','Budget\ORSController');
+
+    /** ORS **/
+    Route::resource('projects','Budget\ProjectsController');
 });
 
 Route::get('display_qr/{slug}',function ($slug, \App\Http\Controllers\DocumentController $documentController){
@@ -605,100 +609,6 @@ Route::get('/phpinfo',function (){
 
 
 
-Route::get('/sdd',function (){
-   $employees = \App\Models\Employee::query()->get();
-   $arr = [];
-
-
-   $query = \App\Models\Employee::query()
-       ->with(['employeeChildren','employeeTraining'])
-       ->where(function ($query){
-           $query->where('is_active','=','ACTIVE');
-           $query->orWhere('is_active','=','SUSPENDED');
-       })
-        ->where(function ($query){
-            $query->where('locations','=','VISAYAS');
-            $query->orWhere('locations','=','LUZON/MINDANAO');
-        })
-//       ->whereHas('employeeTraining',function ($query){
-//           $query->where('title','like','%GAD%')
-//               ->orWhere('title','like','%GST%')
-//               ->orWhere('title','like','%GENDER%')
-//               ->orWhere('title','like','%GESI%')
-//               ->orWhere('title','like','%WOMAN%')
-//               ->orWhere('title','like','%WOMEN%');
-//       })
-
-       ->get();
-   $columns = [];
-    function salary($sal){
-        $r = null;
-        switch ($sal){
-
-            case ($sal > 0 && $sal <= 250):
-                $r = '0-250';
-                break;
-            case ($sal > 250 && $sal <= 400):
-                $r = '251-400';
-                break;
-            case ($sal > 400 && $sal <= 600):
-                $r = '401-600';
-                break;
-            case ($sal > 600 && $sal <= 800):
-                $r = '601-800';
-                break;
-            case ($sal > 800 && $sal <= 1200):
-                $r = '801-1200';
-                break;
-            case ($sal > 1200):
-                $r = '1200+';
-                break;
-            default:
-                $r = '1200q+';
-                break;
-        }
-        return $r;
-    }
-    foreach ($query as $emp){
-        $for_column  = salary($emp->monthly_basic*12/1000);
-        $columns[$for_column] = $for_column;
-        //array_push($columns[$emp->lastname],$for_column);
-        $age = \Illuminate\Support\Carbon::parse($emp->date_of_birth)->age;
-            switch ($age){
-                case ($age >= 21 && $age <= 30):
-                    $arr[$emp->sex]['21-30'][$for_column][$emp->fullname.'-'.$emp->employee_no] = $age.' '.$emp->civil_status.' - '.$emp->monthly_basic*12/1000;
-                    break;
-                case ($age >= 31 && $age <= 40):
-                    $arr[$emp->sex]['31-40'][$for_column][$emp->fullname.'-'.$emp->employee_no] = $age.' '.$emp->civil_status.' - '.$emp->monthly_basic*12/1000;
-                    break;
-                case ($age >= 41 && $age <= 50):
-                    $arr[$emp->sex]['41-50'][$for_column][$emp->fullname.'-'.$emp->employee_no] = $age.' '.$emp->civil_status.' - '.$emp->monthly_basic*12/1000;
-                    break;
-                case ($age >= 51 && $age <= 60):
-                    $arr[$emp->sex]['51-60'][$for_column][$emp->fullname.'-'.$emp->employee_no] = $age.' '.$emp->civil_status.' - '.$emp->monthly_basic*12/1000;
-                    break;
-                case ($age >= 61):
-                    $arr[$emp->sex]['61+'][$for_column][$emp->fullname.'-'.$emp->employee_no] = $age.' '.$emp->civil_status.' - '.$emp->monthly_basic*12/1000;
-                    break;
-            }
-    }
-    ksort($arr['FEMALE']);
-    foreach ($arr['FEMALE'] as $l => $ar){
-        ksort($arr['FEMALE'][$l]);
-
-    }
-    ksort($arr['MALE']);
-    foreach ($arr['MALE'] as $l => $ar){
-        ksort($arr['MALE'][$l]);
-    }
-    krsort($arr);
-    ksort($columns);
-//    dd($arr);
-    return view('dashboard.temp.sdd')->with(['employees' => $arr,'columns' => $columns]);
-
-});
-
-
 
 Route::get('/getSerial',function (\Illuminate\Http\Request $request){
     if(!$request->has('ip')){
@@ -714,140 +624,6 @@ Route::get('/getSerial',function (\Illuminate\Http\Request $request){
 
 
 
-
-Route::get('/post',function (){
-        $server = \App\Models\SuSettings::query()->where('setting','=','server_location')->first()->string_value;
-        $token = \App\Models\SuSettings::query()->where('setting','=','pairing_token')->first()->string_value;
-        // set post fields
-        $array = [
-            'server' => $server,
-            'token' => $token ,
-            'dtrs' => [],
-        ];
-        $staged_ids = [];
-        $dtrs_array = [];
-        $dtrs = \App\Models\DTR::query()->where('uploaded','=',null)->orWhere('uploaded','=',0)->limit(100)->get();
-        if(!empty($dtrs)){
-            foreach ($dtrs as $dtr) {
-                $temp_arr = [
-                    'uid' => $dtr->uid,
-                    'user' => $dtr->user,
-                    'state' => $dtr->state,
-                    'type' => $dtr->type,
-                    'timestamp' => $dtr->timestamp,
-                    'device' => $dtr->device,
-                    'location' => $server,
-                ];
-                array_push($dtrs_array,$temp_arr);
-                array_push($staged_ids,$dtr->id);
-            }
-        }
-
-        $array['dtrs'] = $dtrs_array;
-        $ch = curl_init('http://'.request('url').'/insertDTR');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($array));
-
-        // execute!
-        $response = curl_exec($ch);
-
-        // close the connection, release resources used
-        curl_close($ch);
-
-
-
-         // do anything you want with your response
-        $response = json_decode($response);
-
-        if(!empty($response->code)){
-            if($response->code == 200){
-                if(count($staged_ids) > 0){
-                    foreach ($staged_ids as $staged_id){
-                        \App\Models\DTR::query()->find($staged_id)->update([
-                            'uploaded' => 1,
-                        ]);
-                    }
-                }
-                \App\Models\CronLogs::insert([
-                    'log' => 'Uploaded '.count($staged_ids).' DTRs to the server',
-                    'type' => 8,
-                ]);
-            }
-        }
-});
-
-Route::post('/insertDTR',function(){
-
-    $pairing_token = \App\Models\SuSettings::query()->where('setting','=','pairing_token')->first();
-    if(empty($pairing_token)){
-
-        \App\Models\CronLogs::insert([
-            'log' => 'The pairing token of server is not set',
-            'type' => -6
-        ]);
-        $res = [
-            'status' => 'error',
-            'message' => 'No token set on the server.',
-        ];
-
-    }else{
-
-        if($pairing_token->string_value == request('token')){
-            if(!empty(request())){
-                if( count(request('dtrs')) > 0 ){
-                    $arr = [];
-
-                    foreach (request('dtrs') as $dtr){
-
-                        $a =  [
-
-                            'uid' => $dtr['uid'],
-                            'user' => $dtr['user'],
-                            'state' => $dtr['state'],
-                            'type' => $dtr['type'],
-                            'timestamp' => \Illuminate\Support\Carbon::parse($dtr['timestamp'])->format('Y-m-d H:i:s'),
-                            'device' => $dtr['device'],
-                            'location' => $dtr['location'],
-                        ];
-                        array_push($arr,$a);
-                    }
-
-                    \App\Models\DTR::insert($arr);
-                }
-                \App\Models\CronLogs::insert([
-                    'log' => 'RECEIVED '.count(request('dtrs')).' DTR Data',
-                    'type' => 200
-                ]);
-                return [
-                    'status' => 'success',
-                    'code' => 200,
-                ];
-            }
-            else{
-                \App\Models\CronLogs::insert([
-                    'log' => 'Empty request',
-                    'type' => -5,
-                ]);
-                return [
-                    'status' => 'success',
-                    'message' => 'Empty request.',
-                ];
-            }
-        }else{
-            \App\Models\CronLogs::insert([
-                'log' => request('server').' made a request with an invalid token',
-                'type' => 5
-            ]);
-
-            return [
-                'status' => 'error',
-                'message' => 'Invalid token.',
-            ];
-        }
-
-    }
-
-});
 
 
 

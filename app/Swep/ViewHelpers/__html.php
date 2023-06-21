@@ -404,4 +404,11 @@ class __html{
 		</div>';
     }
 
+    public static function timestampFooter($obj, $cols){
+        return view('layouts.footer_timestamp')->with([
+            'cols' => $cols,
+            'data' => $obj,
+        ]);
+    }
+
 }

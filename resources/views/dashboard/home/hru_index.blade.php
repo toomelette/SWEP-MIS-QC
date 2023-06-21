@@ -67,7 +67,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-3 col-xs-12">
                 <div class="panel">
                     <div class="panel-body">
                         <center><label>Regular Employees by Sex</label></center>
@@ -76,7 +76,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 col-xs-12">
                 <div class="panel">
                     <div class="panel-body">
                         <center><label>COS Personnel by Sex</label></center>

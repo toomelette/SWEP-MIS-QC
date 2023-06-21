@@ -25,7 +25,7 @@
           @endif
       </div>
       <div class="pull-left info">
-        
+
         @if(Auth::check())
               <p>
                 {!! strtoupper(Helper::getUserName()['firstname']) !!}

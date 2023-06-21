@@ -4,7 +4,7 @@ $rand = \Illuminate\Support\Str::random();
 <tr  id="ap{{$rand}}">
     <td>
         {!! \App\Swep\ViewHelpers\__form2::selectOnly('applied_projects['.$rand.'][resp_center]',[
-            'class' => 'input-sm resp_center_clear select2_respCenter',
+            'class' => 'input-sm resp_center_clear select2_respCenter applied_projects_'.$rand.'_resp_center',
             'options' => \App\Swep\Helpers\Arrays::groupedRespCodes(),
             'for' => 'resp_center',
             'container_class' => 'select2-sm',
@@ -13,7 +13,7 @@ $rand = \Illuminate\Support\Str::random();
     @if(request()->ajax())
         <td>
             {!! \App\Swep\ViewHelpers\__form2::selectOnly('applied_projects['.$rand.'][pap_code]',[
-                'class' => 'input-sm select2_clear select2_pap_code_'.$rand,
+                'class' => 'input-sm select2_clear select2_pap_code_'.$rand.' applied_projects_'.$rand.'_pap_code',
                 'container_class' => 'select2-sm',
                 'options' => [],
                 'id' => 'select2_id_ap'.$rand,
@@ -21,19 +21,19 @@ $rand = \Illuminate\Support\Str::random();
         </td>
         <td>
             {!! \App\Swep\ViewHelpers\__form2::textboxOnly('applied_projects['.$rand.'][mooe]',[
-                'class' => 'input-sm text-right autonum_'.$rand,
+                'class' => 'input-sm text-right autonum_'.$rand. ' applied_projects_'.$rand.'_mooe',
                 'for' => 'mooe',
             ],$data->mooe ?? null) !!}
-            <small>
+            <small class="text-balance">
                 Balance: <span class="balance_mooe text-info pull-right"></span>
             </small>
         </td>
         <td>
             {!! \App\Swep\ViewHelpers\__form2::textboxOnly('applied_projects['.$rand.'][co]',[
-                'class' => 'input-sm text-right autonum_'.$rand,
+                'class' => 'input-sm text-right autonum_'.$rand.' applied_projects_'.$rand.'_co',
                 'for' => 'co',
             ],$data->co ?? null) !!}
-            <small>
+            <small class="text-balance">
                 Balance: <span class="balance_co text-info pull-right"></span>
             </small>
         </td>
@@ -53,13 +53,13 @@ $rand = \Illuminate\Support\Str::random();
             {!! \App\Swep\ViewHelpers\__form2::textboxOnly('applied_projects['.$rand.'][mooe]',[
                 'class' => 'input-sm text-right autonum',
                 'for' => 'mooe',
-            ],$data->mooe ?? null) !!}
+            ],($data->mooe == 0 || $data->mooe == null || $data->mooe == '') ? '' : $data->mooe) !!}
         </td>
         <td>
             {!! \App\Swep\ViewHelpers\__form2::textboxOnly('applied_projects['.$rand.'][co]',[
                 'class' => 'input-sm text-right autonum',
                 'for' => 'co',
-            ],$data->co ?? null) !!}
+            ],($data->co == 0 || $data->co == null || $data->co == '') ? '' : $data->co) !!}
         </td>
         <td>
             <button class="btn btn-danger btn-sm remove_row_btn" type="button"><i class="fa fa-times"></i> </button>

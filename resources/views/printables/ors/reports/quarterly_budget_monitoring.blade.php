@@ -16,10 +16,15 @@
 @extends('printables.print_layouts.print_layout_main')
 
 @section('wrapper')
-    <div style="text-align: center">
-        <p class="no-margin">SUGAR REGULATORY ADMINISTRATION</p>
-        <p class="no-margin">Araneta Street, Singcang, Bacolod City</p>
-        <br>
+    <div>
+        <img src="{{asset('images/sra.png')}}" style="width: 60px; float: left; margin-right: 15px;">
+        <p class="no-margin text-left" style="font-size: 14px"> <b>SUGAR REGULATORY ADMINISTRATION</b></p>
+        <p class="no-margin text-left" style="font-size: 12px;"> Araneta Street, Singcang, Bacolod City</p>
+        <p class="no-margin text-left" style="font-size: 10px;"> SRA Web Portal - Budget Monitoring System</p>
+    </div>
+
+    <div style="text-align: left">
+
         <h3 class="no-margin">BUDGET MONITORING</h3>
         <p>
             {{\App\Swep\Helpers\Helper::ordinalWords()[$quarter]}}

@@ -9,6 +9,7 @@ use App\Models\ApplicantPositionApplied;
 use App\Models\HRPayPlanitilla;
 use App\Models\PPU\PPURespCodes;
 use App\Models\PPU\RCDesc;
+use App\Models\SuOptions;
 use Auth;
 use Illuminate\Support\Carbon;
 
@@ -454,6 +455,40 @@ class Arrays
             3 => 'THIRD',
             4 => 'FOURTH',
         ];
+        return $arr;
+    }
+
+    public static function fundSources(){
+        return [
+            'COB' => 'COB',
+            'SIDA' => 'SIDA',
+        ];
+    }
+
+    public static function papTypes(){
+        $arr = [];
+        $ops = SuOptions::query()->where('for','=','papTypes')->get();
+        if(!empty($ops)){
+            foreach ($ops as $op){
+                $arr[$op->option] = $op->value;
+            }
+        }
+        ksort($arr);
+        return $arr;
+    }
+    public static function activeInactive(){
+        return[
+            'active' => 'Active',
+            'inactive' => 'Inactive',
+        ];
+    }
+
+    public static function deptsAssoc(){
+        $depts = RCDesc::query()->get();
+        $arr = [];
+        foreach ($depts as $dept){
+            $arr[$dept->name] = null;
+        }
         return $arr;
     }
 }

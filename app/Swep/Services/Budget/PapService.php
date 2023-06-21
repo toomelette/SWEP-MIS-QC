@@ -6,6 +6,8 @@ namespace App\Swep\Services\Budget;
 
 use App\Models\Budget\ORSProjectsApplied;
 use App\Models\PPU\Pap;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 class PapService
 {
@@ -31,9 +33,24 @@ class PapService
         return $arr;
     }
 
+    public function newPapCode($year , $respCenter){
+        $year = Carbon::parse($year.'-01-01')->format('y');
+        $basePapCode = $year.'-'.$respCenter.'-';
+        $pap = PAP::query()->where('pap_code','like',$basePapCode.'%')->orderBy('pap_code','desc')->first();
+        if(empty($pap)){
+            return $newPapCode = $basePapCode.str_pad(1,2,'0',STR_PAD_LEFT);
+        }else{
+            $papSequence = $pap->pap_code;
+            $basePapSequence = Str::substr($papSequence,-2,2);
+            $newBasePapSequence = str_pad($basePapSequence + 1,2,'0',STR_PAD_LEFT);
+            return $basePapCode.$newBasePapSequence;
+        }
+
+    }
+
 
     public function findBySlug($slug){
-        $pap = Pap::query()->where('slug','=',$slug)->first();
+        $pap = Pap::query()->with(['responsibilityCenter','orsAppliedProjects'])->where('slug','=',$slug)->first();
         return $pap ?? abort(503,'PAP not found.');
     }
 }

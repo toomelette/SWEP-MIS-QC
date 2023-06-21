@@ -40,7 +40,7 @@
         Account Entries
     </p>
 
-    <table class="table table-condensed table-striped table-bordered">
+    <table class="table table-condensed table-bordered">
         <thead>
             <th class="bg-green">Resp Center</th>
             <th class="bg-green">Account Code | Title</th>
@@ -63,8 +63,8 @@
                 @endforeach
             @endif
             @foreach($aeArray as $type => $accountEntries)
-                <tr>
-                    <td colspan="4" class="bg-info text-center text-strong">{{$type}}</td>
+                <tr class="{{$type == 'ORS' ? 'bg-success' : 'bg-info'}}">
+                    <td colspan="4" class="text-center text-strong">{{$type}}</td>
                 </tr>
                 @php
                     $total = [
@@ -84,10 +84,10 @@
                         <td class="text-right">{{\App\Swep\Helpers\Helper::toNumber($accountEntry['obj']->credit,2)}}</td>
                     </tr>
                 @endforeach
-                <tr>
-                    <th colspan="2" class="bg-success">TOTAL {{$type}}</th>
-                    <th class="text-right bg-success">{{number_format($total['debit'],2)}}</th>
-                    <th class="text-right bg-success">{{number_format($total['credit'],2)}}</th>
+                <tr class="{{$type == 'ORS' ? 'bg-success' : 'bg-info'}}">
+                    <th colspan="2">TOTAL {{$type}}</th>
+                    <th class="text-right">{{number_format($total['debit'],2)}}</th>
+                    <th class="text-right">{{number_format($total['credit'],2)}}</th>
                 </tr>
             @endforeach
 
@@ -131,9 +131,9 @@
             @endforeach
         @endif
         <tr>
-            <td class="text-strong bg-success">TOTAL</td>
-            <td class="text-strong text-right bg-success">{{number_format($totalMooe,2)}}</td>
-            <td class="text-strong text-right bg-success">{{number_format($totalCo,2)}}</td>
+            <td class="text-strong bg-warning">TOTAL</td>
+            <td class="text-strong text-right bg-warning">{{number_format($totalMooe,2)}}</td>
+            <td class="text-strong text-right bg-warning">{{number_format($totalCo,2)}}</td>
         </tr>
         </tbody>
     </table>
@@ -141,6 +141,12 @@
 @endsection
 
 @section('modal-footer')
+    <div class="row">
+        {!! \App\Swep\ViewHelpers\__html::timestampFooter($ors,'4') !!}
+        <div class="col-md-4">
+            <button class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+    </div>
 
 @endsection
 

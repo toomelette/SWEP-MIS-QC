@@ -24,6 +24,7 @@ var autonum_settings = {
     currencySymbol : ' ₱',
     decimalCharacter : '.',
     digitGroupSeparator : ',',
+    emptyInputBehavior : 'null',
 };
 
 
@@ -31,6 +32,7 @@ var autonum_settings = {
 
 function autonum_init(){
     $(".autonum").each(function(){
+        $(this).attr('autocomplete','off');
         new AutoNumeric(this, autonum_settings);
     });
 }
@@ -221,10 +223,11 @@ function errored(target_form, response){
 
 
     if(response.status == 503){
-        notify(response.responseJSON.message, "danger");
+        toast('error',response.responseJSON.message,'Error');
     }else if(response.status == 422){
         unmark_required(target_form);
         mark_required(target_form,response);
+        toast('error',response.responseJSON.message,'Error');
     }else if(response.status == 413){
         notify('File too large.','danger');
     }else{
@@ -247,16 +250,38 @@ function unmark_required(target_form){
         $(this).removeClass('has-error');
         $(this).children("span").last().remove();
     });
+
+    $(".nav-tabs li").each(function () {
+        $(this).removeClass('has-error');
+    })
 }
 
 function mark_required(target_form, response){
     form_id = $(target_form[0]).attr('id');
     $.each(response.responseJSON.errors, function(i, item){
-        if($("#"+form_id+" ."+i.replace('.','_')).hasClass('minimal') == false){
-            $("#"+form_id+" ."+i.replace('.','_')).append("<span class='help-block'> "+item+" </span>");
-        }
-        $("#"+form_id+" ."+i.replace('.','_')).addClass('has-error');
+        let replaced = i.replaceAll('.','_');
 
+        if($("#"+form_id+" ."+replaced).hasClass('single') == true){
+            $("#"+form_id+" ."+replaced).parent().append("<span class='warning-message small text-danger'> "+item+" </span>");
+            $("#"+form_id+" ."+replaced).parent().addClass('has-error');
+
+            if($("#"+form_id+" ."+replaced).parents('.tab-pane').length){
+                let parentTabPane = $("#"+form_id+" ."+replaced).parents('.tab-pane');
+                let tab = parentTabPane.attr('id');
+
+                $("a[href='#"+tab+"']").parent('li').removeClass('has-error');
+                if(!$("a[href='#"+tab+"'] i").length){
+                    $("a[href='#"+tab+"']").parent('li').addClass('has-error');
+
+                }
+
+            }
+        }else{
+            if($("#"+form_id+" ."+replaced).hasClass('minimal') == false){
+                $("#"+form_id+" ."+replaced).append("<span class='warning-message small text-danger'> "+item+" </span>");
+            }
+        }
+        $("#"+form_id+" ."+replaced).addClass('has-error');
     });
 }
 
@@ -443,3 +468,20 @@ $("body").on("click",".add_button",function () {
 $("body").on("click",".remove_row_btn",function () {
     $(this).parents('tr').remove();
 })
+
+
+function toast(type,message,heading = null) {
+    $.toast({
+        text: message, // Text that is to be shown in the toast
+        heading: heading, // Optional heading to be shown on the toast
+        icon: type, // Type of toast icon
+        showHideTransition: 'slide', // fade, slide or plain
+        allowToastClose: true, // Boolean value true or false
+        hideAfter: 5000, // false to make it sticky or number representing the miliseconds as time after which toast needs to be hidden
+        stack: 5, // false if there should be only one toast at a time or a number representing the maximum number of toasts to be shown at a time
+        position: 'bottom-right', // bottom-left or bottom-right or bottom-center or top-left or top-right or top-center or mid-center or an object representing the left, right, top, bottom values
+        textAlign: 'left',  // Text alignment i.e. left, right or center
+        loader: false,  // Whether to show loader or not. True by default
+        loaderBg: '#9EC600',  // Background color of the toast loader
+    });
+}

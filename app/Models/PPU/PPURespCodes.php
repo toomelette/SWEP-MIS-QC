@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class PPURespCodes extends Model
 {
-    protected $table = 'resp_codes';
-    protected $connection = 'mysql_ppu';
+    protected $table = 'budget_resp_codes';
+//    protected $connection = 'mysql_ppu';
 
     public function __construct() {
         $this->table = \DB::connection($this->connection)->getDatabaseName() . '.' . $this->table;

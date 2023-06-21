@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class RCDesc extends Model
 {
-    protected $table = 'rc_description';
-    protected $connection = 'mysql_ppu';
+    protected $table = 'budget_rc_description';
+//    protected $connection = 'mysql_ppu';
 
     public function __construct() {
         $this->table = \DB::connection($this->connection)->getDatabaseName() . '.' . $this->table;

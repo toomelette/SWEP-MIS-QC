@@ -60,12 +60,10 @@ class UserMenuRepository extends BaseRepository implements UserMenuInterface {
         $usermenu = $this->user_menu->select('user_menu_id')->orderBy('user_menu_id', 'desc')->first();
 
         if($usermenu != null){
-
             if($usermenu->user_menu_id != null){
                 $num = str_replace('UM', '', $usermenu->user_menu_id) + 1;
                 $id = 'UM' . $num;
             }
-        
         }
         
         return $id;
@@ -80,20 +78,11 @@ class UserMenuRepository extends BaseRepository implements UserMenuInterface {
 
 
     public function getByCategory($cat){
-        $user_menus_u = $this->user_menu->where('user_id', $this->auth->user()->user_id)
+        $user_menus_u = $this->user_menu->with(['user'])->where('user_id', $this->auth->user()->user_id)
             ->where('category', $cat)
             ->with('userSubMenu')
             ->get();
         return $user_menus_u;
-        $user_menus_u = $this->cache->remember('user_menus:getByCategory:'. $this->auth->user()->user_id .':'.$cat.'', 240, function() use ($cat){
-          return $this->user_menu->where('user_id', $this->auth->user()->user_id)
-                                 ->where('category', $cat)
-                                 ->with('userSubMenu')
-                                 ->get();
-        });
-
-        return $user_menus_u;
-        
     }
 
 

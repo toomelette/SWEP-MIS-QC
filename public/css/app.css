@@ -731,3 +731,18 @@ tr.child li {
     background-color: #e8f7ff !important;
 }
 
+li.has-error>a{
+    color: #dd4b39 !important;
+}
+
+.b-top {
+    border-top: 1px solid black;
+}
+
+.text-balance{
+    font-size: 13px;
+}
+
+.text-balance>span{
+    font-weight: bold;
+}

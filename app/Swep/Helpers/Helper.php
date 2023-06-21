@@ -628,4 +628,22 @@ class Helper
         ];
         return $arr;
     }
+
+    public static function dateFormat($date,$format = 'M. d, Y'){
+        if($date == null) {
+            return null;
+        }else{
+            return Carbon::parse($date)->format($format);
+        }
+    }
+
+    public static function listingToDatalist($datalistId, $listing){
+        $html = '<datalist id="'.$datalistId.'">';
+
+        foreach ($listing as $data){
+            $html .= '<option value="'.$data.'"></option>';
+        }
+        $html .= '</datalist>';
+        return  $html;
+    }
 }

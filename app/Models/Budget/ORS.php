@@ -4,6 +4,7 @@
 namespace App\Models\Budget;
 
 
+use App\Models\User;
 use Auth;
 use Illuminate\Database\Eloquent\Model;
 
@@ -42,6 +43,14 @@ class ORS extends Model
 
     public function projectsApplied(){
         return $this->hasMany(ORSProjectsApplied::class,'ors_slug','slug');
+    }
+
+    public function creator(){
+        return $this->hasOne(User::class,'user_id','user_created');
+    }
+
+    public function updater(){
+        return $this->hasOne(User::class,'user_id','user_updated');
     }
 
 }

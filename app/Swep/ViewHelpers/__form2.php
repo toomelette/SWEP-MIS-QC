@@ -36,6 +36,7 @@ class __form2
         $step = ($n->step != '') ? 'step="'.$n->step.'"' : '';
         $id = ($n->id != '') ?  'id="'.$n->id.'"' : '';
         $tab_index = ($n->tab_index != '') ?  'tabindex="'.$n->tab_index.'"' : '';
+        $list = ($n->list != '') ?  'list="'.$n->list.'"' : '';
         $title = ($n->title != '') ? '<i class="fa fa-question-circle" title="'.$n->title.'"></i>' : '';
 
         if($input_only == true){
@@ -44,7 +45,7 @@ class __form2
         }
         return '<div class="form-group '.$c_class.' col-md-'.$n->cols.' '.$name.'">
                 <label for="'. $name .'">'.$n->label.'</label> '.$title.'
-                <input class="form-control '.$n->class.'" '.$id.' '.$tab_index.' name="'. $name .$ext.'" type="'.$n->type.'" value="'.$value.'" placeholder="'. $n->placeholder.'" '. $n->extra_attr .' autocomplete="'.$n->autocomplete.'" '.$r_o.' '.$step.' '.$n->required.'>
+                <input class="form-control '.$n->class.'" '.$id.' '.$tab_index.' name="'. $name .$ext.'" type="'.$n->type.'" value="'.$value.'" placeholder="'. $n->placeholder.'" '. $n->extra_attr .' autocomplete="'.$n->autocomplete.'" '.$r_o.' '.$step.' '.$n->required.' '.$list.'>
               </div>';
     }
 
@@ -70,6 +71,8 @@ class __form2
             $value = ($value != '') ? Carbon::parse($value)->format('Y-m-d') : '';
         }
 
+        $tab_index = ($n->tab_index != '') ?  'tabindex="'.$n->tab_index.'"' : '';
+
         $r_o = ($n->readonly == 'readonly') ? 'readonly' : '';
         $step = ($n->step != '') ? 'step="'.$n->step.'"' : '';
         $id = ($n->id != '') ?  'id="'.$n->id.'"' : '';
@@ -81,7 +84,7 @@ class __form2
              ';
         }
         return '<div class=" '.$c_class.' col-md-'.$n->cols.' '.$name.'">
-                <input placeholder="'. $n->placeholder.'" for="'.$n->for.'" class="form-control single '.$n->class.'" '.$id.' '.$tab_index.' name="'. $name .$ext.'" type="'.$n->type.'" value="'.$value.'" placeholder="'. $n->placeholder.'" '. $n->extra_attr .' autocomplete="'.$n->autocomplete.'" '.$r_o.' '.$step.' '.$n->required.'>
+                <input placeholder="'. $n->placeholder.'" for="'.$n->for.'" class="form-control single '.$n->class.'" '.$id.' '.$tab_index.' name="'. $name .$ext.'" type="'.$n->type.'" value="'.$value.'" placeholder="'. $n->placeholder.'" '. $n->extra_attr .' autocomplete="'.$n->autocomplete.'" '.$r_o.' '.$step.' '.$n->required.' '.$tab_index.'>
               </div>';
     }
 
@@ -345,6 +348,7 @@ class __form2
         ($array['type'] == '') ?  $array['type'] = 'text' : false;
         (!isset($array['select2_preSelected'])) ? $array['select2_preSelected']= '' : false;
         (!isset($array['defaultText'])) ? $array['defaultText']= '' : false;
+        (!isset($array['list'])) ? $array['list']= '' : false;
 
         $this->class = $array['class'];
         $this->cols = $array['cols'];
@@ -367,6 +371,7 @@ class __form2
         $this->container_class = $array['container_class'];
         $this->select2_preSelected = $array['select2_preSelected'];
         $this->defaultText = $array['defaultText'];
+        $this->list = $array['list'];
     }
     public function get($array){
         return $this->name.' Hello';

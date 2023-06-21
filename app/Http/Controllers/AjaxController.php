@@ -14,6 +14,7 @@ use App\Models\HRPayPlanitilla;
 use App\Models\PPU\Pap;
 use App\Models\SSL;
 use App\Swep\Helpers\Helper;
+use App\Swep\Services\Budget\ORSService;
 use App\Swep\Services\Budget\PapService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cookie;
@@ -30,7 +31,7 @@ class AjaxController extends Controller
         $this->papService = $papService;
     }
 
-    public function get($for){
+    public function get($for, ORSService $ORSService){
 
         if($for == 'compute_monthly_salary'){
             return $this->compute_monthly_salary();
@@ -174,6 +175,10 @@ class AjaxController extends Controller
             ]);
         }
 
+        if($for == 'nextOrsNo'){
+            $request = \Illuminate\Http\Request::capture();
+            return $ORSService->newOrsNumber($request->fund);
+        }
     }
 
     private function applicant_filter_item_no(){

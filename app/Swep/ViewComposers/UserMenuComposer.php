@@ -37,28 +37,28 @@ class UserMenuComposer{
         $user_menus_hr = [];
 
 
-        if($this->auth->check()){
-
-            $user_menus_u = $this->user_menu_repo->getByCategory('U');
-
-            $user_menus_su = $this->user_menu_repo->getByCategory('SU');
-
-            $user_menus_acctg = $this->user_menu_repo->getByCategory('ACCTG');
-
-            $user_menus_hr = $this->user_menu_repo->getByCategory('HR');
-
-            $user_menus_records = $this->user_menu_repo->getByCategory('RECORDS');
-
-        }  
-
-
-    	$view->with([
-            'global_user_menus_u' => $user_menus_u,
-            'global_user_menus_acctg' => $user_menus_acctg, 
-            'global_user_menus_hr' => $user_menus_hr, 
-            'global_user_menus_su' => $user_menus_su,
-            'global_user_menus_records' => $user_menus_records,
-        ]);
+//        if($this->auth->check()){
+//
+//            $user_menus_u = $this->user_menu_repo->getByCategory('U');
+//
+//            $user_menus_su = $this->user_menu_repo->getByCategory('SU');
+//
+//            $user_menus_acctg = $this->user_menu_repo->getByCategory('ACCTG');
+//
+//            $user_menus_hr = $this->user_menu_repo->getByCategory('HR');
+//
+//            $user_menus_records = $this->user_menu_repo->getByCategory('RECORDS');
+//
+//        }
+//
+//
+//    	$view->with([
+//            'global_user_menus_u' => $user_menus_u,
+//            'global_user_menus_acctg' => $user_menus_acctg,
+//            'global_user_menus_hr' => $user_menus_hr,
+//            'global_user_menus_su' => $user_menus_su,
+//            'global_user_menus_records' => $user_menus_records,
+//        ]);
 
 
     }
