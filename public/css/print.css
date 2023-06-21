@@ -212,6 +212,10 @@ table.print-table th,table.print-table td{
     padding-left: 20px !important;
 }
 
+.td-indent-3{
+    padding-left: 30px !important;
+}
+
 .bg-lightgreen{
     background-color: #eeffee;
 }
@@ -224,5 +228,12 @@ table.print-table th,table.print-table td{
 }
 .bg-lightyellow{
     background-color: #fffcee;
+}
+
+.bg-purple{
+    background-color: #f9daff;
+}
+.bg-orange{
+    background-color: #ffebd6;
 }
 

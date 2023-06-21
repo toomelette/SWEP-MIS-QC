@@ -37,15 +37,15 @@
 
     <table class="tbl tbl-bordered-grey tbl-padded" style="width: 100%; font-size: 11px">
         <thead>
-        <tr>
+        <tr class="bg-purple">
             <th class="text-center" rowspan="2">Recommended Programs/Projects</th>
             <th class="text-center" colspan="2">Year</th>
             @foreach(\App\Swep\Helpers\Helper::quarters()[$quarter] as $m => $q)
                 <th class="text-center" colspan="2">{{\Illuminate\Support\Carbon::parse('2022-'.$m.'-01')->format('F')}}</th>
             @endforeach
-            <th class="text-center" rowspan="2">Remarks</th>
+            <th class="text-center" rowspan="2">Total for the <br> {{\App\Swep\Helpers\Helper::ordinal($quarter)}}  Quarter</th>
         </tr>
-        <tr>
+        <tr class="bg-purple">
             <th class="text-center" style="width: 80px">MOOE</th>
             <th class="text-center" style="width: 80px">CO</th>
             @foreach(\App\Swep\Helpers\Helper::quarters()[$quarter] as $m => $q)
@@ -55,72 +55,92 @@
         </tr>
         </thead>
         <tbody>
-        @foreach($orsArray as $resp_center=> $paps)
-            <tr class="bg-lightred">
-                <td colspan="10" style="padding-bottom: 10px"><span style="font-size: 14px;" class="text-strong">{{$resp_center}}</span></td>
-            </tr>
-            @foreach($paps as $pap_code => $papDetails)
-                @php
-                    $totalsArray[$resp_center][$pap_code] = [
-                        'mooe' => 0,
-                        'co' => 0,
-                        'quarters' => \App\Swep\Helpers\Helper::quarters()[$quarter],
-                    ];
-                @endphp
-                <tr class="bg-lightblue">
-                    <td colspan="10" style="font-size: 12px" class="td-indent"> <b>{{$pap_code}}</b> - <span class="text-info text-strong text-italic">{{$papDetails['pap_obj']->pap_title ?? 'N/A'}}</span></td>
-                </tr>
-                <tr>
-                    <td class="text-right text-strong">BALANCE FORWARDED:</td>
-                    <td class="text-right text-strong">{{number_format($papDetails['pap_obj']->mooe ?? 0,2)}}</td>
-                    <td class="text-right text-strong">{{number_format($papDetails['pap_obj']->co ?? 0,2)}}</td>
-                    <td colspan="7"></td>
-                </tr>
-                @foreach($papDetails['ors'] as $or)
-                    <tr>
-                        <td class="td-indent-2"> {{$or['ors_obj']->payee}} - {{$or['ors_obj']->particulars}}</td>
-                        <td></td>
-                        <td></td>
-                        @foreach($or['months'] as $m => $appliedProject)
-                            @if(!empty($appliedProject))
-                                @php
-                                    $totalsArray[$resp_center][$pap_code]['mooe'] =   $totalsArray[$resp_center][$pap_code]['mooe'] + $appliedProject->mooe;
-                                    $totalsArray[$resp_center][$pap_code]['co'] =   $totalsArray[$resp_center][$pap_code]['co'] + $appliedProject->co;
-                                    $totalsArray[$resp_center][$pap_code]['quarters'][$m] = $totalsArray[$resp_center][$pap_code]['quarters'][$m] + $appliedProject->mooe ?? $appliedProject->co;
-                                @endphp
+        @foreach($orsArray as $deptCode => $dept)
 
-                                <td style="width: 80px" class="text-center">{{$or['ors_obj']->ors_no}}</td>
-                                <td style="width: 80px" class="text-right">{{\App\Swep\Helpers\Helper::toNumber($appliedProject->mooe, 2,'')}}</td>
+            <tr class="bg-lightred">
+                <td colspan="10" style="padding-bottom: 10px"><span style="font-size: 14px;" class="text-strong">{{$dept['dept_obj']->descriptive_name ?? ''}}</span></td>
+            </tr>
+            @foreach($dept['resp_centers'] as $respCenterCode => $respCenter)
+                <tr class="bg-orange">
+                    <td class="text-strong td-indent">{{$respCenter['resp_center_obj']->desc ?? ''}}</td>
+                    <td colspan="{{count((\App\Swep\Helpers\Helper::quarters()[$quarter]) )* 2 + 3}}"></td>
+                </tr>
+                @foreach($respCenter['paps'] as $papCode => $pap)
+                    @php
+                        $totalsArray[$deptCode][$papCode] = [
+                            'mooe' => 0,
+                            'co' => 0,
+                            'quarters' => \App\Swep\Helpers\Helper::quarters()[$quarter],
+                        ];
+                    @endphp
+                    <tr class="bg-lightblue">
+                        <td colspan="10" style="font-size: 12px" class="td-indent-2"> <b>{{$papCode}}</b> - <span class="text-info text-strong text-italic">{{$pap['pap_obj']->pap_title ?? 'N/A'}}</span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right text-strong">BALANCE FORWARDED:</td>
+                        <td class="text-right text-strong">{{number_format($pap['pap_obj']->mooe ?? 0,2)}}</td>
+                        <td class="text-right text-strong">{{number_format($pap['pap_obj']->co ?? 0,2)}}</td>
+                        <td colspan="7"></td>
+                    </tr>
+                    @foreach($pap['ors'] as $or)
+                        <tr>
+                            <td class="td-indent-3"> {{$or['ors_obj']->payee}} - {{$or['ors_obj']->particulars}}</td>
+                            <td></td>
+                            @if($or['applied_project_obj']->co != 0)
+                                @php
+                                    $totalsArray[$deptCode][$papCode]['co'] =   $totalsArray[$deptCode][$papCode]['co'] + $or['applied_project_obj']->co;
+                                @endphp
+                                <td class="text-right">{{\App\Swep\Helpers\Helper::toNumber($or['applied_project_obj']->co,2,'')}}</td>
+                                @for($a = 0; $a < count((\App\Swep\Helpers\Helper::quarters()[$quarter]) )* 2 ; $a++)
+                                    <td></td>
+                                @endfor
                             @else
                                 <td></td>
-                                <td></td>
+                                @foreach($or['months'] as $m => $appliedProject)
+                                    @if(!empty($appliedProject))
+                                            @php
+                                                $totalsArray[$deptCode][$papCode]['mooe'] =   $totalsArray[$deptCode][$papCode]['mooe'] + $appliedProject->mooe;
+                                                $totalsArray[$deptCode][$papCode]['co'] =   $totalsArray[$deptCode][$papCode]['co'] + $appliedProject->co;
+                                                $totalsArray[$deptCode][$papCode]['quarters'][$m] = $totalsArray[$deptCode][$papCode]['quarters'][$m] + $appliedProject->mooe ?? $appliedProject->co;
+                                            @endphp
+                                            <td style="width: 80px" class="text-center">{{$or['ors_obj']->ors_no}}</td>
+                                            <td style="width: 80px" class="text-right">{{\App\Swep\Helpers\Helper::toNumber($appliedProject->mooe, 2,'')}}</td>
+
+                                    @else
+                                        <td></td>
+                                        <td></td>
+                                    @endif
+
+                                @endforeach
                             @endif
 
+                            <td></td>
+                        </tr>
+                    @endforeach
+                    <tr class="bg-lightgreen">
+                        <td class="text-right text-strong">Balance as of</td>
+                        <td class="text-right text-strong">{{number_format(($pap['pap_obj']->mooe ?? 0) - $totalsArray[$deptCode][$papCode]['mooe'],2)}}</td>
+                        <td class="text-right text-strong">{{number_format(($pap['pap_obj']->co ?? 0) - $totalsArray[$deptCode][$papCode]['co'] ?? 0,2)}}</td>
+                        @foreach($totalsArray[$deptCode][$papCode]['quarters'] as $m => $amount)
+                            <td></td>
+                            <td class="text-right text-strong">{{number_format($amount,2)}}</td>
                         @endforeach
-                        <td></td>
+
+                        <td class="text-right text-strong">{{number_format(array_sum($totalsArray[$deptCode][$papCode]['quarters']),2)}}</td>
                     </tr>
                 @endforeach
-                <tr class="bg-lightgreen">
-                    <td class="text-right text-strong">Balance as of</td>
-                    <td class="text-right text-strong">{{number_format(($papDetails['pap_obj']->mooe ?? 0) - $totalsArray[$resp_center][$pap_code]['mooe'],2)}}</td>
-                    <td class="text-right text-strong">{{number_format(($papDetails['pap_obj']->co ?? 0) - $totalsArray[$resp_center][$pap_code]['co'] ?? 0,2)}}</td>
-                    @foreach($totalsArray[$resp_center][$pap_code]['quarters'] as $m => $amount)
-                        <td></td>
-                        <td class="text-right text-strong">{{number_format($amount,2)}}</td>
-                    @endforeach
 
-                    <td class="text-right text-strong">{{number_format(array_sum($totalsArray[$resp_center][$pap_code]['quarters']),2)}}</td>
-                </tr>
+
             @endforeach
             <tr class="bg-lightyellow">
-                <td class="text-strong">TOTAL {{$resp_center}}</td>
+                <td class="text-strong">TOTAL {{$dept['dept_obj']->name ?? ''}}</td>
                 <td></td>
                 <td></td>
-                @foreach(array_map('sumQuarters',$totalsArray)[$resp_center] as $m => $amount)
+                @foreach(array_map('sumQuarters',$totalsArray)[$deptCode] as $m => $amount)
                     <td></td>
                     <td class="text-strong text-right">{{number_format($amount,2)}}</td>
                 @endforeach
-                <td class="text-strong text-right">{{number_format(array_sum(array_map('sumQuarters',$totalsArray)[$resp_center]),2)}}</td>
+                <td class="text-strong text-right">{{number_format(array_sum(array_map('sumQuarters',$totalsArray)[$deptCode]),2)}}</td>
             </tr>
         @endforeach
             @if(count($orsArray) > 1)

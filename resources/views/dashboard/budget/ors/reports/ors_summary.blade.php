@@ -17,7 +17,7 @@
                     'type' => 'date',
                 ]) !!}
                 {!! \App\Swep\ViewHelpers\__form2::select('resp_center',[
-                    'label' => 'Responsibility Center',
+                    'label' => 'Resp. Center',
                     'cols' => 2,
                     'options' => \App\Swep\Helpers\Arrays::departmentList(),
                 ]) !!}

@@ -322,19 +322,29 @@ class ORSController extends Controller
                 $orsArray = [];
 
                 foreach ($appliedProjects as $appliedProject){
-                    $department = $appliedProject->pap->responsibilityCenter->description->name ?? '';
+                    $department = $appliedProject->pap->responsibilityCenter->description->rc ?? '';
+                    $respCenter = $appliedProject->pap->responsibilityCenter->rc_code ?? '';
                     $papCode = $appliedProject->pap->pap_code ?? '';
                     $ors = $appliedProject->ors;
-                    $orsArray[$department][$papCode]['pap_obj'] = $appliedProject->pap;
-                    $orsArray[$department][$papCode]['ors'][$ors->slug ?? '']['ors_obj'] = $ors;
-                    $orsArray[$department][$papCode]['ors'][$ors->slug ?? '']['months'] = Helper::quarters()[$quarter];
-                    $orsArray[$department][$papCode]['ors'][$ors->slug ?? '']['months'][Carbon::parse($ors->ors_date)->format('m')] = $appliedProject;
-                    $orsArray[$department][$papCode]['ors'][$ors->slug ?? '']['applied_project_obj'] = $appliedProject;
+
+                    $orsArray[$department]['dept_obj'] = $appliedProject->pap->responsibilityCenter->description ?? null;
+                    $orsArray[$department]['resp_centers'][$respCenter]['resp_center_obj'] = $appliedProject->pap->responsibilityCenter ?? null;
+                    $orsArray[$department]['resp_centers'][$respCenter]['paps'][$papCode]['pap_obj'] = $appliedProject->pap;
+                    $orsArray[$department]['resp_centers'][$respCenter]['paps'][$papCode]['ors'][$ors->slug ?? '']['ors_obj'] = $ors;
+                    $orsArray[$department]['resp_centers'][$respCenter]['paps'][$papCode]['ors'][$ors->slug ?? '']['months'] = Helper::quarters()[$quarter];
+                    $orsArray[$department]['resp_centers'][$respCenter]['paps'][$papCode]['ors'][$ors->slug ?? '']['months'][Carbon::parse($ors->ors_date)->format('m')] = $appliedProject;
+                    $orsArray[$department]['resp_centers'][$respCenter]['paps'][$papCode]['ors'][$ors->slug ?? '']['applied_project_obj'] = $appliedProject;
+
+
+
 
 //                    dd($appliedProject->pap);
 //                    dd($appliedProject->pap->responsibilityCenter->description->name);
                 }
-                ksort($orsArray);
+                Helper::ksortRecursive($orsArray);
+
+
+
                 return view('printables.ors.reports.quarterly_budget_monitoring')->with([
                     'orsArray' => $orsArray,
                     'quarter' => $quarter,
@@ -388,6 +398,8 @@ class ORSController extends Controller
                 break;
         }
     }
+
+
 
     public function destroy($slug){
         $ors = $this->orsService->findBySlug($slug);

@@ -72,7 +72,7 @@
             <div class="col-md-12">
                 @if(!empty($orsNoErrors))
                     <div class="callout callout-danger">
-                        <h4><i class="fa fa-warning"></i> Warning | The system has found some errors with the following ORS Number:</h4>
+                        <h4><i class="fa fa-warning"></i> Warning | The system has found {{$orsNoErrors->count()}} errors with the following ORS Number:</h4>
                         @foreach($orsNoErrors as $orsNoError)
                         <p>
                             <a href="{{route('dashboard.ors.index')}}?find={{$orsNoError->ors_no}}" target="_blank"><span class="text-strong">{{$orsNoError->ors_no}}</span> - {{$orsNoError->payee}} ----- {{$orsNoError->particulars}}</a>
@@ -80,6 +80,21 @@
                         @endforeach
                     </div>
                 @endif
+
+                    @if(!empty($orsAppliedProjectErrors))
+                        <div class="callout callout-danger">
+                            <h4><i class="fa fa-warning"></i> Warning | The system has found {{count($orsAppliedProjectErrors)}} errors with the Applied Projects of the following ORS: </h4>
+                            <div class="row">
+                                @foreach($orsAppliedProjectErrors as $orsAppliedProjectError)
+                                    <div class="col-lg-1 col-md-2 col-sm-3 col-xs-4">
+                                        <li>
+                                            <a href="{{route('dashboard.ors.edit',$orsAppliedProjectError->slug)}}?find={{$orsAppliedProjectError->ors_no}}" target="_blank"><small class="">{{$orsAppliedProjectError->ors_no}}</small></a>
+                                        </li>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
 
             </div>
         </div>

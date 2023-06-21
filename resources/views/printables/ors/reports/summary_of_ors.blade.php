@@ -21,7 +21,7 @@
     </div>
     <table class="tbl tbl-bordered-grey tbl-padded" style="width: 100%; font-size: 11px">
         <thead>
-        <tr>
+        <tr class="bg-purple">
             <th class="text-center">ORS No.</th>
             <th class="text-center">Ref Doc</th>
             <th class="text-center">Ref No.</th>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Applicant;
 use App\Models\Budget\ORS;
+use App\Models\Budget\ORSProjectsApplied;
 use App\Models\Course;
 use App\Models\Document;
 use App\Models\DocumentDisseminationLog;
@@ -193,8 +194,21 @@ class HomeController extends Controller{
             $orsNoErrors = ORS::query()
                 ->where(DB::raw('length(ors_no)'),'!=',13)
                 ->get();
+
+            $appliedProjects = ORSProjectsApplied::query()
+                ->with('ors')
+                ->whereDoesntHave('pap')
+                ->get();
+            $orsAppliedProjectErrors = [];
+            if(!empty($appliedProjects)){
+                foreach ($appliedProjects as $appliedProject){
+                    $orsAppliedProjectErrors[$appliedProject->ors->slug] = $appliedProject->ors;
+                }
+            }
+
             return view('dashboard.home.budget_index')->with([
                 'orsNoErrors' => $orsNoErrors,
+                'orsAppliedProjectErrors' => $orsAppliedProjectErrors,
             ]);
         }
 
