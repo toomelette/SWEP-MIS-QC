@@ -492,8 +492,11 @@ Route::group(['prefix'=>'dashboard', 'as' => 'dashboard.',
     Route::get('ors/report_generate/{type}','Budget\ORSController@reportGenerate')->name('ors.report_generate');
     Route::resource('ors','Budget\ORSController');
 
-    /** ORS **/
+    /** Projects **/
     Route::resource('projects','Budget\ProjectsController');
+
+    /** Annual Budget **/
+    Route::resource('annual_budget','Budget\AnnualBudgetController');
 });
 
 Route::get('display_qr/{slug}',function ($slug, \App\Http\Controllers\DocumentController $documentController){

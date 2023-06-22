@@ -6,6 +6,7 @@ namespace App\Swep\Helpers;
 
 use App\Models\Applicant;
 use App\Models\ApplicantPositionApplied;
+use App\Models\Budget\ChartOfAccounts;
 use App\Models\HRPayPlanitilla;
 use App\Models\PPU\PPURespCodes;
 use App\Models\PPU\RCDesc;
@@ -490,5 +491,20 @@ class Arrays
             $arr[$dept->name] = null;
         }
         return $arr;
+    }
+
+    public static function chartOfAccounts(){
+        $arr = [];
+        $coas = ChartOfAccounts::query()->select('account_code','account_title')->get();
+        if(!$coas->isEmpty()){
+            return $coas
+                ->pluck('account_title','account_code')
+                ->map(function ($value,$key){
+                    return $key.' | '.$value;
+                })
+                ->sort()
+                ->toArray();
+        }
+        return null;
     }
 }

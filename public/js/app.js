@@ -380,6 +380,19 @@ function succeed(target_form, reset,modal){
     form_id = $(target_form[0]).attr('id');
     if(reset == true){
         $("#"+form_id).get(0).reset();
+        $element = $(target_form);
+        $element.find('select').each(function (i, select) {
+            var $select = $(select);
+
+            // Make sure that the select has Select2.
+            if($select.hasClass("select2-hidden-accessible")) {
+                // Perform your action, e.g.:
+                $("#"+$select.attr('id')).val('');
+                $("#"+$select.attr('id')).trigger('change');
+                // You can also use the console for debugging:
+                // console.log($select);
+            }
+        });
     }
 
     if(modal == true){
