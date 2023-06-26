@@ -11,7 +11,7 @@
     <section class="content">
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Projects Activities and Programs</h3>
+                <h3 class="box-title"></h3>
                 <div class="pull-right">
                     <button class="btn btn-primary btn-sm" data-target="#add_modal" data-toggle="modal"><i class="fa fa-plus"></i> New</button>
                 </div>

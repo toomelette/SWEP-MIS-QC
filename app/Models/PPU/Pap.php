@@ -4,6 +4,7 @@
 namespace App\Models\PPU;
 
 use App\Models\Budget\ORSProjectsApplied;
+use App\Models\PPBTMS\Transactions;
 use Illuminate\Database\Eloquent\Model;
 
 class Pap extends Model
@@ -23,5 +24,7 @@ class Pap extends Model
         return $this->hasMany(ORSProjectsApplied::class,'pap_code','pap_code');
     }
 
-
+    public function procurements(){
+        return $this->hasMany(Transactions::class,'pap_code','pap_code')->where('ref_book','=','PR')->orWhere('ref_book','=','JR');
+    }
 }

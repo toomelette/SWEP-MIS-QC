@@ -80,7 +80,7 @@
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#tab_1" data-toggle="tab">ORS</a></li>
-{{--                <li><a href="#tab_2" data-toggle="tab">Tab 2</a></li>--}}
+                <li><a href="#tab_2" data-toggle="tab">Procurements</a></li>
 {{--                <li><a href="#tab_3" data-toggle="tab">Tab 3</a></li>--}}
             </ul>
             <div class="tab-content">
@@ -110,13 +110,28 @@
                 </div>
 
                 <div class="tab-pane" id="tab_2">
-                    The European languages are members of the same family. Their separate existence is a myth.
-                    For science, music, sport, etc, Europe uses the same vocabulary. The languages only differ
-                    in their grammar, their pronunciation and their most common words. Everyone realizes why a
-                    new common language would be desirable: one could refuse to pay expensive translators. To
-                    achieve this, it would be necessary to have uniform grammar, pronunciation and more common
-                    words. If several languages coalesce, the grammar of the resulting language is more simple
-                    and regular than that of the individual languages.
+                    <div id="procurements_table_container" style="display: none">
+                        <table class="table table-bordered table-striped table-hover" id="procurements_table" style="width: 100%">
+                            <thead>
+                            <tr class="">
+                                <th >Ref Book</th>
+                                <th class="th-20">Ref No</th>
+                                <th class="th-20">Date</th>
+                                <th >Requested by</th>
+                                <th >Purpose</th>
+                                <th >Amount</th>
+                                <th >Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="tbl_loader2">
+                        <center>
+                            <img style="width: 100px" src="{{asset('images/loader.gif')}}">
+                        </center>
+                    </div>
                 </div>
 
                 <div class="tab-pane" id="tab_3">
@@ -157,7 +172,7 @@
             'dom' : 'lBfrtip',
             "processing": true,
             "serverSide": true,
-            "ajax" : '{{route('dashboard.projects.show',$pap->slug)}}',
+            "ajax" : '{{route('dashboard.projects.show',$pap->slug)}}?table=ors',
             "columns": [
                 { "data": "ors_no" },
                 { "data": "ors_date" },
@@ -199,6 +214,7 @@
             "responsive": true,
             "initComplete": function( settings, json ) {
                 // console.log(settings);
+                style_datatable("#"+settings.sTableId);
                 setTimeout(function () {
                     $("#filter_form select[name='is_active']").val('ACTIVE');
                     $("#filter_form select[name='is_active']").trigger('change');
@@ -223,6 +239,12 @@
                         // window.history.pushState({}, document.title, "/dashboard/employee");
                     }
 
+                });
+                $('#'+settings.sTableId+'_filter input').unbind();
+                $('#'+settings.sTableId+'_filter input').bind('keyup', function (e) {
+                    if (e.keyCode == 13) {
+                        ors_tbl.search(this.value).draw();
+                    }
                 });
                 @if(\Illuminate\Support\Facades\Request::get('toPage') != null && \Illuminate\Support\Facades\Request::get('mark') != null)
                 setTimeout(function () {
@@ -253,6 +275,110 @@
             }
         })
 
-        style_datatable("#ors_table");
+
+        procurements_tbl = $("#procurements_table").on('xhr.dt', function (e, settings, json, xhr){
+            if(xhr.status > 500){
+                alert('Error '+xhr.status+': '+xhr.responseJSON.message);
+            }
+        }).DataTable({
+            'dom' : 'lBfrtip',
+            "processing": true,
+            "serverSide": true,
+            "ajax" : '{{route('dashboard.projects.show',$pap->slug)}}?table=procurements',
+            "columns": [
+                { "data": "ref_book" },
+                { "data": "ref_no" },
+                { "data": "date" },
+                { "data": "requested_by" },
+                { "data": "purpose" },
+                { "data": "abc"},
+                { "data": "action"},
+
+            ],
+            "buttons": [
+                {!! __js::dt_buttons() !!}
+            ],
+            "columnDefs":[
+                {
+                    "targets" : 6,
+                    "orderable" : false,
+                    "visible" : false,
+                    "class" : 'action2'
+                },
+                {
+                    'targets' : [0,1,2],
+                    "class" : 'w-10p',
+                },
+                {
+                    'targets' : 5,
+                    'class' : 'w-10p text-right',
+                },
+
+            ],
+            "order" : [[1, 'desc'],[2,'desc']],
+            "responsive": true,
+            "initComplete": function( settings, json ) {
+                // console.log(settings);
+                style_datatable("#"+settings.sTableId);
+                setTimeout(function () {
+                    $("#filter_form select[name='is_active']").val('ACTIVE');
+                    $("#filter_form select[name='is_active']").trigger('change');
+                },100);
+
+                setTimeout(function () {
+                    // $('a[href="#advanced_filters"]').trigger('click');
+                    // $('.advanced_filters_toggler').trigger('click');
+                },1000);
+
+                $('#tbl_loader2').fadeOut(function(){
+                    $("#procurements_table_container").fadeIn(function () {
+                        @if(request()->has('initiator') && request('initiator') == 'create')
+                        introJs().start();
+                        @endif
+                    });
+                    if(find != ''){
+                        procurements_tbl.search(find).draw();
+                        setTimeout(function(){
+                            active = '';
+                        },3000);
+                        // window.history.pushState({}, document.title, "/dashboard/employee");
+                    }
+
+                });
+                $('#'+settings.sTableId+'_filter input').unbind();
+                $('#'+settings.sTableId+'_filter input').bind('keyup', function (e) {
+                    if (e.keyCode == 13) {
+                        procurements_tbl.search(this.value).draw();
+                    }
+                });
+                @if(\Illuminate\Support\Facades\Request::get('toPage') != null && \Illuminate\Support\Facades\Request::get('mark') != null)
+                setTimeout(function () {
+                    procurements_tbl.page({{\Illuminate\Support\Facades\Request::get('toPage')}}).draw('page');
+                    active = '{{\Illuminate\Support\Facades\Request::get("mark")}}';
+                    notify('Employee successfully updated.');
+                    // window.history.pushState({}, document.title, "/dashboard/employee");
+                },700);
+                @endif
+            },
+            "language":
+                {
+                    "processing": "<center><img style='width: 70px' src='{{asset("images/loader.gif")}}'></center>",
+                },
+            "drawCallback": function(settings){
+                // console.log(procurements_tbl.page.info().page);
+                $("#procurements_table a[for='linkToEdit']").each(function () {
+                    let orig_uri = $(this).attr('href');
+                    $(this).attr('href',orig_uri+'?page='+procurements_tbl.page.info().page);
+                });
+                $("#totalCo").html(settings.json.totalCo);
+                $("#totalMooe").html(settings.json.totalMooe);
+                $('[data-toggle="tooltip"]').tooltip();
+                $('[data-toggle="modal"]').tooltip();
+                if(active != ''){
+                    $("#procurements_table #"+active).addClass('success');
+                }
+            }
+        })
+
     </script>
 @endsection

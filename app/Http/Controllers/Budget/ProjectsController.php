@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Budget\PapFormRequest;
 use App\Models\Budget\ORS;
 use App\Models\Budget\ORSProjectsApplied;
+use App\Models\PPBTMS\Transactions;
 use App\Models\PPU\Pap;
 use App\Models\PPU\PPURespCodes;
 use App\Swep\Helpers\Helper;
@@ -143,55 +144,99 @@ class ProjectsController extends Controller
     }
 
     public function show($slug, Request $request){
+
+        if($request->has('draw') && $request->table == 'ors'){
+            return $this->orsDatatable($slug, $request);
+        }
+
+        if($request->has('draw') && $request->table == 'procurements'){
+            return $this->procurementsDatatable($slug, $request);
+        }
+
         $pap = $this->papService->findBySlug($slug);
         $pap_code = $pap->pap_code;
-        if($request->has('draw')){
-            $ors = ORS::query()->with(['projectsApplied'])
-                ->whereHas('projectsApplied',function ($q) use ($pap_code){
-                    return $q->where('pap_code','=',$pap_code);
-                });
-
-            $sumCo = ORSProjectsApplied::query()->where('pap_code','=',$pap_code)->sum('co');
-            $sumMooe = ORSProjectsApplied::query()->where('pap_code','=',$pap_code)->sum('mooe');
-            if($request->has('funds') && $request->funds != ''){
-                $ors = $ors->where('funds','=',$request->funds);
-            }
-            if($request->has('ref_book') && $request->ref_book != ''){
-                $ors = $ors->where('ref_book','=',$request->ref_book);
-            }
-
-            if($request->has('applied_projects') && $request->applied_projects != ''){
-                $ors = $ors->whereHas('projectsApplied',function ($q) use($request){
-                    return $q->where('pap_code','=',$request->applied_projects);
-                });
-            }
-            $request->applied_projects = $pap->pap_code;
-            return DataTables::of($ors)
-                ->addColumn('action',function($data) use ($pap_code){
-                    return '<a href="'.route('dashboard.ors.index').'?find='.$data->ors_no.'" target="_blank" class="btn btn-sm btn-default">View ORS</>';
-                })
-                ->addColumn('details',function($data) use($request){
-                    return view('dashboard.budget.ors.dtDetails')->with([
-                        'data' => $data,
-                    ])->with([
-                        'request' => $request,
-                    ]);
-                })
-                ->editColumn('amount',function($data){
-                    return number_format($data->amount,2);
-                })
-                ->editColumn('ors_date',function($data){
-                    return $data->ors_date != null ? Carbon::parse($data->ors_date)->format('M. d, Y') : '';
-                })
-                ->escapeColumns([])
-                ->setRowId('slug')
-                ->with([
-                    'totalCo' => number_format($sumCo,2),
-                    'totalMooe' => number_format($sumMooe,2),
-                ])->toJson();
-        }
         return view('dashboard.budget.projects.show')->with([
             'pap' => $pap,
         ]);
+    }
+
+    private function orsDatatable($slug, Request $request){
+        $pap = $this->papService->findBySlug($slug);
+        $pap_code = $pap->pap_code;
+        $ors = ORS::query()->with(['projectsApplied'])
+            ->whereIn('slug',function ($q) use ($pap_code){
+                $q->select('ors_slug')
+                    ->from(with(new ORSProjectsApplied())->getTable())
+                    ->where('pap_code','=',$pap_code);
+            });
+
+        $sumCo = ORSProjectsApplied::query()->where('pap_code','=',$pap_code)->sum('co');
+        $sumMooe = ORSProjectsApplied::query()->where('pap_code','=',$pap_code)->sum('mooe');
+        if($request->has('funds') && $request->funds != ''){
+            $ors = $ors->where('funds','=',$request->funds);
+        }
+        if($request->has('ref_book') && $request->ref_book != ''){
+            $ors = $ors->where('ref_book','=',$request->ref_book);
+        }
+
+        if($request->has('applied_projects') && $request->applied_projects != ''){
+            $ors = $ors->whereHas('projectsApplied',function ($q) use($request){
+                return $q->where('pap_code','=',$request->applied_projects);
+            });
+        }
+        $request->applied_projects = $pap->pap_code;
+        return DataTables::of($ors)
+            ->addColumn('action',function($data) use ($pap_code){
+                return '<a href="'.route('dashboard.ors.index').'?find='.$data->ors_no.'" target="_blank" class="btn btn-sm btn-default">View ORS</>';
+            })
+            ->addColumn('details',function($data) use($request){
+                return view('dashboard.budget.ors.dtDetails')->with([
+                    'data' => $data,
+                ])->with([
+                    'request' => $request,
+                ]);
+            })
+            ->editColumn('amount',function($data){
+                return number_format($data->amount,2);
+            })
+            ->editColumn('ors_date',function($data){
+                return $data->ors_date != null ? Carbon::parse($data->ors_date)->format('M. d, Y') : '';
+            })
+            ->escapeColumns([])
+            ->setRowId('slug')
+            ->with([
+                'totalCo' => number_format($sumCo,2),
+                'totalMooe' => number_format($sumMooe,2),
+            ])->toJson();
+    }
+
+    private function procurementsDatatable($slug, Request $request){
+        $pap = $this->papService->findBySlug($slug);
+        $pap_code = $pap->pap_code;
+        $transactions = Transactions::query()
+            ->where('pap_code','=',$pap_code)
+            ->where(function ($q){
+                $q->where('ref_book','=','PR')
+                    ->orWhere('ref_book','=','JR');
+            });
+
+
+        return DataTables::of($transactions)
+            ->addColumn('action',function($data) use ($pap_code){
+                return 1;
+                return '<a href="'.route('dashboard.ors.index').'?find='.$data->ors_no.'" target="_blank" class="btn btn-sm btn-default">View ORS</>';
+            })
+            ->editColumn('abc',function($data){
+                return number_format($data->abc,2);
+            })
+            ->editColumn('ors_date',function($data){
+                return $data->ors_date != null ? Carbon::parse($data->ors_date)->format('M. d, Y') : '';
+            })
+            ->editColumn('date',function($data){
+                return Helper::dateFormat($data->date,'M. d, Y');
+            })
+            ->escapeColumns([])
+            ->setRowId('slug')
+            ->toJson();
     }
 }
