@@ -25,8 +25,8 @@
 
       <div class="content-wrapper" >
 
-          @if(!empty(Auth::user()->employeeUnion))
-            @if(Hash::check(Carbon::parse(Auth::user()->employeeUnion->birthday)->format('mdy'), \Illuminate\Support\Facades\Auth::user()->password))
+          @if(!empty(Auth::user()->employee))
+            @if(Hash::check(Carbon::parse(Auth::user()->employee->birthday)->format('mdy'), \Illuminate\Support\Facades\Auth::user()->password))
               <div class="row" id="change_pass_container">
                 <div class="col-md-12">
                   <a href="#" id="change_pass_href">

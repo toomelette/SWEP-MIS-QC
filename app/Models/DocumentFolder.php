@@ -10,7 +10,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 class DocumentFolder extends Model{
 
 
-	use Sortable,LogsActivity;
+//	use Sortable,LogsActivity;
 
     protected $table = 'rec_document_folders';
 
@@ -21,10 +21,10 @@ class DocumentFolder extends Model{
 	public $timestamps = false;
 
 
-    protected static $logName = 'document folder';
-    protected static $logAttributes = ['*'];
-    protected static $ignoreChangedAttributes = ['updated_at','ip_updated','user_updated'];
-    protected static $logOnlyDirty = true;
+//    protected static $logName = 'document folder';
+//    protected static $logAttributes = ['*'];
+//    protected static $ignoreChangedAttributes = ['updated_at','ip_updated','user_updated'];
+//    protected static $logOnlyDirty = true;
 
     protected $attributes = [
         
@@ -42,9 +42,10 @@ class DocumentFolder extends Model{
     ];
 
     public function getTable(){
-        if( Auth::user()->getAccessToDocuments() == 'QC'){
+        $user_access = 'VIS';
+        if( $user_access == 'QC'){
             return 'qc_rec_document_folders';
-        }elseif(  Auth::user()->getAccessToDocuments() == 'VIS'){
+        }elseif(  $user_access == 'VIS'){
             return 'rec_document_folders';
         }
     }

@@ -195,17 +195,20 @@
                             ) !!}
                         </div>
                         <div class="row">
+                            @php
+                                $folderCodes = \App\Swep\Helpers\Helper::folderCodesArray();
+                            @endphp
                             {!! \App\Swep\ViewHelpers\__form2::select('folder_code',[
                                 'label' => 'Folder Code:',
                                 'cols' => 6,
-                                'options' => \App\Swep\Helpers\Helper::folderCodesArray(),
+                                'options' => $folderCodes,
                                 'class' => 'select2',
                             ]) !!}
 
                             {!! \App\Swep\ViewHelpers\__form2::select('folder_code2',[
                                 'label' => '2nd Folder Code (If Cross-File) :',
                                 'cols' => 6,
-                                'options' => \App\Swep\Helpers\Helper::folderCodesArray(),
+                                'options' => $folderCodes,
                                 'class' => 'select2',
                             ]) !!}
                         </div>

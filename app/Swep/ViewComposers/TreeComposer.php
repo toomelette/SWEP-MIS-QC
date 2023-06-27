@@ -28,7 +28,7 @@ class TreeComposer
 
         $user_submenus = $user_submenus->get();
 
-        $dtr_menus = Menu::query();
+        $dtr_menus = Menu::query()->with(['submenu']);
         if(Helper::dtrMenuOn() == true){
             $dtr_menus = $dtr_menus->where('slug','=','OjM6liSKVeDpwZQc');
         }

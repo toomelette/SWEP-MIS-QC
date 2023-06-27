@@ -40,15 +40,18 @@ class DocumentController extends Controller{
 
     
     public function index(DocumentFilterRequest $request){
-        Auth::user()->hasAccessToDocuments('QC','VIS');
+
+//        Auth::user()->hasAccessToDocuments('QC','VIS');
+
         $documents = Document::with(['folder','folder2']);
 
         if ($request->ajax() && !empty($request->draw)){
-
+//            return 1;
             return $this->dataTable($request, $documents);
         }
-        return $this->document->fetch($request);
-    
+
+        return view('dashboard.document.index');
+
     }
 
     
@@ -74,12 +77,11 @@ class DocumentController extends Controller{
             $documents->where('date','>=',$request->date_after);
         }
 
-
+        $storage = $this->getStorage();
 
         return \DataTables::of($documents)
-            ->addColumn('view_document',function($data){
-
-                if($this->getStorage()->exists($data->path.$data->filename)){
+            ->addColumn('view_document',function($data) use ($storage){
+                if($storage->exists($data->path.$data->filename)){
                     return '<a href="'.route("dashboard.document.view_file", $data->slug).'" class="btn btn-sm btn-success" target="_blank">
                                     <i class="fa fa-file-o"></i>
                                   </a>';

@@ -27,16 +27,17 @@ class Document extends Model{
         });
     }
 
-//    protected $table = 'rec_documents';
+//    protected $table = env('DOCUMENTS_TABLE','');
 
     use Sortable, LogsActivity;
 
     public function getTable(){
-        if( Auth::user()->getAccessToDocuments() == 'QC'){
-            return 'qc_rec_documents';
-        }elseif(  Auth::user()->getAccessToDocuments() == 'VIS'){
-            return 'rec_documents';
-        }
+        return env('DOCUMENTS_TABLE');
+//        if( Auth::user()->getAccessToDocuments() == 'QC'){
+//            return 'qc_rec_documents';
+//        }elseif(  Auth::user()->getAccessToDocuments() == 'VIS'){
+//            return 'rec_documents';
+//        }
     }
 
     use SoftDeletes;

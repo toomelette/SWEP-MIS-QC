@@ -182,6 +182,7 @@ class User extends Authenticatable{
 
     public function hasAccessToDocuments(...$access){
         if(is_array($access)){
+
             $acc = $this->hasMany(UserAccess::class,'user','user_id')
                 ->where('for','=','documents')
                 ->where(function($query) use ($access){

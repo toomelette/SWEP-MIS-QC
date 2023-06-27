@@ -11,6 +11,8 @@
     }else{
       $server_address = $sa->string_value;
     }
+
+    $userName = Helper::getUserName();
   @endphp
 
   <nav class="navbar navbar-static-top" @if($_SERVER['SERVER_ADDR'] != $server_address)style="background-color: #054629" @endif>
@@ -41,7 +43,7 @@
             <img src="{{asset('images/avatar.jpeg')}}" class="user-image" alt="User Image">
             @endif
             @if(Auth::check())
-              {!! strtoupper(Helper::getUserName()['firstname']) !!}
+              {!! strtoupper($userName['firstname']) !!}
             @endif
           </a>
           <ul class="dropdown-menu">
@@ -55,8 +57,8 @@
 
               <p>
                 @if(Auth::check())
-                  {!! strtoupper(Helper::getUserName()['firstname']) !!}  {!! strtoupper(Helper::getUserName()['lastname']) !!}
-                  <small>{!! strtoupper(Helper::getUserName()['position']) !!}</small>
+                  {!! strtoupper($userName['firstname']) !!}  {!! strtoupper($userName['lastname']) !!}
+                  <small>{!! strtoupper($userName['position']) !!}</small>
                 @endif
                 
               </p>
