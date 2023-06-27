@@ -1,7 +1,7 @@
 @php
     $rand = \Illuminate\Support\Str::random();
 @endphp
-<tr id="{{$rand}}">
+<tr id="{{$rand}}" class="">
     <td>
         {!! \App\Swep\ViewHelpers\__form2::selectOnly('account_entries['.$rand.'][type]',[
             'class' => 'input-sm ors_dv account_entries_'.$rand.'_type',
@@ -113,7 +113,8 @@
             $("#"+parentTrId+" [for='account_code']").val(data.id);
             $("#"+parentTrId+" [for='text-value']").val(data.text);
         });
-    @endif
     $(".ors_dv").change();
+    @endif
+
 
 </script>

@@ -16,9 +16,10 @@ use App\Models\SSL;
 use App\Swep\Helpers\Helper;
 use App\Swep\Services\Budget\ORSService;
 use App\Swep\Services\Budget\PapService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Request;
+
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
@@ -26,12 +27,14 @@ class AjaxController extends Controller
 {
 
     protected $papService;
-    public function __construct(PapService $papService)
+    protected $orsService;
+    public function __construct(PapService $papService, ORSService $orsService)
     {
         $this->papService = $papService;
+        $this->orsService = $orsService;
     }
 
-    public function get($for, ORSService $ORSService){
+    public function get($for, ORSService $ORSService, Request $r){
 
         if($for == 'compute_monthly_salary'){
             return $this->compute_monthly_salary();
@@ -88,7 +91,7 @@ class AjaxController extends Controller
         }
 
         if($for == 'add_row'){
-            return view('ajax.dynamic.'.Request::get('view'));
+            return view('ajax.dynamic.'.\Illuminate\Support\Facades\Request::get('view'));
         }
 
         if($for == 'account'){
@@ -161,6 +164,10 @@ class AjaxController extends Controller
             }
         }
 
+        if($for == 'ors_payees'){
+            return $this->orsService->__typeAhead_payee($r);
+        }
+
         //check for pap balances;
 
         if($for == 'ors_pap_balances'){
@@ -169,7 +176,7 @@ class AjaxController extends Controller
         }
 
         if($for == 'orsAccountEntry'){
-            $r = Request::all();
+            $r = \Illuminate\Support\Facades\Request::all();
             return view('ajax.dynamic.ors_account_entry')->with([
                 'data' => $r,
             ]);

@@ -23,6 +23,7 @@ class ORSFormRequest extends FormRequest
            'funds' => 'required|string',
             'ors_date' => 'required|date_format:Y-m-d',
             'payee' => 'required|string',
+            'amount' => 'required|string|min:2',
 
             'account_entries.*.type' => 'required',
             'account_entries.*.account_code' => 'required',

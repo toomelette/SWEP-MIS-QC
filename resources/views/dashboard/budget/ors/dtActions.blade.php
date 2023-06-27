@@ -2,7 +2,7 @@
     <button type="button" class="btn btn-default btn-sm show_ors_btn" data="{{$data->slug}}" data-toggle="modal" data-target="#show_ors_modal" title="" data-placement="left" data-original-title="View more">
         <i class="fa fa-file-text"></i>
     </button>
-    <a class="btn btn-default btn-sm print_pr_btn" data="{{$data->slug}}" target="popup" href="{{route('dashboard.ors.edit',$data->slug)}}"title="" data-placement="left" data-original-title="Print">
+    <a class="btn btn-default btn-sm" data="{{$data->slug}}" target="_self" href="{{route('dashboard.ors.edit',$data->slug)}}"title="" data-placement="left" data-original-title="Print">
         <i class="fa fa-edit"></i>
     </a>
     <button type="button" onclick="delete_data('{{$data->slug}}','{{route("dashboard.ors.destroy",$data->slug)}}')" class="btn btn-sm btn-danger" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete">

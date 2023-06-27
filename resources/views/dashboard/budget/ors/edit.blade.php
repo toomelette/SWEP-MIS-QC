@@ -50,6 +50,8 @@
                         {!! \App\Swep\ViewHelpers\__form2::textbox('payee',[
                             'label' => 'Payee:',
                             'cols' => 4,
+                            'id' => 'payee',
+                            'autocomplete' => 'off',
                         ],$ors ?? null) !!}
 
                         {!! \App\Swep\ViewHelpers\__form2::textbox('office',[
@@ -314,10 +316,12 @@
                     {!! __html::token_header() !!}
                 },
                 success: function (res) {
-                    succeed(form,true,true);
+                    succeed(form,false,true);
+                    window.location = '{{route('dashboard.ors.index')}}?active='+res.slug;
                 },
                 error: function (res) {
                     errored(form,res);
+
                 }
             })
         })
@@ -387,9 +391,27 @@
                 }
             });
         });
+        $("body").on('change','.ors_dv',function () {
+            $(this).parents('tr').removeClass('row-ORS');
+            $(this).parents('tr').removeClass('row-DV');
+            $(this).parents('tr').addClass('row-'+$(this).val());
+        })
 
+        $(".ors_dv").each(function () {
+            $(this).change();
+        })
+
+        $(document).on('focus', '.select2.select2-container', function (e) {
+            // only open on original attempt - close focus event should not fire open
+            if (e.originalEvent && $(this).find(".select2-selection--single").length > 0) {
+                $(this).siblings('select').select2('open');
+            }
+        });
+        $(".select2_respCenter").select2();
         totalAccountEntries();
         totalAppliedProjects();
-
+        $("#payee").typeahead({
+            ajax : "{{ route('dashboard.ajax.get','ors_payees') }}?typeahead=true",
+        });
     </script>
 @endsection

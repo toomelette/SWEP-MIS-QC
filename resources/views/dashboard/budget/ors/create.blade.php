@@ -39,6 +39,8 @@
                             {!! \App\Swep\ViewHelpers\__form2::textbox('payee',[
                                 'label' => 'Payee:',
                                 'cols' => 4,
+                                'id' => 'payee',
+                                'autocomplete' => 'off',
                             ]) !!}
 
                             {!! \App\Swep\ViewHelpers\__form2::textbox('office',[
@@ -382,5 +384,11 @@
                 }
             })
         })
+
+
+
+        $("#payee").typeahead({
+            ajax : "{{ route('dashboard.ajax.get','ors_payees') }}?typeahead=true",
+        });
     </script>
 @endsection

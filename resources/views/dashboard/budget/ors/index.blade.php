@@ -48,6 +48,14 @@
                                             'select2_preSelected' => '' ,
                                         ],$data->pap_code ?? null) !!}
                                     </div>
+
+                                    <div class="col-md-2 dt_filter-parent-div">
+                                        <label>Fund Source:</label>
+                                        <select name="ref_book"  class="form-control dt_filter filters">
+                                            <option value="">Don't filter</option>
+                                            {!! \App\Swep\Helpers\Helper::populateOptionsFromArray(\App\Swep\Helpers\Arrays::orsBooks()) !!}
+                                        </select>
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -95,7 +103,7 @@
         //-----DATATABLES-----//
         modal_loader = $("#modal_loader").parent('div').html();
         //Initialize DataTable
-        active = '';
+        active = '{{(\Illuminate\Support\Facades\Request::has('active') && \Illuminate\Support\Facades\Request::get('active') != '') ? \Illuminate\Support\Facades\Request::get('active') : ''}}';
         ors_tbl = $("#ors_table").on('xhr.dt', function (e, settings, json, xhr){
             if(xhr.status > 500){
                 alert('Error '+xhr.status+': '+xhr.responseJSON.message);
@@ -141,6 +149,15 @@
                 },
 
             ],
+            "stateSave": true,
+            "stateDuration": 60 * 60 * 24,
+            stateSaveCallback: function(settings,data) {
+                console.log(settings);
+                localStorage.setItem( 'DataTables_' + settings.sInstance, JSON.stringify(data) )
+            },
+            stateLoadCallback: function(settings) {
+                return JSON.parse( localStorage.getItem( 'DataTables_' + settings.sInstance ) )
+            },
             "order" : [[1, 'desc'],[2,'desc']],
             "responsive": true,
             "initComplete": function( settings, json ) {
@@ -166,7 +183,11 @@
                         setTimeout(function(){
                             active = '';
                         },3000);
-                        // window.history.pushState({}, document.title, "/dashboard/employee");
+                        window.history.pushState({}, document.title, "/dashboard/ors");
+                    }
+                    if(active != ''){
+                        toast('success','Data successfully updated','Success');
+                        window.history.pushState({}, document.title, "/dashboard/ors");
                     }
 
                 });
@@ -231,6 +252,9 @@
                 }
             })
         })
+
+
+
 
         $(".select2_pap_code").select2({
             ajax: {

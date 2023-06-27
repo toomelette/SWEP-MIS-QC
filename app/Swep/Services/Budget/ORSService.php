@@ -6,6 +6,7 @@ namespace App\Swep\Services\Budget;
 
 use App\Models\Budget\ORS;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class ORSService
 {
@@ -39,5 +40,29 @@ class ORSService
     public function findBySlug($slug){
         $ors = ORS::query()->with(['accountEntries.chartOfAccount','projectsApplied'])->where('slug','=',$slug)->first();
         return $ors ?? abort(503,'ORS not found.');
+    }
+
+    public function __typeAhead_payee(Request $request){
+        if($request->query != ''){
+            $q = $request->get('query');
+            $ors  = ORS::query()
+                ->select(\DB::raw('payee , 
+                    case when payee like "%'.$q.'" then 3
+                        when payee like "%'.$q.'% " then 2
+                        when payee like "'.$q.'%" then 1 
+                        else 1000
+                    end
+                    as priority
+                    '))
+                ->groupBy('payee')
+                ->orderBy('priority','asc')
+                ->get();
+            return $ors->map(function ($data){
+                return [
+                    'id' => 0,
+                    'name' => $data->payee,
+                ];
+            });
+        }
     }
 }

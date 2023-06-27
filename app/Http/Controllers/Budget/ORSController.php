@@ -208,6 +208,7 @@ class ORSController extends Controller
                 $ors->projectsApplied()->delete();
                 ORSProjectsApplied::insert($arr);
             }
+            return $ors->only('slug');
         }
     }
 
