@@ -298,10 +298,10 @@ class AjaxController extends Controller
 
     private function applicant_courses(){
         $arr['results'] = [];
-        $courses = Course::query()->where('acronym','like','%'.Request::get("q").'%')
-            ->orWhere('name','like','%'.Request::get("q").'%')
+        $courses = Course::query()->where('acronym','like','%'.\Illuminate\Support\Facades\Request::get("q").'%')
+            ->orWhere('name','like','%'.\Illuminate\Support\Facades\Request::get("q").'%')
             ->groupBy('name')->limit(30)->get();
-        if(Request::get('default') == 'Select'){
+        if(\Illuminate\Support\Facades\Request::get('default') == 'Select'){
             array_push($arr['results'],['id'=>'','text' => "Select"]);
         }else{
             array_push($arr['results'],['id'=>'','text' => "Don't Filter"]);
@@ -315,10 +315,10 @@ class AjaxController extends Controller
     }
 
     private function search_active_employees(){
-        if(Request::get('afterTypeahead') == true){
+        if(\Illuminate\Support\Facades\Request::get('afterTypeahead') == true){
             $emp = Employee::query()
                 ->select('lastname','firstname','middlename','sex','date_of_birth','civil_status','cell_no')
-                ->where('slug','=',Request::get('id'))->first();
+                ->where('slug','=',\Illuminate\Support\Facades\Request::get('id'))->first();
 
             return [
                 'lastname' => $emp->lastname,
@@ -332,7 +332,7 @@ class AjaxController extends Controller
             ];
         }
         $arr = [];
-        $find = Request::get('query');
+        $find = \Illuminate\Support\Facades\Request::get('query');
 
         $emps = Employee::query()
             ->where(function ($query) use($find){
