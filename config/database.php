@@ -208,6 +208,7 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
             'trust_server_certificate' => 'true',
+            'encrypt' => 'false',
         ],
 
         'sqlsrv_accounting2017' => [
@@ -219,6 +220,7 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
             'trust_server_certificate' => 'true',
+            'encrypt' => 'false',
         ],
 //
 
