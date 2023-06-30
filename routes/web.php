@@ -829,7 +829,8 @@ Route::get('/sqlsrv',function (){
            'Database' => 'GASS',
            'UID' => 'sa',
            'PWD' => 'noliboy',
-       'TrustServerCertificate' => true,
+            'Encrypt' => 'no',
+            'TrustServerCertificate' => true,
        ];
    $conn = sqlsrv_connect($serverName,$connectionInfo);
     if( $conn ) {
