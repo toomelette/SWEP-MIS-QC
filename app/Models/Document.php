@@ -6,6 +6,7 @@ use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Kyslik\ColumnSortable\Sortable;
+use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -38,6 +39,10 @@ class Document extends Model{
 //        }elseif(  Auth::user()->getAccessToDocuments() == 'VIS'){
 //            return 'rec_documents';
 //        }
+    }
+
+    public function getActivitylogOptions():LogOptions {
+        return LogOptions::defaults();
     }
 
     use SoftDeletes;

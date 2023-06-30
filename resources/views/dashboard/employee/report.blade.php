@@ -166,8 +166,8 @@
                                                 <br>
                                                 Select columns to show: <span class="text-info text-strong pull-right">(Drag to reorder)</span>
                                                 <ol class="for_sort sortable todo-list">
-                                                    @if(count(\App\Http\Controllers\EmployeeController::allColumnsForReport()) > 0)
-                                                        @foreach(\App\Http\Controllers\EmployeeController::allColumnsForReport() as $column_name => $display_name)
+                                                    @if(count($allColumnsForReport) > 0)
+                                                        @foreach($allColumnsForReport as $column_name => $display_name)
                                                             <li class="ui-sortable">
                                                                 <div class="checkbox" style="margin: 0">
                                                                     <label>

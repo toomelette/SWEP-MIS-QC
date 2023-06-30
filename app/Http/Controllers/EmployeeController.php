@@ -544,8 +544,10 @@ class EmployeeController extends Controller{
 
 
     public function report(){
-        
-        return view('dashboard.employee.report');
+        $allColumnsForReport = $this->allColumnsForReport();
+        return view('dashboard.employee.report')->with([
+            'allColumnsForReport' => $allColumnsForReport,
+        ]);
     }
 
 

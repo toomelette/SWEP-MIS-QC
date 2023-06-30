@@ -31,17 +31,17 @@ class DocumentDisseminationRequest extends FormRequest{
 
         ];
 
-        if(!empty($this->request->get('employee'))){
-            foreach($this->request->get('employee') as $key => $value){
-                $rules['employee.'.$key] = 'string|max:45';
-            } 
-        }
-
-        if(!empty($this->request->get('email_contact'))){
-            foreach($this->request->get('email_contact') as $key => $value){
-                $rules['email_contact.'.$key] = 'string|max:45';
-            } 
-        }
+//        if(!empty($this->request->get('employee'))){
+//            foreach($this->request->get('employee') as $key => $value){
+//                $rules['employee.'.$key] = 'string|max:45';
+//            }
+//        }
+//
+//        if(!empty($this->request->get('email_contact'))){
+//            foreach($this->request->get('email_contact') as $key => $value){
+//                $rules['email_contact.'.$key] = 'string|max:45';
+//            }
+//        }
 
         return $rules;
 

@@ -160,7 +160,9 @@
             success: function (res) {
                 succeed(form,false,true);
                 active = res.slug;
-                documents_tbl.draw(false);
+                setTimeout(function () {
+                    documents_tbl.draw(false);
+                },500)
             },
             error: function (res) {
                 errored(form,res);

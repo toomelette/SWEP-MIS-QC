@@ -157,7 +157,6 @@ class DocumentFolderRepository extends BaseRepository implements DocumentFolderI
     public function populate($model, $entries){
 
         return $model->select('folder_code', 'description', 'slug')
-                     ->sortable()
                      ->orderBy('updated_at', 'desc')
                      ->paginate($entries);
 

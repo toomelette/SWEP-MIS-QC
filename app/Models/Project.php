@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Project extends Model{
@@ -20,5 +21,7 @@ class Project extends Model{
     protected static $ignoreChangedAttributes = ['updated_at','ip_updated','user_updated'];
     protected static $logOnlyDirty = true;
 
-    
+    public function getActivitylogOptions():LogOptions {
+        return LogOptions::defaults();
+    }
 }

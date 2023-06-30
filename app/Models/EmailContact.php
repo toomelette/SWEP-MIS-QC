@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Kyslik\ColumnSortable\Sortable;
+use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class EmailContact extends Model{
@@ -40,6 +41,10 @@ class EmailContact extends Model{
         'user_updated' => '',
 
     ];
+
+    public function getActivitylogOptions():LogOptions {
+        return LogOptions::defaults();
+    }
 
 
 

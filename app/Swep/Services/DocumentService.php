@@ -3,6 +3,7 @@
 namespace App\Swep\Services;
 
 use App\Http\Controllers\DocumentController;
+use App\Models\Document;
 use File;
 use Hash;
 use Illuminate\Support\Facades\Auth;
@@ -435,18 +436,25 @@ class DocumentService extends BaseService{
 
 
 
-
+    public function findBySlug($slug){
+        $doc = Document::query()
+            ->where('slug','=',$slug)
+            ->first();
+        return $doc ?? abort(503,'Doc not found');
+    }
 
     public function viewFile($slug){
-        $document = $this->document_repo->findBySlug($slug);
+
+        $document = $this->findBySlug($slug);
 
         if(!empty($document->filename)){
 //            $path = $this->__static->archive_dir() . $document->year .'/'. $document->folder_code .'/'. $document->filename;
             $path = $this->getStorage()->path('/'.$document->path.$document->filename);
 
-            if (!File::exists($path)) {
-                abort(504,'File does not exist.');
-            }
+//            return ;
+//            if (!File::exists($path)) {
+//                abort(504,'File does not exist.');
+//            }
             $file = File::get($path);
             $type = File::mimeType($path);
             $response = response()->make($file, 200);

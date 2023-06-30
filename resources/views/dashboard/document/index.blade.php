@@ -530,7 +530,9 @@
                     succeed(form,true,false);
                     notify('Document was uploaded successfully');
                     active = res.slug;
-                    documents_tbl.draw(false);
+                    setTimeout(function () {
+                        documents_tbl.draw(false);
+                    },500)
                     $(".select2").val(null).trigger("change");
                 },
                 error: function (res) {

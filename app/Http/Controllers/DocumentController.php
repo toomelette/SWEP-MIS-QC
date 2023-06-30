@@ -435,12 +435,12 @@ class DocumentController extends Controller{
 
         if(empty(\Illuminate\Support\Facades\Request::get('slug'))){
             $document = $this->findBySlug($slug);
+
             if(!empty($document)){
                 $rt = route('dashboard.document.view_file',$document->reference_no).'?slug='.$slug;
                 return redirect($rt);
             }
         }
-
         return $this->document->viewFile($request_slug);
 
     }

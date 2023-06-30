@@ -233,9 +233,8 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
 
 
     public function findBySlug($slug){
-        return $this->document->where('slug', $slug)
-            ->with('documentDisseminationLog',
-                'documentDisseminationLog.employee')
+        return Document::query()
+            ->with(['documentDisseminationLog','documentDisseminationLog.employee'])
             ->first();
 
         $document = $this->cache->remember('documents:findBySlug:' . $slug, 240, function() use ($slug){

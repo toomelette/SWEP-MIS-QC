@@ -5,6 +5,7 @@ namespace App\Models;
 
 use Kyslik\ColumnSortable\Sortable;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 
@@ -31,7 +32,9 @@ class DisbursementVoucher extends Model{
 
 
 
-
+    public function getActivitylogOptions():LogOptions {
+        return LogOptions::defaults();
+    }
 
 
     protected $attributes = [
