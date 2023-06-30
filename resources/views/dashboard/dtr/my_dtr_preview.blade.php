@@ -30,7 +30,9 @@
   <style>
       .fc-basic-view .fc-body .fc-row{min-height:8em !important;}
   </style>
-    @php($days_in_this_month = \Carbon\Carbon::parse($month)->daysInMonth)
+    @php
+        $days_in_this_month = \Carbon\Carbon::parse($month)->daysInMonth
+    @endphp
 {{--    {{print_r($dtr_array)}}--}}
     <form method="POST" id="download_form" action="{{route('dashboard.dtr.download')}}">
         @csrf
@@ -69,33 +71,42 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @php($late = 0)
-                        @php($undertime = 0)
-                        @php($saturdays= 0)
-                        @php($sundays = 0)
-                        @php($intro_num = 0)
+                        @php
+                            $late = 0;
+                            $undertime = 0;
+                            $saturdays= 0;
+                            $sundays = 0;
+                            $intro_num = 0;
+                        @endphp
+
 
                         @for($a = 1 ; $a <= $days_in_this_month; $a++)
+                            @php
+                                $date = sprintf('%02d', $a);
+                                $fullDate = $month.'-'.$date;
 
-                            @php($date = sprintf('%02d', $a))
-                            @php($fullDate = $month.'-'.$date)
-                            @if($month.'-'.$date == \Carbon\Carbon::now()->format('Y-m-d'))
-                                @php($mark = 'info')
-                            @else
-                                @php($mark ='')
-                            @endif
+                                if($month.'-'.$date == \Carbon\Carbon::now()->format('Y-m-d')){
+                                    $mark = 'info';
+                                }else{
+                                    $mark ='';
+                                }
+                            @endphp
+
+
 {{--                            IF THIS DATE HAS A RECORD--}}
                             @if(isset($dtr_array[$month.'-'.$date]))
 
-                                @php($late =  $late + $dtr_array[$month.'-'.$date]->late)
-                                @php($undertime = $undertime + $dtr_array[$month.'-'.$date]->undertime)
-                                @if($dtr_array[$month.'-'.$date]->calculated == -1)
-                                    @php($italic_op = '<i style="color:#e6a800">')
-                                    @php($italic_cl = '</i>')
-                                @else
-                                    @php($italic_op = '')
-                                    @php($italic_cl = '')
-                                @endif
+                                @php
+                                    $late =  $late + $dtr_array[$month.'-'.$date]->late;
+                                    $undertime = $undertime + $dtr_array[$month.'-'.$date]->undertime;
+                                    if($dtr_array[$month.'-'.$date]->calculated == -1){
+                                        $italic_op = '<i style="color:#e6a800">';
+                                        $italic_cl = '</i>';
+                                    }else{
+                                        $italic_op = '';
+                                        $italic_cl = '';
+                                    }
+                                @endphp
 
                                 <tr class="text-center {{$mark}}">
                                     <td>
@@ -154,11 +165,15 @@
                                     </td>
                                     <td class="text-left {{$editable_remarks_class}}" id="a{{\Illuminate\Support\Str::random(8)}}" data="{{$month}}-{{$date}}" title="Click to edit remark">
                                         @if(\Carbon\Carbon::parse($month.'-'.$date)->format('w') == 6)
-                                            @php($saturdays++)
+                                            @php
+                                                $saturdays++;
+                                            @endphp
                                             SATURDAY
                                         @endif
                                         @if(\Carbon\Carbon::parse($month.'-'.$date)->format('w') == 0)
-                                            @php($sundays++)
+                                            @php
+                                                $sundays++;
+                                            @endphp
                                             SUNDAY
                                         @endif
                                         @if(isset($holidays[$month.'-'.$date]))
@@ -171,7 +186,9 @@
                                     </td>
                                 </tr>
                             @else
-                                @php($intro_num++)
+                                @php
+                                    $intro_num++;
+                                @endphp
                                     <tr class="text-center {{$mark}} {{($intro_num == 1) ? 'first-empty-cell':''}}">
                                         <td>
                                             {{$date}}
@@ -186,11 +203,15 @@
                                         <td id="{{\Illuminate\Support\Str::random(9)}}" class="{{$editable_lt_ut}}"></td>
                                         <td class="text-left {{$editable_remarks_class}}" id="a{{\Illuminate\Support\Str::random(8)}}" data="{{$month}}-{{$date}}" title="Click to edit remark">
                                             @if(\Carbon\Carbon::parse($month.'-'.$date)->format('w') == 6)
-                                                @php($saturdays++)
+                                                @php
+                                                    $saturdays++;
+                                                @endphp
                                                 SAT
                                             @endif
                                             @if(\Carbon\Carbon::parse($month.'-'.$date)->format('w') == 0)
-                                                @php($sundays++)
+                                                @php
+                                                    $sundays++;
+                                                @endphp
                                                 SUN
                                             @endif
                                             @if(isset($holidays[$month.'-'.$date]))
@@ -309,7 +330,7 @@
                         @endforeach
                     @endif
                     @if(count($holidays)>0)
-                        @foreach($holidays as$key => $holiday)
+                        @foreach($holidays as $key => $holiday)
                         {
                             title          : "{{$holiday['name']}}",
                             start          : new Date("{{Carbon::parse($holiday['date'])->format('Y-m-d')}}T00:00:00"),
