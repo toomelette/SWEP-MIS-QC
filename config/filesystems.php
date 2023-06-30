@@ -50,7 +50,7 @@ return [
 
         'external1' => [
             'driver' => 'local',
-            'root' => '/home/swep_afd_storage/',
+            'root' => '/external1/swep_afd_storage/',
         ],
 
         'qc' => [
