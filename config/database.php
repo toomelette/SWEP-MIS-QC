@@ -208,7 +208,7 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
             'TrustServerCertificate' => 'yes',
-//            'encrypt' => 'false',
+            'Encrypt' => 'no',
         ],
 
         'sqlsrv_accounting2017' => [
@@ -220,7 +220,7 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
             'TrustServerCertificate' => 'yes',
-//            'encrypt' => 'false',
+            'Encrypt' => 'no',
         ],
 //
 
