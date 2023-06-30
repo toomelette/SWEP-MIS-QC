@@ -48,6 +48,11 @@ return [
             'root' => '/home/swep_afd_storage/',
         ],
 
+        'external1' => [
+            'driver' => 'local',
+            'root' => '/home/swep_afd_storage/',
+        ],
+
         'qc' => [
             'driver' => 'local',
             'root' => '/home/swep_afd_storage_qc/',
