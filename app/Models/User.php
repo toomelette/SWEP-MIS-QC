@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Kyslik\ColumnSortable\Sortable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -73,7 +74,9 @@ class User extends Authenticatable{
 
     ];
 
-
+    public function getActivitylogOptions():LogOptions {
+        return LogOptions::defaults();
+    }
 
 
 

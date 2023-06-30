@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Holiday extends Model
@@ -32,6 +33,10 @@ class Holiday extends Model
     protected static $logAttributes = ['*'];
     protected static $ignoreChangedAttributes = ['updated_at','ip_updated','user_updated'];
     protected static $logOnlyDirty = true;
+
+    public function getActivitylogOptions():LogOptions {
+        return LogOptions::defaults();
+    }
 
     protected $attributes = [
         'slug' => '',

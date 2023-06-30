@@ -818,9 +818,30 @@ Route::get('migrate_coa',function (){
             'treas_account' => $c->TREASACCT,
             'tax' => $c->TAX,
             'account_number' => $c->ACCOUNTNUMBER,
-
         ]);
     }
     \App\Models\Budget\ChartOfAccounts::insert($arr);
 });
 
+Route::get('/sqlsrv',function (){
+   $serverName = '10.36.1.105\SRA';
+   $connectionInfo = [
+           'Database' => 'GASS',
+           'UID' => 'sa',
+           'PWD' => 'noliboy',
+       'TrustServerCertificate' => true,
+       ];
+   $conn = sqlsrv_connect($serverName,$connectionInfo);
+    if( $conn ) {
+        echo "Connection established.<br />";
+    }else{
+        echo "Connection could not be established.<br />";
+        die( print_r( sqlsrv_errors(), true));
+    }
+});
+
+
+Route::get('numtowords',function (){
+    $num = 1546;
+
+});
