@@ -207,7 +207,7 @@ return [
             'password' => env('DB_PASSWORD_MSSQL_GASS', ''),
             'charset' => 'utf8',
             'prefix' => '',
-            'TrustServerCertificate' => 'yes',
+//            'TrustServerCertificate' => 'yes',
             'Encrypt' => 'no',
         ],
 
@@ -219,7 +219,7 @@ return [
             'password' => env('DB_PASSWORD_MSSQL_ACCOUNTING2017', ''),
             'charset' => 'utf8',
             'prefix' => '',
-            'TrustServerCertificate' => 'yes',
+//            'TrustServerCertificate' => 'yes',
             'Encrypt' => 'no',
         ],
 //
