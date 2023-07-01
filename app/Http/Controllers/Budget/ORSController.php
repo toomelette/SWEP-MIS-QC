@@ -44,6 +44,10 @@ class ORSController extends Controller
             $ors = $ors->where('ref_book','=',$request->ref_book);
         }
 
+        if($request->has('payee') && $request->payee != ''){
+            $ors = $ors->where('payee','=',$request->payee);
+        }
+
         if($request->has('applied_projects') && $request->applied_projects != ''){
             $ors = $ors->whereHas('projectsApplied',function ($q) use($request){
                 return $q->where('pap_code','=',$request->applied_projects);

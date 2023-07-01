@@ -22,6 +22,8 @@
 
                         </div>
 
+
+
                         <div class="box-body" style="display: none">
                             <form id="filter_form">
                                 <div class="row">
@@ -50,12 +52,34 @@
                                     </div>
 
                                     <div class="col-md-2 dt_filter-parent-div">
-                                        <label>Fund Source:</label>
+                                        <label>Ref Book:</label>
                                         <select name="ref_book"  class="form-control dt_filter filters">
                                             <option value="">Don't filter</option>
                                             {!! \App\Swep\Helpers\Helper::populateOptionsFromArray(\App\Swep\Helpers\Arrays::orsBooks()) !!}
                                         </select>
                                     </div>
+
+                                    <div class="col-md-4 dt_filter-parent-div">
+                                        <label>Payee:</label>
+                                        @php
+                                            $payees = \App\Models\Budget\ORS::query()
+                                                    ->select('payee')
+                                                    ->groupBy('payee')
+                                                    ->orderBy('payee','asc')
+                                                    ->get();
+                                            $payees = $payees->pluck('payee')->map(function ($key,$value){
+                                                return $key;
+                                            });
+                                        @endphp
+                                        {!! \App\Swep\ViewHelpers\__form2::selectOnly('payee',[
+                                            'class' => 'dt_filter filters',
+                                            'container_class' => 'select2-md',
+                                            'options' => \App\Swep\Helpers\Helper::flattenArray(array_values($payees->toArray())),
+                                            'id' => 'select2_payee',
+                                        ],'') !!}
+                                    </div>
+
+
                                 </div>
                             </form>
                         </div>
@@ -262,5 +286,6 @@
             },
             placeholder: 'Select item',
         });
+        $("#select2_payee").select2();
     </script>
 @endsection

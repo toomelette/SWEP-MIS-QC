@@ -655,4 +655,12 @@ class Helper
         }
         return true;
     }
+
+    public static function flattenArray($array){
+        $arr = [];
+        foreach ($array as $a){
+            $arr[$a] = $a;
+        }
+        return $arr;
+    }
 }

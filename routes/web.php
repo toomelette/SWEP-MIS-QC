@@ -709,19 +709,21 @@ Route::get('summaryOfOrsWithProjects',function (\Illuminate\Http\Request $reques
 
 Route::get('/migrate_bur',function (){
     //please resume on 44,000
-    return 1;
-    $offset = 0;
+
+    $offset = 3000;
     $burs = \App\Models\SqlServer\BUR::query()
         ->with(['BURDetails','BURProjApplied','certified','budget'])
         ->where('BURDate','>=','2023-01-01')
         ->offset($offset)
-        ->limit(2000)
+        ->limit(1000)
         ->get();
     $orsArr = [];
     $orsDetailsArr = [];
     $orsProjectsAppliedArr = [];
 
-
+    if($burs->isEmpty()){
+        return 'NO records found';
+    }
 
     foreach ($burs as $bur){
         $slug = \Illuminate\Support\Str::random();
@@ -829,8 +831,8 @@ Route::get('/sqlsrv',function (){
            'Database' => 'GASS',
            'UID' => 'sa',
            'PWD' => 'noliboy',
-            'Encrypt' => 'no',
-            'TrustServerCertificate' => true,
+//            'Encrypt' => 'no',
+//            'TrustServerCertificate' => true,
        ];
    $conn = sqlsrv_connect($serverName,$connectionInfo);
     if( $conn ) {
