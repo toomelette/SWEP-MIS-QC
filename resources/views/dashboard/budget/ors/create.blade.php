@@ -305,7 +305,11 @@
                 },
                 success: function (res) {
                     succeed(form,true,true);
-                    toast('success','ORS successfully saved.','Success');
+                    let print = "{{route('dashboard.ors.print','slug')}}";
+                    print = print.replace('slug',res.slug);
+                    toast('success','ORS successfully saved. <a href="'+print+'" target="_blank">Click here to print.</a>','Success',10000);
+
+
                     $(".remove_row_btn").each(function () {
                         $(this).trigger('click');
                     })
