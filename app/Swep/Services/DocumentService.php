@@ -302,7 +302,7 @@ class DocumentService extends BaseService{
 
     public function edit($slug){
 
-        $document = $this->document_repo->findBySlug($slug);
+        $document = $this->findBySlug($slug);
         return view('dashboard.document.edit')->with('document', $document);
 
     }
@@ -567,7 +567,7 @@ class DocumentService extends BaseService{
 
     public function disseminationPost($request, $slug){
 
-        $document = $this->document_repo->findBySlug($slug);
+        $document = $this->findBySlug($slug);
 
         //$path = $this->__static->archive_dir() . $document->year .'/'. $document->folder_code .'/'. $document->filename;
         $path = $this->getStorage()->path($document->path.$document->filename);
