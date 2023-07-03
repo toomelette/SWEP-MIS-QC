@@ -161,6 +161,7 @@ class ORSController extends Controller
 
         $ors = $this->orsService->findBySlug($slug);
         $ors->ors_date = $request->ors_date;
+        $ors->ors_no = $request->ors_no;
         $ors->funds = $request->funds;
         $ors->payee = $request->payee;
         $ors->office = $request->office;
