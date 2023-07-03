@@ -74,7 +74,8 @@
             <td class="b-left"></td>
             <td class="b-left">
                 {{$ors->particulars}}
-                <p class="no-margin text-strong" style="font-size: 15px">
+                <br><br>
+                <p class="no-margin text-strong" style="font-size: 18px">
                     {{
                     \App\Swep\Helpers\Arrays::orsBooks()[$ors->ref_book] ??
                     \App\Swep\Helpers\Arrays::oldOrsBooks()[$ors->ref_book] ??

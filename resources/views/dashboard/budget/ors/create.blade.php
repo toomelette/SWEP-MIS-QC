@@ -13,7 +13,13 @@
             <form id="ors_form">
                 <div class="box-header with-border">
                     <h3 class="box-title">ORS</h3>
-                    <button type="submit" class="btn btn-primary btn-sm pull-right"><i class="fa fa-check"></i> Save</button>
+                    <div class="pull-right">
+                        <label style="padding-right: 20px">Print upon save
+                            <input id="print_on_save" type="checkbox" checked>
+                        </label>
+                        <button type="submit" class="btn btn-primary btn-sm pull-right"><i class="fa fa-check"></i> Save</button>
+                    </div>
+
                 </div>
                 <div class="box-body">
 
@@ -79,9 +85,6 @@
                             ]) !!}
                         </div>
 
-{{--                        <p class="page-header-sm text-info" style="margin-bottom: 0px;background-color: #00a65a;border-bottom: 1px solid #cedbe1;border-radius: 5px;text-align: center; color: white">--}}
-{{--                            CERTIFICATION--}}
-{{--                        </p>--}}
                         <div class="row">
                             <div class="col-md-6">
                                 <p class="page-header-sm text-info" style="border-bottom: 1px solid #cedbe1">
@@ -109,12 +112,12 @@
                                         'label' => 'Budget Cert.:',
                                         'cols' => 6,
                                         'list' => 'certified_budget_by',
-                                    ]) !!}
+                                    ], 'HELEN P. BALO') !!}
                                     {!! \App\Swep\ViewHelpers\__form2::textbox('certified_budget_by_position',[
                                         'label' => 'Position:',
                                         'cols' => 6,
                                         'list' => 'certified_budget_by_position',
-                                    ]) !!}
+                                    ], 'BUDGET OFFICER IV') !!}
                                 </div>
                             </div>
                         </div>
@@ -306,9 +309,11 @@
                 success: function (res) {
                     succeed(form,true,true);
                     let print = "{{route('dashboard.ors.print','slug')}}";
-                    print = print.replace('slug',res.slug);
-                    toast('success','ORS successfully saved. <a href="'+print+'" target="_blank">Click here to print.</a>','Success',10000);
-
+                    print = print.replace('slug',res.slug)+'?withOrsEntries=true';
+                    toast('success','ORS successfully saved.  <a href="'+print+'" target="_blank">PRINT with ORS Entries</a>' ,'Success',10000);
+                    if($("#print_on_save").prop('checked') == true){
+                        window.open(print,'_blank');
+                    }
 
                     $(".remove_row_btn").each(function () {
                         $(this).trigger('click');
@@ -321,6 +326,7 @@
                 },
                 error: function (res) {
                     errored(form,res);
+
 
                 }
             })

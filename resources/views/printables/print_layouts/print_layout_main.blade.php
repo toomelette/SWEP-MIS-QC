@@ -8,7 +8,7 @@
     <link type="text/css" rel="stylesheet" href="{{asset('css/print.css')}}?rand={{\Illuminate\Support\Str::random()}}">
 
     <link type="text/css" rel="stylesheet" href="{{asset('template/bower_components/font-awesome/css/font-awesome.min.css')}}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arial">
+
     <style type="text/css">
         .no-margin{
             margin: 0 0 0 0;

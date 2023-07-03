@@ -290,7 +290,7 @@ class DocumentService extends BaseService{
 
     public function show($slug){
 
-        $document = $this->document_repo->findBySlug($slug);
+        $document = $this->findBySlug($slug);
         return view('dashboard.document.show')->with('document', $document);
 
     }
@@ -530,8 +530,8 @@ class DocumentService extends BaseService{
 
 
     public function dissemination($request, $slug){
-
         $document = $this->document_repo->findBySlug($slug);
+
         return view('dashboard.document.dissemination')->with(['document'=>$document, 'request' => $request]);
 
 
