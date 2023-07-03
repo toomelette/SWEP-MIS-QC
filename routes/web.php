@@ -848,3 +848,16 @@ Route::get('numtowords',function (){
     $num = 1546;
 
 });
+
+Route::get('/mail',function (){
+
+        $testMailData = [
+            'title' => 'Test Email From SWEP',
+            'body' => 'This is the body of test email.'
+        ];
+
+        Mail::to('gguance221@gmail.com')->send(new \App\Mail\SendMail($testMailData));
+
+        dd('Success! Email has been sent successfully.');
+
+});
