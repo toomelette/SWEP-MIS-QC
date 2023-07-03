@@ -28,7 +28,7 @@ class Document extends Model{
         });
     }
 
-//    protected $table = env('DOCUMENTS_TABLE','');
+    protected $table = 'rec_documents';
 
     use Sortable, LogsActivity;
 

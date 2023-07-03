@@ -301,7 +301,6 @@ class DocumentService extends BaseService{
 
 
     public function edit($slug){
-
         $document = $this->findBySlug($slug);
         return view('dashboard.document.edit')->with('document', $document);
 
@@ -626,11 +625,11 @@ class DocumentService extends BaseService{
         $connected = @fsockopen("www.google.com",80);
         $connected_2 = @fsockopen("www.yahoo.com",80);
 
-        if(!$connected){
-            if(!$connected_2){
-                return "<center style='font-family:Arial; color:red; padding-top:100px; font-size:26px'><b>No internet or Server not responding</b></center>";
-            }
-        }
+//        if(!$connected){
+//            if(!$connected_2){
+//                return "<center style='font-family:Arial; color:red; padding-top:100px; font-size:26px'><b>No internet or Server not responding</b></center>";
+//            }
+//        }
 
 
 
