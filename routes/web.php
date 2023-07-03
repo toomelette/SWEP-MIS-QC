@@ -850,7 +850,15 @@ Route::get('numtowords',function (){
 });
 
 Route::get('/mail',function (){
+    $connected = @fsockopen("www.google.com",80);
+    $connected_2 = @fsockopen("www.yahoo.com",80);
 
+        if(!$connected){
+            if(!$connected_2){
+                return "<center style='font-family:Arial; color:red; padding-top:100px; font-size:26px'><b>No internet or Server not responding</b></center>";
+            }
+        }
+    return 1;
         $testMailData = [
             'title' => 'Test Email From SWEP',
             'body' => 'This is the body of test email.'
