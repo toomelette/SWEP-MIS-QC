@@ -49,7 +49,7 @@
             @if(!empty($ors->dvEntries))
                 @foreach($ors->dvEntries as $dvEntry)
                     <tr>
-                        <td>{{$dvEntry->responsibilityCenter->description->name}}</td>
+                        <td>{{$dvEntry->responsibilityCenter->description->name ?? '-'}}</td>
                         <td>{{$dvEntry->account_code}}</td>
                         <td>{{$dvEntry->chartOfAccount->account_title}}</td>
                         <td class="text-right">{{\App\Swep\Helpers\Helper::toNumber($dvEntry->debit,2)}}</td>
