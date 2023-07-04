@@ -28,7 +28,7 @@ class ORSFormRequest extends FormRequest
             'account_entries.*.type' => 'required',
             'account_entries.*.account_code' => 'required',
             'account_entries.*.account_title' => 'required',
-            'account_entries.*.resp_center' => 'required',
+            'account_entries.*.resp_center' => 'required_with:account_entries.*.debit,null|nullable',
             'account_entries.*.debit' => 'required_without:account_entries.*.credit|prohibited_unless:account_entries.*.credit,null',
             'account_entries.*.credit' => 'required_without:account_entries.*.debit|prohibited_unless:account_entries.*.debit,null',
 

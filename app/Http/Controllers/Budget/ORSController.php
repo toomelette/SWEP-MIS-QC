@@ -145,7 +145,13 @@ class ORSController extends Controller
         abort(503,'Error saving ORS');
     }
 
-    public function print($slug){
+    public function print($slug, Request $request){
+
+        if($request->has('attachment') && $request->attachment != null){
+            return view('printables.ors.ors_attachment')->with([
+                'ors' => $this->orsService->findBySlug($slug),
+            ]);
+        }
         return view('printables.ors.ors')->with([
             'ors' => $this->orsService->findBySlug($slug),
         ]);
@@ -193,6 +199,7 @@ class ORSController extends Controller
                         'credit' => Helper::sanitizeAutonum($account_entry['credit']),
                     ]);
                 }
+
                 $ors->accountEntries()->delete();
                 ORSAccountEntries::insert($arr);
             }

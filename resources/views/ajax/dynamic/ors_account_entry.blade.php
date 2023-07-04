@@ -10,7 +10,7 @@
                 'DV' => 'DV',
             ],
             'for' => 'type',
-        ],($data->type ?? $data['type'] ?? null) == 'ORS' ? 'DV' : 'ORS') !!}
+        ],($data->type ?? $data['type'] ?? null) == 'ORS' ? 'ORS' : 'DV') !!}
     </td>
     <td>
         {!! \App\Swep\ViewHelpers\__form2::selectOnly('account_entries['.$rand.'][resp_center]',[

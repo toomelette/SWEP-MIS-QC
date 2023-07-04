@@ -19,6 +19,9 @@
             <li>
                 <a  data="{{$data->slug}}" target="popup" href="{{route('dashboard.ors.print',$data->slug)}}?withOrsEntries=true" title="" data-placement="left" data-original-title="Print"><i class="fa fa-print"></i> Print with ORS Entries</a>
             </li>
+            <li>
+                <a  data="{{$data->slug}}" target="popup" href="{{route('dashboard.ors.print',$data->slug)}}?attachment=true" title="" data-placement="left" data-original-title="Print"><i class="fa fa-print"></i> Print attachment</a>
+            </li>
         </ul>
     </div>
 </div>

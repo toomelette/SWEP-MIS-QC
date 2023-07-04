@@ -20,7 +20,7 @@
                             <ul class="dropdown-menu">
                                 <li><a href="{{route('dashboard.ors.print',$ors->slug)}}" target="_blank">Print</a></li>
                                 <li><a href="{{route('dashboard.ors.print',$ors->slug)}}?withOrsEntries=true" target="_blank">Print with ORS Entries</a></li>
-
+                                <li><a href="{{route('dashboard.ors.print',$ors->slug)}}?attachment=true" target="_blank">Print Attachment</a></li>
                             </ul>
 
                         <button type="submit" class="btn btn-primary btn-sm "><i class="fa fa-check"></i> Save</button>
