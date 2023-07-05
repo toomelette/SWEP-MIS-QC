@@ -298,7 +298,7 @@ class AjaxController extends Controller
 
     private function document_person_to(){
         $arr['results'] = [];
-        $docs = Document::query()->select('person_to')->where('person_to','like','%'.Request::get("q").'%')->groupBy('person_to')->limit(30)->get();
+        $docs = Document::query()->select('person_to')->where('person_to','like','%'.\Illuminate\Support\Facades\Request::get("q").'%')->groupBy('person_to')->limit(30)->get();
         array_push($arr['results'],['id'=>'','text' => "Don't Filter"]);
         if(!empty($docs)){
 
@@ -311,7 +311,7 @@ class AjaxController extends Controller
 
     private function document_person_from(){
         $arr['results'] = [];
-        $docs = Document::query()->select('person_from')->where('person_from','like','%'.Request::get("q").'%')->groupBy('person_from')->limit(30)->get();
+        $docs = Document::query()->select('person_from')->where('person_from','like','%'.\Illuminate\Support\Facades\Request::get("q").'%')->groupBy('person_from')->limit(30)->get();
         array_push($arr['results'],['id'=>'','text' => "Don't Filter"]);
         if(!empty($docs)){
             foreach ($docs as $doc){

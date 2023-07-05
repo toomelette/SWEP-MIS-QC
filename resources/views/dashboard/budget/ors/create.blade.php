@@ -14,9 +14,8 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">ORS</h3>
                     <div class="pull-right">
-                        <label style="padding-right: 20px">Print upon save
-                            <input id="print_on_save" type="checkbox" checked>
-                        </label>
+
+
                         <button type="submit" class="btn btn-primary btn-sm pull-right"><i class="fa fa-check"></i> Save</button>
                     </div>
 
@@ -314,11 +313,30 @@
                     let edit = "{{route('dashboard.ors.edit','slug')}}";
                     print = print.replace('slug',res.slug)+'?withOrsEntries=true';
                     edit = edit.replace('slug',res.slug);
-                    toast('success','ORS successfully saved.  <a href="'+print+'" target="_blank">PRINT with ORS Entries</a> or <a href="'+edit+'" target="_blank">EDIT</a>' ,'Success',10000);
-                    if($("#print_on_save").prop('checked') == true){
-                        window.open(print,'_blank');
-                    }
 
+                    Swal.fire({
+                        title: 'ORS successfully saved',
+                        icon: 'success',
+                        html: '<p>Choose what you want to do next.</p>',
+                        showDenyButton: true,
+                        showCancelButton: true,
+                        closeOnConfirm: false,
+                        closeOnDeny: false,
+                        confirmButtonText: '<i class="fa fa-print"></i> Print ORS',
+                        denyButtonText: '<i class="fa fa-edit"></i> Edit previous',
+                        cancelButtonText: '<i class="fa fa-plus"></i> New ORS',
+                        preConfirm: (e) => {
+                            window.open(print,'_blank');
+                            return false;
+                        },
+                        preDeny : (e) => {
+                            window.open(edit,'_blank');
+                            return false;
+                        },
+                    })
+
+                    toast('success','ORS successfully saved.' ,'Success',10000);
+                    // toast('success','ORS successfully saved.  <a href="'+print+'" target="_blank">PRINT with ORS Entries</a> or <a href="'+edit+'" target="_blank">EDIT</a>' ,'Success',10000);
                     $(".remove_row_btn").each(function () {
                         $(this).trigger('click');
                     })
@@ -415,6 +433,11 @@
             let data = e.params.data;
             $("#certified_by_position").val(data.position);
         });
+
+
+
+
+
 
     </script>
 @endsection
