@@ -9,6 +9,7 @@ use App\Models\PPU\RecommendedBudget;
 use App\Models\SuSettings;
 use Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class Helper
 {
@@ -662,5 +663,12 @@ class Helper
             $arr[$a] = $a;
         }
         return $arr;
+    }
+
+    public static function middleInitial($text,$append = '.'){
+        if($text != null){
+            return Str::limit($text,1,$append);
+        }
+        return '';
     }
 }

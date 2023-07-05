@@ -124,6 +124,47 @@ class AjaxController extends Controller
             return Helper::wrapForSelect2($arr);
         }
 
+        if($for == 'ors_certified_by'){
+            $data = null;
+            $employees = Employee::query()
+                ->select('lastname','firstname','middlename','position')
+                ->where('is_active','ACTIVE')
+                ->where(function($q){
+                    $q->where('locations','=','VISAYAS')
+                        ->orWhere('locations','=','LUZON/MINDANAO');
+                })
+                ->orderBy('salary_grade','desc')
+                ->orderBy('firstname','asc');
+
+
+            if($r->has('q') && $r->q != ''){
+                $employees = $employees->where(function ($q) use ($r){
+                    $q->where('lastname','like','%'.$r->q.'%')
+                        ->orWhere('firstname','like','%'.$r->q.'%')
+                        ->orWhere('middlename','like','%'.$r->q.'%');
+                });
+            }
+
+            if($r->has('page')){
+                $employees = $employees->offset((($r->page) - 1) * 10);
+            }
+
+
+            $employees = $employees->limit(10)->get();
+
+            if($employees->count() > 0){
+                $data = $employees->map(function ($data){
+                    return [
+                        'id' => $data->firstname.' '.Helper::middleInitial($data->middlename).' '.$data->lastname,
+                        'text' => $data->firstname.' '.Helper::middleInitial($data->middlename).' '.$data->lastname,
+                        'position' => $data->position,
+                    ];
+                });
+                return Helper::wrapForSelect2($data->toArray());
+            }
+            return false;
+        }
+
         if($for == 'pap'){
             $arr = [];
             $like = '%'.request('q').'%';
@@ -176,7 +217,12 @@ class AjaxController extends Controller
         }
 
         if($for == 'orsAccountEntry'){
-            $r = \Illuminate\Support\Facades\Request::all();
+            if($r->type == 'DV'){
+                $r->type = 'ORS';
+            }else{
+                $r->type = 'DV';
+            }
+
             return view('ajax.dynamic.ors_account_entry')->with([
                 'data' => $r,
             ]);

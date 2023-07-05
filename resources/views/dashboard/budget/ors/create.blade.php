@@ -91,15 +91,17 @@
                                     Certified By
                                 </p>
                                 <div class="row">
-                                    {!! \App\Swep\ViewHelpers\__form2::textbox('certified_by',[
+                                    {!! \App\Swep\ViewHelpers\__form2::select('certified_by',[
                                         'label' => 'Certified by:',
                                         'cols' => 6,
-                                        'list' => 'certified_by',
+                                        'id' => 'certified_by_select2',
+                                        'options' => [],
                                     ]) !!}
                                     {!! \App\Swep\ViewHelpers\__form2::textbox('certified_by_position',[
                                         'label' => 'Position:',
                                         'cols' => 6,
-                                        'list' => 'certified_by_position'
+                                        'id' => 'certified_by_position',
+
                                     ]) !!}
                                 </div>
                             </div>
@@ -396,11 +398,23 @@
                 }
             })
         })
-
-
-
         $("#payee").typeahead({
             ajax : "{{ route('dashboard.ajax.get','ors_payees') }}?typeahead=true",
         });
+
+        $('#certified_by_select2').select2({
+            ajax: {
+                url: '{{route("dashboard.ajax.get","ors_certified_by")}}',
+                dataType: 'json',
+                delay : 250,
+            },
+            placeholder: 'Select item',
+        });
+
+        $('#certified_by_select2').on('select2:select', function (e) {
+            let data = e.params.data;
+            $("#certified_by_position").val(data.position);
+        });
+
     </script>
 @endsection
