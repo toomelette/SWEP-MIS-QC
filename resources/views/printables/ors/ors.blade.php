@@ -251,7 +251,7 @@
 
 @section('scripts')
     <script type="text/javascript">
-        let height = 450;
+        let height = 400;
         $(document).ready(function () {
             let set = height;
             if($("#reference_table").height() < set){
