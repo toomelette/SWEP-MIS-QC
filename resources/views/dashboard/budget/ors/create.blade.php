@@ -311,9 +311,9 @@
                 success: function (res) {
                     succeed(form,true,true);
                     let print = "{{route('dashboard.ors.print','slug')}}";
-                    let edit = print;
+                    let edit = "{{route('dashboard.ors.edit','slug')}}";
                     print = print.replace('slug',res.slug)+'?withOrsEntries=true';
-                    edit = edit.replace('slug',res.slug)+'?attachment=true';
+                    edit = edit.replace('slug',res.slug);
                     toast('success','ORS successfully saved.  <a href="'+print+'" target="_blank">PRINT with ORS Entries</a> or <a href="'+edit+'" target="_blank">EDIT</a>' ,'Success',10000);
                     if($("#print_on_save").prop('checked') == true){
                         window.open(print,'_blank');
