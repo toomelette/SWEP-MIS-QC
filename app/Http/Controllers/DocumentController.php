@@ -192,6 +192,7 @@ class DocumentController extends Controller{
         $document->folder_code2 = $request->folder_code2;
         $document->remarks = $request->remarks;
         $document->qr_location = $request->qr_location;
+        abort(503,'before qr');
         if(!empty($request->qr_location)){
             //Make QR
             $this->makeQR($document,$document_id);
