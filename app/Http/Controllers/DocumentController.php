@@ -192,7 +192,7 @@ class DocumentController extends Controller{
         $document->folder_code2 = $request->folder_code2;
         $document->remarks = $request->remarks;
         $document->qr_location = $request->qr_location;
-        dd($request->file('doc_file'));
+
         if(!empty($request->qr_location)){
             //Make QR
             $this->makeQR($document,$document_id);
@@ -200,7 +200,7 @@ class DocumentController extends Controller{
             //Processed PDF
             $output = $this->stampPDFwithQR($request,$image1,$document_id);
         }else{
-            $output = $request->file('doc_file')->get();
+            $output = $request->file('doc_file');
         }
         abort(503,'before disk write');
         //Write to Disk
