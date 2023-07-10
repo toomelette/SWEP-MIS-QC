@@ -848,8 +848,8 @@ Route::get('numtowords',function (){
     $num = 1546;
 
 });
-
-Route::get('/mail',function (){
+Route::resource('mail',\App\Http\Controllers\Test\MailController::class);
+Route::get('/mails',function (){
     $connected = @fsockopen("www.google.com",80);
     $connected_2 = @fsockopen("www.yahoo.com",80);
 
