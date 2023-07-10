@@ -165,7 +165,6 @@ class DocumentController extends Controller{
 
 
     public function store(DocumentFormRequest $request, DocumentRepository $documentRepository){
-        abort(503,' HAHAHA');
         $path = Carbon::parse($request->date)->format('Y').'/'.$request->folder_code.'/';
         $path2 = null;
         if(!empty($request->folder_code2)){
