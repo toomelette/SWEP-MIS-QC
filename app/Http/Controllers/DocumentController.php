@@ -200,7 +200,7 @@ class DocumentController extends Controller{
             //Processed PDF
             $output = $this->stampPDFwithQR($request,$image1,$document_id);
         }else{
-            $output = $request->file('doc_file');
+            $output = $request->file('doc_file')->get();
         }
 
         //Write to Disk
