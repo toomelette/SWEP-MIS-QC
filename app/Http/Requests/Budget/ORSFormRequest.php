@@ -32,10 +32,10 @@ class ORSFormRequest extends FormRequest
             'account_entries.*.debit' => 'required_without:account_entries.*.credit|prohibited_unless:account_entries.*.credit,null',
             'account_entries.*.credit' => 'required_without:account_entries.*.debit|prohibited_unless:account_entries.*.debit,null',
 
-            'applied_projects.*.resp_center' => ($this->request->get('funds') == '02' || $this->request->get('funds') == '06' || $this->request->get('funds') == '69') ? 'required' : '',
-            'applied_projects.*.pap_code' => ($this->request->get('funds') == '02' || $this->request->get('funds') == '06' || $this->request->get('funds') == '69') ? 'required' : '',
-            'applied_projects.*.mooe' => ($this->request->get('funds') == '02' || $this->request->get('funds') == '06' || $this->request->get('funds') == '69') ? 'required_without:applied_projects.*.co|prohibited_unless:applied_projects.*.co,null' : '',
-            'applied_projects.*.co' => ($this->request->get('funds') == '02' || $this->request->get('funds') == '06' || $this->request->get('funds') == '69') ? 'required_without:applied_projects.*.mooe|prohibited_unless:applied_projects.*.mooe,null' : '',
+            //'applied_projects.*.resp_center' => ($this->request->get('funds') == '02' || $this->request->get('funds') == '06' || $this->request->get('funds') == '69') ? 'required' : '',
+            //'applied_projects.*.pap_code' => ($this->request->get('funds') == '02' || $this->request->get('funds') == '06' || $this->request->get('funds') == '69') ? 'required' : '',
+            //'applied_projects.*.mooe' => ($this->request->get('funds') == '02' || $this->request->get('funds') == '06' || $this->request->get('funds') == '69') ? 'required_without:applied_projects.*.co|prohibited_unless:applied_projects.*.co,null' : '',
+            //'applied_projects.*.co' => ($this->request->get('funds') == '02' || $this->request->get('funds') == '06' || $this->request->get('funds') == '69') ? 'required_without:applied_projects.*.mooe|prohibited_unless:applied_projects.*.mooe,null' : '',
         ];
     }
 
