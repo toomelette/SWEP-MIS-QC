@@ -202,7 +202,7 @@ class DocumentController extends Controller{
         }else{
             $output = $request->file('doc_file');
         }
-        abort(503,'before disk write');
+
         //Write to Disk
         $storage->put($path.'/'.$new_file_name,$output);
         //Cross filing
