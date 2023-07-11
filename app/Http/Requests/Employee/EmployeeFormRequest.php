@@ -22,7 +22,7 @@ class EmployeeFormRequest extends FormRequest{
     public function rules(){
         
         $rows_children = $this->request->get('row_children');
-        $rows_eb = $this->request->get('row_eb');
+        $rows_eb = $this->request->all()['row_eb'];
         $rows_training = $this->request->get('row_training');
         $rows_eligibility = $this->request->get('row_eligibility');
         $rows_we = $this->request->get('row_we');

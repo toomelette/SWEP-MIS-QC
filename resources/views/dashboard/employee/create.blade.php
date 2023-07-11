@@ -2438,7 +2438,6 @@
           error: function (res) {
 
             errored(form,res);
-            notify('Please fill out the required fields.','warning');
             markTabs(form);
           }
       })
