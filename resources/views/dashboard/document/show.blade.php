@@ -31,6 +31,9 @@
                 <dt>Folder 2:</dt>
                 <dd>{{$document->folder_code2}} - {{$document->folder2->description}}</dd>
             @endif
+
+            <dt>Remarks:</dt>
+            <dd>{{$document->remarks}}</dd>
         </dl>
     </div>
     <p class="page-header-sm text-info" style="border-bottom: 1px solid #cedbe1">

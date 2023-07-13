@@ -139,6 +139,11 @@ class DocumentController extends Controller{
                          '.array_search($data->type,__static::document_types()).$folder_sub.'
                     </div>';
             })
+            ->editColumn('subject',function($data){
+                return view('dashboard.document.dtSubject')->with([
+                    'data' => $data,
+                ]);
+            })
             ->escapeColumns([])
             ->setRowId('slug')
             ->toJson();
