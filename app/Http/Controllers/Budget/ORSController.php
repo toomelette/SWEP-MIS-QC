@@ -36,7 +36,7 @@ class ORSController extends Controller
     }
 
     public function dataTable(Request $request){
-        $ors = ORS::query()->with(['projectsApplied']);
+        $ors = ORS::query()->with(['projectsApplied.pap']);
         if($request->has('funds') && $request->funds != ''){
             $ors = $ors->where('funds','=',$request->funds);
         }
