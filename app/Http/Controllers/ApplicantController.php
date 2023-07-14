@@ -111,7 +111,8 @@ class ApplicantController extends Controller{
 	public function index(ApplicantFilterRequest $request){
 
         if($request->ajax() && $request->has('draw')){
-            $applicants = Applicant::query();
+            $applicants = Applicant::query()
+                ->with(['positionApplied.item']);
             if(!is_null($request->course)){
                 $applicants = $applicants->where('course','=',$request->course);
             }
@@ -166,7 +167,7 @@ class ApplicantController extends Controller{
                 })
                 ->addColumn('position_applied',function($data){
                     $text = '';
-                    if($data->positionApplied()->count() > 0){
+                    if($data->positionApplied->count() > 0){
                         $text = $text.'<ul style="padding-left: 15px; margin-bottom: 0px">';
                         foreach ($data->positionApplied as $position){
                             $text = $text.'<li>';
