@@ -220,6 +220,8 @@ class Employee extends Model{
 
 
 
+
+
     /** Scopes **/
     public function scopeCountBySexAndDeptUnit($query, $dept_unit_id, $sex){
 
@@ -259,7 +261,10 @@ class Employee extends Model{
 
 
     public function rawDtrRecords(){
-        return $this->hasMany('App\Models\DTR','user','biometric_user_id');
+        return $this->hasMany(DTR::class,'user','biometric_user_id');
+    }
+    public function lastRawDtrRecord(){
+        return $this->hasOne(DTR::class,'user','biometric_user_id')->orderBy('timestamp','desc');
     }
 
     public function empMaster(){

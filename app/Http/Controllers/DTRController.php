@@ -61,7 +61,9 @@ class DTRController extends  Controller
 
         if($request->ajax()){
             $access = Auth::user()->getAccessToEmployees();
-            $query = Employee::query()->where('biometric_user_id','!=','')
+            $query = Employee::query()
+                ->with(['lastRawDtrRecord'])
+                ->where('biometric_user_id','!=','')
                 ->where(function($q) use($access){
                 foreach ($access as $item){
                     $q->orWhere('station','=',$item);
@@ -85,14 +87,7 @@ class DTRController extends  Controller
 
             return Datatables::of($query)
                 ->addColumn('last_attendance',function ($data){
-                    $dtr = DTR::query()->where('user','=',$data->biometric_user_id)->orderBy('timestamp','desc')->first();
-                    if(!empty($dtr)){
-                        try{
-                            return Carbon::parse($dtr->timestamp)->format('M. d, Y | h:i A') .' ----- '.$this->dtr_service->biometric_values(true)[$dtr->type];
-                        }catch (\Exception $e){
-                            return $e->getMessage();
-                        }
-                    }
+                    return Helper::dateFormat($data->lastRawDtrRecord->timestamp ?? null,'F d, Y').' --- '.$this->dtr_service->biometric_values(true)[$data->lastRawDtrRecord->type];
                 })
                 ->editColumn('sex',function ($data){
                     return __html::sex($data->sex);
