@@ -8,10 +8,10 @@
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
   <style type="text/css">
-      
+
     @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400);
       html {font-size: 18px;}
-      body { 
+      body {
         font-family: 'Source Sans Pro', sans-serif;
         line-height: 1.6;
         font-size: 1em;
@@ -22,7 +22,7 @@
         width: 410px;
         height: 350px;
         margin: 0 auto;
-        
+
         position: absolute;
         top: 50%;
         left: 50%;
@@ -50,7 +50,7 @@
         color: #333;
       }
 
-      /* 
+      /*
       Server by @chrisburton
       */
 
@@ -127,14 +127,14 @@
       }
 
 
-      @media only screen 
-        and (min-device-width: 320px) 
+      @media only screen
+        and (min-device-width: 320px)
         and (max-device-width: 480px)
         and (-webkit-min-device-pixel-ratio: 2) {
           html {font-size: 12px;}
       }
-      @media only screen 
-        and (min-device-width: 320px) 
+      @media only screen
+        and (min-device-width: 320px)
         and (max-device-width: 568px)
         and (-webkit-min-device-pixel-ratio: 2) {
           html {font-size: 14px;}
