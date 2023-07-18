@@ -529,10 +529,13 @@ class ORSController extends Controller
                 break;
 
             case 'subsidiary_ledger':
+                if(empty($request->account)){
+                    abort(504,'Please select an account code.');
+                }
                 $ors = ORS::query()
                     ->with(['orsEntries.chartOfAccount','orsEntries.responsibilityCenter'])
-                    ->whereHas('orsEntries.chartOfAccount',function ($q){
-                        return $q->where('account_code','=','50102010');
+                    ->whereHas('orsEntries.chartOfAccount',function ($q) use ($request){
+                        return $q->where('account_code','=',$request->account);
                     });
                 if(!empty($request->date_from) && !empty($request->date_to)){
                     $ors = $ors->whereBetween('ors_date',[$request->date_from,$request->date_to]);
@@ -556,6 +559,7 @@ class ORSController extends Controller
                         'Subsidiary Ledger.xlsx',
                     );
                 }
+
                 return view('printables.ors.reports.subsidiary_ledger')->with([
                     'ors' => $ors,
                     'account' => $account,
