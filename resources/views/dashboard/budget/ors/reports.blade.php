@@ -33,9 +33,7 @@
                                 </div>
 
                                 <div class="tab-pane" id="ors_summary_with_projects">
-                                    <div class="row">
-
-                                    </div>
+                                    @include('dashboard.budget.ors.reports.ors_summary_with_projects')
                                 </div>
 
                                 <div class="tab-pane" id="budget_monitoring">
@@ -89,6 +87,15 @@
         $(".print-btn").click(function () {
             let btn = $(this);
             btn.parents('.frame-inner-container').find('iframe').get(0).contentWindow.print();
+
+        })
+
+        $(".generate_excel_btn").click(function () {
+            let btn = $(this);
+            let iframeId = btn.parents('.frame-inner-container').find('iframe').attr('id');
+            let form = $(".generate_report_form[target='#"+iframeId+"']");
+            let url = form.attr('url')+'?'+form.serialize()+'&excel=true';
+            window.open(url,'_blank');
         })
     </script>
 @endsection

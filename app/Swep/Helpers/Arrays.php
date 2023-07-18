@@ -449,6 +449,17 @@ class Arrays
         return $arr;
     }
 
+    public static function departmentListAbbv(){
+        $depts = RCDesc::query()->get();
+        $arr = [];
+        if(count($depts) > 0){
+            foreach ($depts as $dept) {
+                $arr[$dept->rc] = $dept->name;
+            }
+        }
+        return $arr;
+    }
+
     public static function quartersArray(){
         $arr = [
             1 => 'FIRST',

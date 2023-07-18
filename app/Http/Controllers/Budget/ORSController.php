@@ -4,12 +4,14 @@
 namespace App\Http\Controllers\Budget;
 
 
+use App\Exports\StatementOfBudgeAndActualExpendituresExporter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Budget\ORSFormRequest;
 use App\Models\Budget\ChartOfAccounts;
 use App\Models\Budget\ORS;
 use App\Models\Budget\ORSAccountEntries;
 use App\Models\Budget\ORSProjectsApplied;
+use App\Models\PPU\RCDesc;
 use App\Swep\Helpers\Arrays;
 use App\Swep\Helpers\Get;
 use App\Swep\Helpers\Helper;
@@ -18,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class ORSController extends Controller
@@ -28,12 +31,20 @@ class ORSController extends Controller
         $this->orsService = $orsService;
     }
 
+    public function export_from_view(){
+        return Excel::download(
+            new StatementOfBudgeAndActualExpendituresExporter(),
+            'test.xlsx',
+        );
+    }
+
     public function index(Request $request){
         if($request->ajax() && $request->has('draw')){
             return $this->dataTable($request);
         }
         return view('dashboard.budget.ors.index');
     }
+
 
     public function dataTable(Request $request){
         $ors = ORS::query()->with(['projectsApplied.pap']);
@@ -306,6 +317,88 @@ class ORSController extends Controller
                     'orsArray' => $orsArray,
                 ]);
                 break;
+
+
+            case 'summary_of_ors_with_projects':
+                $request = Request::capture();
+                $arr = [];
+                $start = $request->date_from;
+                $end = $request->date_to;
+                $ors = ORS::query()
+                    ->with(['orsEntries.responsibilityCenter','projectsApplied'])
+                    ->whereBetween('ors_date',[
+                        $start,$end
+                    ]);
+
+                if(!empty($request->funds)){
+                    $funds = $request->funds;
+                    $ors = $ors->where(function ($q) use ($funds){
+                        foreach ($funds as $fund){
+                            $q = $q->orWhere('funds','=',$fund);
+                        }
+                    });
+                }
+
+                $ors = $ors->orderBy('ors_date','asc')
+                    ->get();
+
+                if($request->showAllColumns == 1){
+                    $colss = collect(Arrays::departmentList())->map(function ($data){
+                        return null;
+                    })->toArray();
+                }else{
+                    $cols = ORSAccountEntries::query()
+                        ->with('responsibilityCenter')
+                        ->where('type','=','ORS')
+                        ->whereHas('ors',function ($q) use ($start,$end,$request){
+                            $q = $q->whereBetween('ors_date',[
+                                $start,$end
+                            ]);
+                            if(!empty($request->funds)){
+                                $funds = $request->funds;
+                                $q->where(function ($q) use ($funds){
+                                    foreach ($funds as $fund){
+                                        $q = $q->orWhere('funds','=',$fund);
+                                    }
+                                });
+                            }
+                            return $q;
+                        })
+                        ->groupBy('resp_center')->get();
+                    $colss = [];
+
+                    foreach ($cols as $col){
+                        $colss[$col->responsibilityCenter->rc] = null;
+                    }
+                }
+                ksort($colss);
+                foreach ($ors as $or){
+                    $arr[$or->slug]['obj'] = $or;
+                    $arr[$or->slug]['accountEntries'] = $colss;
+                    if(!empty($or->orsEntries)){
+                        foreach ($or->orsEntries as $det){
+
+                            $arr[$or->slug]['accountEntries'][$det->responsibilityCenter->rc] = $arr[$or->slug]['accountEntries'][$det->responsibilityCenter->rc] + $det->debit;
+                        }
+                    }
+
+                    if(!empty($or->projectsApplied)){
+                        foreach ($or->projectsApplied as $proj){
+                            $arr[$or->slug]['projectsApplied'][\Illuminate\Support\Str::random()] = $proj;
+                        }
+                    }
+                }
+
+
+                return view('printables.ors.reports.summary_of_ors_with_projects')->with([
+                    'burs' => $arr,
+                    'cols' => $colss,
+                    'departmentListAbbv' => Arrays::departmentListAbbv(),
+                ]);
+
+
+                break;
+
             case 'quarterly_budget_monitoring':
                 if(!$request->has('quarter') || $request->quarter == '' || !$request->has('year') || $request->year == ''){
                     abort(504,'Required fields: YEAR, QUARTER');
@@ -400,6 +493,14 @@ class ORSController extends Controller
 
                     }
                 }
+
+                if($request->excel == true){
+                    return Excel::download(
+                        new StatementOfBudgeAndActualExpendituresExporter($depts,$groupedCoasArray),
+                        'Statement of Budget and Actual Expenditures.xlsx',
+                    );
+                }
+
                 return view('printables.ors.reports.statement_of_budget_and_actual_expenditures')->with([
                     'groupedCoasArray' => $groupedCoasArray,
                     'depts' => $depts,

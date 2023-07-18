@@ -869,3 +869,9 @@ Route::get('/mails',function (){
         dd('Success! Email has been sent successfully.');
 
 });
+
+
+Route::get(
+    '/export',
+    [\App\Http\Controllers\Budget\ORSController::class, 'export_from_view']
+);
