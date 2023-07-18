@@ -21,6 +21,7 @@
                                         <li role="presentation" class=""><a href="#ors_summary_with_projects" data-toggle="tab" aria-expanded="true">ORS Summary with projects</a></li>
                                         <li role="presentation" class=""><a href="#budget_monitoring" data-toggle="tab" aria-expanded="true">Budget Monitoring</a></li>
                                         <li role="presentation" class=""><a href="#statement_of_budget_and_actual_expenditures" data-toggle="tab" aria-expanded="true">Statement of Budget and Actual Expenditures</a></li>
+                                        <li role="presentation" class=""><a href="#subsidiary_ledger" data-toggle="tab" aria-expanded="true">Subsidiary Ledger</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -43,6 +44,10 @@
                                 <div class="tab-pane" id="statement_of_budget_and_actual_expenditures">
 
                                     @include('dashboard.budget.ors.reports.statement_of_budget_and_actual_expenditures')
+                                </div>
+                                <div class="tab-pane" id="subsidiary_ledger">
+
+                                    @include('dashboard.budget.ors.reports.subsidiary_ledger')
                                 </div>
                             </div>
                         </div>
@@ -97,5 +102,7 @@
             let url = form.attr('url')+'?'+form.serialize()+'&excel=true';
             window.open(url,'_blank');
         })
+
+        $("#sl_accounts").select2();
     </script>
 @endsection

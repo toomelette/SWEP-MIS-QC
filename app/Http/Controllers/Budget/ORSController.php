@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Budget;
 
 
 use App\Exports\StatementOfBudgeAndActualExpendituresExporter;
+use App\Exports\SubsidiaryLedgerExporter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Budget\ORSFormRequest;
 use App\Models\Budget\ChartOfAccounts;
@@ -507,8 +508,43 @@ class ORSController extends Controller
                     'request' => $request,
                 ]);
                 break;
+
+            case 'subsidiary_ledger':
+                $ors = ORS::query()
+                    ->with(['orsEntries.chartOfAccount','orsEntries.responsibilityCenter'])
+                    ->whereHas('orsEntries.chartOfAccount',function ($q){
+                        return $q->where('account_code','=','50102010');
+                    });
+                if(!empty($request->date_from) && !empty($request->date_to)){
+                    $ors = $ors->whereBetween('ors_date',[$request->date_from,$request->date_to]);
+                }else{
+                    abort(504,'Please select date range.');
+                }
+
+                if(!empty($request->dept)){
+                    $ors = $ors->whereHas('orsEntries.responsibilityCenter',function ($qq) use ($request){
+                        return $qq->where('rc','=',$request->dept);
+                    });
+                }
+                $ors = $ors->get();
+                $account = ChartOfAccounts::query()->where('account_code','=',$request->account)->first();
+                if(empty($account)){
+                    abort(504,'Account Code does not exist.');
+                }
+                if($request->excel == true){
+                    return Excel::download(
+                        new SubsidiaryLedgerExporter($ors,$account,$request),
+                        'Subsidiary Ledger.xlsx',
+                    );
+                }
+                return view('printables.ors.reports.subsidiary_ledger')->with([
+                    'ors' => $ors,
+                    'account' => $account,
+                    'request' => $request,
+                ]);
+                break;
             default:
-                return 1;
+                return 'default';
                 break;
         }
     }
