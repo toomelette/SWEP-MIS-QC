@@ -6,6 +6,8 @@ namespace App\Http\Controllers\Budget;
 
 use App\Exports\StatementOfBudgeAndActualExpendituresExporter;
 use App\Exports\SubsidiaryLedgerExporter;
+use App\Exports\SummaryOfOrsExporter;
+use App\Exports\SummaryOfOrsWithProjectsExporter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Budget\ORSFormRequest;
 use App\Models\Budget\ChartOfAccounts;
@@ -252,6 +254,9 @@ class ORSController extends Controller
 
         switch ($type){
             case 'summary_of_ors':
+                if(empty($request->date_from) || empty($request->date_to)){
+                    abort(504,'Please select a date range.');
+                }
                 $baseSql = ORS::query()
                     ->with('projectsApplied.pap.responsibilityCenter.description')
                     ->whereBetween('ors_date',[
@@ -309,6 +314,13 @@ class ORSController extends Controller
                             }
                         }
                     }
+                }
+
+                if($request->excel == true){
+                    return Excel::download(
+                        new SummaryOfOrsExporter($ors,$groupedProjectsArray,$groupedProjectsArrayNull,$orsArray),
+                        'Summary of ORS.xlsx',
+                    );
                 }
 
                 return view('printables.ors.reports.summary_of_ors')->with([
@@ -390,11 +402,18 @@ class ORSController extends Controller
                     }
                 }
 
+                $departmentListAbbv = Arrays::departmentListAbbv();
+                if($request->excel == true){
+                    return Excel::download(
+                        new SummaryOfOrsWithProjectsExporter($arr,$colss,$departmentListAbbv),
+                        'Summary of ORS with Projects.xlsx',
+                    );
+                }
 
                 return view('printables.ors.reports.summary_of_ors_with_projects')->with([
                     'burs' => $arr,
                     'cols' => $colss,
-                    'departmentListAbbv' => Arrays::departmentListAbbv(),
+                    'departmentListAbbv' => $departmentListAbbv,
                 ]);
 
 

@@ -43,7 +43,10 @@
             <div class="bs-example frame-inner-container" style="display:none;">
                 <div class="row">
                     <div class="col-md-12">
-                        <button class="btn btn-sm btn-primary pull-right print-btn" type="button"><i class="fa fa-print"></i> Print</button>
+                        <div class="btn-group pull-right">
+                            <button class="btn btn-sm btn-default generate_excel_btn" type="button"><i class="fa fa-file-excel-o"></i> Excel</button>
+                            <button class="btn btn-sm btn-primary print-btn" type="button"><i class="fa fa-print"></i> Print</button>
+                        </div>
                     </div>
                 </div>
                 <div class="embed-responsive embed-responsive-16by9" style="height: 1019.938px;">
