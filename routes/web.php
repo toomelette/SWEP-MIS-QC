@@ -871,7 +871,33 @@ Route::get('/mails',function (){
 });
 
 
-Route::get(
-    '/export',
-    [\App\Http\Controllers\Budget\ORSController::class, 'export_from_view']
+Route::get('/conso',function (){
+    $my = \App\Models\Temp\Conso::query()->get();
+    $sql = \App\Models\Temp\SRVConso::query()->get();
+    $conso = new \App\Models\Temp\Conso();
+    $columns = \Illuminate\Support\Facades\DB::getSchemaBuilder()->getColumnListing($conso->getTable());
+
+    $tree = [];
+    $arr = [];
+    foreach ($columns as $c){
+        $tree[$c] = null;
+    }
+
+    foreach ($my as $data){
+        $dataArr = $tree;
+        foreach ($tree as $columnName => $null){
+            $dataArr[$columnName] = $data->$columnName;
+        }
+        array_push($arr,$dataArr);
+    }
+    $collect = collect($arr);
+    $arr = $collect->chunk(50)->toArray();
+
+    foreach ($arr as $a){
+        \App\Models\Temp\SRVConso::insert($a);
+    }
+
+
+    return 1;
+}
 );

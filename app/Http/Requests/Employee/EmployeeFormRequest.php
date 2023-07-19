@@ -22,15 +22,15 @@ class EmployeeFormRequest extends FormRequest{
     public function rules(){
         
         $rows_children = $this->request->get('row_children');
-        $rows_eb = $this->request->all()['row_eb'];
-        $rows_training = $this->request->get('row_training');
-        $rows_eligibility = $this->request->get('row_eligibility');
-        $rows_we = $this->request->get('row_we');
-        $rows_vw = $this->request->get('row_vw');
-        $rows_recognition = $this->request->get('row_recognition');
-        $rows_org = $this->request->get('row_org');
-        $rows_ss = $this->request->get('row_ss');
-        $rows_reference = $this->request->get('row_reference');
+//        $rows_eb = $this->request->all()['row_eb'];
+//        $rows_training = $this->request->get('row_training');
+//        $rows_eligibility = $this->request->get('row_eligibility');
+//        $rows_we = $this->request->get('row_we');
+//        $rows_vw = $this->request->get('row_vw');
+//        $rows_recognition = $this->request->get('row_recognition');
+//        $rows_org = $this->request->get('row_org');
+//        $rows_ss = $this->request->get('row_ss');
+//        $rows_reference = $this->request->get('row_reference');
 
         $rules = [
             
@@ -198,32 +198,32 @@ class EmployeeFormRequest extends FormRequest{
 
 
         // Educational background
-        if(!empty($rows_eb)){
-            foreach($rows_eb as $key => $value){   
-                $rules['row_eb.'.$key.'.level'] = 'nullable|string|max:90';
-                $rules['row_eb.'.$key.'.school_name'] = 'nullable|string|max:255';
-                $rules['row_eb.'.$key.'.course'] = 'nullable|string|max:90';
-                $rules['row_eb.'.$key.'.date_from'] = 'nullable|string|max:45';
-                $rules['row_eb.'.$key.'.date_to'] = 'nullable|string|max:45';
-                $rules['row_eb.'.$key.'.units'] = 'nullable|numeric';
-                $rules['row_eb.'.$key.'.graduate_year'] = 'nullable|string|max:45';
-                $rules['row_eb.'.$key.'.scholarship'] = 'nullable|string|max:90';
-            } 
-        }
+//        if(!empty($rows_eb)){
+//            foreach($rows_eb as $key => $value){
+//                $rules['row_eb.'.$key.'.level'] = 'nullable|string|max:90';
+//                $rules['row_eb.'.$key.'.school_name'] = 'nullable|string|max:255';
+//                $rules['row_eb.'.$key.'.course'] = 'nullable|string|max:90';
+//                $rules['row_eb.'.$key.'.date_from'] = 'nullable|string|max:45';
+//                $rules['row_eb.'.$key.'.date_to'] = 'nullable|string|max:45';
+//                $rules['row_eb.'.$key.'.units'] = 'nullable|numeric';
+//                $rules['row_eb.'.$key.'.graduate_year'] = 'nullable|string|max:45';
+//                $rules['row_eb.'.$key.'.scholarship'] = 'nullable|string|max:90';
+//            }
+//        }
 
 
         // Eligibility
-        if(!empty($rows_eligibility)){
-            foreach($rows_eligibility as $key => $value){   
-                $rules['row_eligibility.'.$key.'.eligibility'] = 'nullable|string|max:250';
-                $rules['row_eligibility.'.$key.'.level'] = 'nullable|string|max:20';
-                $rules['row_eligibility.'.$key.'.rating'] = 'nullable|numeric';
-                $rules['row_eligibility.'.$key.'.exam_place'] = 'nullable|string|max:255';
-                $rules['row_eligibility.'.$key.'.exam_date'] = 'nullable|date_format:"m/d/Y"';
-                $rules['row_eligibility.'.$key.'.license_no'] = 'nullable|string|max:90';
-                $rules['row_eligibility.'.$key.'.license_validity'] = 'nullable|string|max:255';
-            } 
-        }
+//        if(!empty($rows_eligibility)){
+//            foreach($rows_eligibility as $key => $value){
+//                $rules['row_eligibility.'.$key.'.eligibility'] = 'nullable|string|max:250';
+//                $rules['row_eligibility.'.$key.'.level'] = 'nullable|string|max:20';
+//                $rules['row_eligibility.'.$key.'.rating'] = 'nullable|numeric';
+//                $rules['row_eligibility.'.$key.'.exam_place'] = 'nullable|string|max:255';
+//                $rules['row_eligibility.'.$key.'.exam_date'] = 'nullable|date_format:"m/d/Y"';
+//                $rules['row_eligibility.'.$key.'.license_no'] = 'nullable|string|max:90';
+//                $rules['row_eligibility.'.$key.'.license_validity'] = 'nullable|string|max:255';
+//            }
+//        }
 
 
         // Work Experience
