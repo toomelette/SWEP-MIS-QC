@@ -31,16 +31,17 @@ class ViewDocument extends Controller
             if(empty($attachment)){
                 abort(504,'Attachment not available. The file maybe moved or deleted.');
             }
-            $n = new File201Controller;
-            $path = $n->path.$attachment->employee_no.'/';
-            $filename = $attachment->filename;
-            if(\request()->has('download')){
-                return $dl = Storage::disk('local')->download($path.$filename);
+
+            if(\request()->has('download')) {
+                return $dl = \Storage::disk('local_hru')->download($attachment->full_path);
             }
-            $path = __static::archive_dir().$path.$filename;
-            if (!File::exists($path)) { abort(404); }
-            $file = File::get($path);
-            $type = File::mimeType($path);
+
+            $fullPathRelativeToStorage = \Storage::disk('local_hru')->path($attachment->full_path);
+            if(!\Storage::disk('local_hru')->exists($attachment->full_path)){
+                abort(404,'File not found');
+            }
+            $file = File::get($fullPathRelativeToStorage);
+            $type = File::mimeType($fullPathRelativeToStorage);
             $response = response()->make($file, 200);
             $response->header("Content-Type", $type);
             return $response;

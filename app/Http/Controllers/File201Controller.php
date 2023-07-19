@@ -84,12 +84,13 @@ class File201Controller extends Controller
                 $original_ext = $file->getClientOriginalExtension();
                 $original_file_name_only = str_replace('.'.$original_ext,'',$file->getClientOriginalName());
                 $new_file_name_full = $original_file_name_only.'-'.Str::random(10).'.'.$original_ext;
-                $slug = Str::random();
-                $file->storeAs($this->path.$employee->employee_no.'/',$new_file_name_full);
+                $fullPath = '/File201/'.$employee->employee_no.'/'.$new_file_name_full;
+                \Storage::disk('local_hru')->put($fullPath,$file->get());
                 $file201->employee_no = $employee->employee_no;
                 $file201->filename = $new_file_name_full;
                 $file201->original_filename =  $original_file_name_only.'.'.$original_ext;
                 $file201->file_ext = $original_ext;
+                $file201->full_path = $fullPath;
             }
         }else{
             abort(503,'At least 1 attachment is required.');
@@ -116,10 +117,12 @@ class File201Controller extends Controller
         ]);
     }
 
-    public function update(EmployeeFile201UpdateFormRequest $request,$slug){
+    public function update(EmployeeFile201UpdateFormRequest $request,$slug,EmployeeController $employeeController){
         $file201 = $this->findBySlug($slug);
         $file201->title = $request->title;
         $file201->description = $request->description;
+
+        $employee = $file201->employeeData;
         if($request->_changed == 'true'){
             if(!empty($request->doc_file)){
                 $this->deleteFile($file201->employee_no,$file201->filename);
@@ -130,11 +133,15 @@ class File201Controller extends Controller
                     $original_ext = $file->getClientOriginalExtension();
                     $original_file_name_only = str_replace('.'.$original_ext,'',$file->getClientOriginalName());
                     $new_file_name_full = $original_file_name_only.'-'.Str::random(10).'.'.$original_ext;
-                    $slug = Str::random();
-                    $file->storeAs($this->path.$file201->employee_no.'/',$new_file_name_full);
+                    $fullPath = '/File201/'.$employee->employee_no.'/'.$new_file_name_full;
+
+                    \Storage::disk('local_hru')->put($fullPath,$file->get());
+
+                    $file201->employee_no = $employee->employee_no;
                     $file201->filename = $new_file_name_full;
                     $file201->original_filename =  $original_file_name_only.'.'.$original_ext;
                     $file201->file_ext = $original_ext;
+                    $file201->full_path = $fullPath;
                 }
             }else{
                 abort(503,'At least 1 attachment is required.');

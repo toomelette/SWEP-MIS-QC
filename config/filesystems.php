@@ -48,6 +48,11 @@ return [
             'root' => env('STORAGE_LOCATION','/home/swep_afd_storage/'),
         ],
 
+        'local_hru' => [
+            'driver' => 'local',
+            'root' => env('STORAGE_LOCATION','/home/swep_afd_storage/').'HR/',
+        ],
+
         'qc' => [
             'driver' => 'local',
             'root' => '/home/swep_afd_storage_qc/',
