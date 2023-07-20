@@ -453,10 +453,13 @@ class DTRController extends  Controller
 
         $userAccess = \App\Swep\Helpers\Helper::checkRouteAccess('dashboard.dtr.store');
         $accessSetting = Get::setting('dtr_edit_allowed')->int_value;
-        if($accessSetting !== 1){
-            abort(503,'Access denied.');
+        if(!empty($userAccess) || $accessSetting ==1){
+
+        }else{
+            abort(503,'access debnited');
         }
         if(!empty($userAccess) || $request->biometric_user_id == \Illuminate\Support\Facades\Auth::user()->employee->biometric_user_id){
+
             if(!$request->has('time') || $request->time == null){
 
                 $dtrEdits = DTREdits::query()
