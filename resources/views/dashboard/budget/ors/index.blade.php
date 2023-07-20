@@ -184,7 +184,7 @@
 
             ],
             "stateSave": true,
-            "stateDuration": 1,
+            "stateDuration": 60 * 5,
             stateSaveCallback: function(settings,data) {
                 console.log(settings);
                 localStorage.setItem( 'DataTables_' + settings.sInstance, JSON.stringify(data) )
