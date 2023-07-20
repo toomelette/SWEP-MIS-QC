@@ -95,6 +95,7 @@
                             <th class="th-20">Date</th>
                             <th class="th-20">Payee</th>
                             <th >Particulars</th>
+                            <th >Account Entries</th>
                             <th >Applied Projects</th>
                             <th >Amount</th>
                             <th >Action</th>
@@ -142,6 +143,7 @@
                 { "data": "ors_date" },
                 { "data": "payee" },
                 { "data": "particulars" },
+                { "data": "account_entries" },
                 { "data": "details" },
                 { "data": "amount"},
                 { "data": "action"},
@@ -152,7 +154,7 @@
             ],
             "columnDefs":[
                 {
-                    "targets" : 6,
+                    "targets" : 7,
                     "class" : 'action4'
                 },
                 {
@@ -164,17 +166,25 @@
                     'class' : 'w-8p',
                 },
                 {
-                    'targets' : 5,
+                    'targets' : 6,
                     'class' : 'w-8p text-right',
                 },
                 {
-                    'targets' : 4,
+                    'targets' : [5],
                     'class' : 'w-16p',
                 },
+                {
+                    'targets' : 4,
+                    'class' : 'w-12p',
+                },
+                {
+                    targets : 3,
+                    visible : false,
+                }
 
             ],
             "stateSave": true,
-            "stateDuration": 60 * 60 * 24,
+            "stateDuration": 1,
             stateSaveCallback: function(settings,data) {
                 console.log(settings);
                 localStorage.setItem( 'DataTables_' + settings.sInstance, JSON.stringify(data) )

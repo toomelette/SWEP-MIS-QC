@@ -52,7 +52,8 @@ class ORSController extends Controller
 
 
     public function dataTable(Request $request){
-        $ors = ORS::query()->with(['projectsApplied.pap']);
+        $ors = ORS::query()
+            ->with(['accountEntries.chartOfAccount','projectsApplied.pap']);
         if($request->has('funds') && $request->funds != ''){
             $ors = $ors->where('funds','=',$request->funds);
         }
@@ -88,6 +89,16 @@ class ORSController extends Controller
             })
             ->editColumn('ors_date',function($data){
                 return $data->ors_date != null ? Carbon::parse($data->ors_date)->format('M. d, Y') : '';
+            })
+            ->editColumn('payee',function($data){
+                return view('dashboard.budget.ors.dtPayee')->with([
+                    'data' => $data,
+                ]);
+            })
+            ->addColumn('account_entries',function($data){
+                return view('dashboard.budget.ors.dtAccountEntries')->with([
+                    'data' => $data,
+                ]);
             })
             ->escapeColumns([])
             ->setRowId('slug')

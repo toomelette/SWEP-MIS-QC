@@ -871,33 +871,19 @@ Route::get('/mails',function (){
 });
 
 
-Route::get('/conso',function (){
-    $my = \App\Models\Temp\Conso::query()->get();
-    $sql = \App\Models\Temp\SRVConso::query()->get();
-    $conso = new \App\Models\Temp\Conso();
-    $columns = \Illuminate\Support\Facades\DB::getSchemaBuilder()->getColumnListing($conso->getTable());
-
-    $tree = [];
-    $arr = [];
-    foreach ($columns as $c){
-        $tree[$c] = null;
-    }
-
-    foreach ($my as $data){
-        $dataArr = $tree;
-        foreach ($tree as $columnName => $null){
-            $dataArr[$columnName] = $data->$columnName;
+Route::get('/checking',function (){
+    $burs = \App\Models\SqlServer\BUR::query()->with(['BURProjApplied'])
+        ->where('BURDate','>','2022-12-31')
+        ->whereHas('BURProjApplied',function ($q){
+            return $q->where('COAmt','>',0);
+        })
+        ->get();
+    foreach ($burs as $bur){
+        echo $bur->BURNo.'<hr>';
+        foreach($bur->BURProjApplied as $d){
+            echo $d->COAmt.'<br>';
         }
-        array_push($arr,$dataArr);
+        echo '<br><br>';
     }
-    $collect = collect($arr);
-    $arr = $collect->chunk(50)->toArray();
-
-    foreach ($arr as $a){
-        \App\Models\Temp\SRVConso::insert($a);
-    }
-
-
-    return 1;
 }
 );
