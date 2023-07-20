@@ -22,6 +22,7 @@
                                         <li role="presentation" class=""><a href="#budget_monitoring" data-toggle="tab" aria-expanded="true">Budget Monitoring</a></li>
                                         <li role="presentation" class=""><a href="#statement_of_budget_and_actual_expenditures" data-toggle="tab" aria-expanded="true">Statement of Budget and Actual Expenditures</a></li>
                                         <li role="presentation" class=""><a href="#subsidiary_ledger" data-toggle="tab" aria-expanded="true">Subsidiary Ledger</a></li>
+                                        <li role="presentation" class=""><a href="#budget_proposal_monitoring" data-toggle="tab" aria-expanded="true">Budget Proposal - (Monitoring)</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -29,7 +30,6 @@
                         <div class="col-md-10">
                             <div class="tab-content">
                                 <div class="tab-pane active" id="ors_summary">
-
                                     @include('dashboard.budget.ors.reports.ors_summary')
                                 </div>
 
@@ -38,16 +38,16 @@
                                 </div>
 
                                 <div class="tab-pane" id="budget_monitoring">
-
                                     @include('dashboard.budget.ors.reports.budget_monitoring')
                                 </div>
                                 <div class="tab-pane" id="statement_of_budget_and_actual_expenditures">
-
                                     @include('dashboard.budget.ors.reports.statement_of_budget_and_actual_expenditures')
                                 </div>
                                 <div class="tab-pane" id="subsidiary_ledger">
-
                                     @include('dashboard.budget.ors.reports.subsidiary_ledger')
+                                </div>
+                                <div class="tab-pane" id="budget_proposal_monitoring">
+                                    @include('dashboard.budget.ors.reports.budget_proposal_monitoring')
                                 </div>
                             </div>
                         </div>

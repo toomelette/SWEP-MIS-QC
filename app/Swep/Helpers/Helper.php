@@ -671,4 +671,13 @@ class Helper
         }
         return '';
     }
+
+    public static function divide($num1 , $num2){
+        try {
+            if(@($num1 / $num2) === false) return INF; // covers PHP5
+            return @($num1 / $num2); // covers PHP7
+        } catch (\DivisionByZeroError $e) {
+            return INF; // covers PHP8
+        }
+    }
 }

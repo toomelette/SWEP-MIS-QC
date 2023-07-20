@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Budget;
 
 
+use App\Exports\BudgetProposalMonitoringExporter;
 use App\Exports\StatementOfBudgeAndActualExpendituresExporter;
 use App\Exports\SubsidiaryLedgerExporter;
 use App\Exports\SummaryOfOrsExporter;
@@ -14,6 +15,7 @@ use App\Models\Budget\ChartOfAccounts;
 use App\Models\Budget\ORS;
 use App\Models\Budget\ORSAccountEntries;
 use App\Models\Budget\ORSProjectsApplied;
+use App\Models\PPU\Pap;
 use App\Models\PPU\RCDesc;
 use App\Swep\Helpers\Arrays;
 use App\Swep\Helpers\Get;
@@ -461,11 +463,6 @@ class ORSController extends Controller
                     $orsArray[$department]['resp_centers'][$respCenter]['paps'][$papCode]['ors'][$ors->slug ?? '']['months'][Carbon::parse($ors->ors_date)->format('m')] = $appliedProject;
                     $orsArray[$department]['resp_centers'][$respCenter]['paps'][$papCode]['ors'][$ors->slug ?? '']['applied_project_obj'] = $appliedProject;
 
-
-
-
-//                    dd($appliedProject->pap);
-//                    dd($appliedProject->pap->responsibilityCenter->description->name);
                 }
                 Helper::ksortRecursive($orsArray);
 
@@ -563,6 +560,60 @@ class ORSController extends Controller
                 return view('printables.ors.reports.subsidiary_ledger')->with([
                     'ors' => $ors,
                     'account' => $account,
+                    'request' => $request,
+                ]);
+                break;
+
+            case 'budget_proposal_monitoring':
+                if(empty($request->dept)){
+                    abort(504,'Please select department');
+                }
+                $papsArray = Pap::query()
+                    ->with(['responsibilityCenter']);
+                if(!empty($request->dept)){
+                    $papsArray = $papsArray->whereHas('responsibilityCenter',function ($q) use ($request){
+                        return $q->where('rc','=',$request->dept);
+                    });
+                }
+                $papsArray = $papsArray->get();
+                $papsArray  = $papsArray->pluck(null,'pap_code')->map(function ($data){
+                    return [
+                        'utilized' => null,
+                        'pap' => $data->toArray(),
+                    ];
+                })->toArray();
+
+                $paps = Pap::query()
+                    ->with(['responsibilityCenter','orsAppliedProjects.ors'])
+                    ->orderBy('pap_code','asc');
+                if(empty($request->date_from) || empty($request->date_to)){
+                    abort(504,'Please select date range');
+                }else{
+                    $paps = $paps->whereHas('orsAppliedProjects.ors',function ($q) use ($request){
+                        return $q->whereBetween('ors_date',[$request->date_from,$request->date_to]);
+                    });
+                }
+
+                //IF USER HAS CHOSEN A DEPARTMENT
+                if(!empty($request->dept)){
+                    $paps = $paps->whereHas('responsibilityCenter',function ($q) use ($request){
+                        return $q->where('rc','=',$request->dept);
+                    });
+                }
+                $paps = $paps->get();
+                foreach ($paps as $pap){
+                    $papsArray[$pap->pap_code]['utilized'] = $pap->orsAppliedProjects->sum('total');
+                }
+
+                //IF USER REQUESTS FOR EXCEL
+                if($request->excel == true){
+                    return Excel::download(
+                        new BudgetProposalMonitoringExporter($papsArray,$request),
+                        'Budget Proposal - Monitoring.xlsx',
+                        );
+                }
+                return view('printables.ors.reports.budget_proposal_monitoring')->with([
+                    'paps' => $papsArray,
                     'request' => $request,
                 ]);
                 break;
