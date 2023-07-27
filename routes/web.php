@@ -887,3 +887,14 @@ Route::get('/checking',function (){
     }
 }
 );
+
+Route::get('fullPather',function (){
+    $file201s = \App\Models\EmployeeFile201::query()
+        ->whereNull('full_path')
+        ->get();
+    foreach ($file201s as $file201){
+        $file201->full_path = '/File201/'.$file201->employee_no.'/'.$file201->filename;
+        $file201->save();
+    }
+    dd(1);
+});
