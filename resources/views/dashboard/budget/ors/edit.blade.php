@@ -76,9 +76,10 @@
                             'cols' => 2,
                         ],$ors ?? null) !!}
 
-                        {!! \App\Swep\ViewHelpers\__form2::textbox('particulars',[
+                        {!! \App\Swep\ViewHelpers\__form2::textarea('particulars',[
                             'label' => 'Remarks:',
                             'cols' => 4,
+                            'rows' => 3,
                         ],$ors ?? null) !!}
 
                         {!! \App\Swep\ViewHelpers\__form2::textbox('amount',[
