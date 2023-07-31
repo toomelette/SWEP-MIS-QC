@@ -184,6 +184,7 @@
                                   'UPPER_LEFT' => 'Upper left',
                                   'LOWER_RIGHT' => 'Lower Right',
                                   'LOWER_LEFT' => 'Lower left',
+                                  'LOWER_LEFT_PADDED' => 'Lower Middle',
                                 ],
                                 'class' => '',
                             ],'UPPER_RIGHT') !!}

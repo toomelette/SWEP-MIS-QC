@@ -252,7 +252,6 @@ class DocumentController extends Controller{
             $pdf->SetXY($mainX,$mainY);
             if($pageNo < 2){
 
-
                 $pdf->SetFont('Arial', '', '8');
                 $pdf->Image($image1,$mainX-20,$mainY-15,15 , 15);
                 $pdf->SetFont('Arial', '', '8');
@@ -286,6 +285,10 @@ class DocumentController extends Controller{
                 break;
             case 'LOWER_LEFT':
                 $mainX = 30;
+                $mainY = $page_height - 19;
+                break;
+            case 'LOWER_LEFT_PADDED':
+                $mainX = 90;
                 $mainY = $page_height - 19;
                 break;
         }
