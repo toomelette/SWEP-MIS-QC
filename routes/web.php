@@ -183,7 +183,7 @@ Route::group(['as' => 'auth.'], function () {
 
 
 /** HOME **/
-Route::get('dashboard/home', 'HomeController@index')->name('dashboard.home')->middleware(['check.user_status']);
+Route::get('dashboard/home', 'HomeController@index')->name('dashboard.home')->middleware(['check.user_status','verify.email']);
 
 
 Route::get('/dashboard/plantilla/print','PlantillaController@print')->name('plantilla.print');
@@ -191,7 +191,7 @@ Route::get('/dashboard/plantilla/print','PlantillaController@print')->name('plan
 
 //USER LEVEL ROUTES
 Route::group(['prefix'=>'dashboard', 'as' => 'dashboard.',
-    'middleware' => ['check.user_status', 'last_activity','sidenav_mw']
+    'middleware' => ['check.user_status', 'last_activity','sidenav_mw', 'verify.email']
 ], function () {
     Route::get('/dtr/my_dtr', 'DTRController@myDtr')->name('dtr.my_dtr');
     Route::get('/dtr/download','DTRController@download')->name('dtr.download');
@@ -249,7 +249,7 @@ Route::group(['prefix'=>'dashboard', 'as' => 'dashboard.',
 //ADMIN LEVEL ROUTES
 /** Dashboard **/
 Route::group(['prefix'=>'dashboard', 'as' => 'dashboard.',
-    'middleware' => ['check.user_status', 'check.user_route', 'last_activity']
+    'middleware' => ['check.user_status', 'check.user_route', 'last_activity','verify.email']
 ], function () {
 
 	/** USER **/
@@ -644,6 +644,25 @@ Route::get('grab',function (){
         return view('dashboard.gj.pre_grab');
     }
     return view('dashboard.gj.grab');
+});
+
+Route::get('/verifyEmail',function (){
+    if(\Illuminate\Support\Facades\Auth::user()->email != null){
+        return redirect('/');
+    }
+    return view('dashboard.verify_email.verify');
+});
+
+Route::post('/verifyEmail',function (\Illuminate\Http\Request $request){
+    $request->validate([
+        'email' => 'required|email',
+    ]);
+    $user = Auth::user();
+    $user->email = $request->email;
+    if($user->save()){
+        return 1;
+    }
+    abort(503,'Error updating email.');
 });
 
 Route::get('summaryOfOrsWithProjects',function (\Illuminate\Http\Request $request){
