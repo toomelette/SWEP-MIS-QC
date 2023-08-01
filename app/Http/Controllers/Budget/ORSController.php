@@ -647,7 +647,7 @@ class ORSController extends Controller
                     abort(504,'Please select date range');
                 }else{
                     $paps = $paps->whereHas('orsAppliedProjects.ors',function ($q) use ($request){
-                        return $q->whereBetween('ors_date',[$request->date_from,$request->date_to]);
+                        return $q->where('ors_date','<=',$request->date_to);
                     });
                 }
 
