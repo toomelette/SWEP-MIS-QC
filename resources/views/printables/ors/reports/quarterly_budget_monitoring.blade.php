@@ -3,15 +3,7 @@
     $totalArray = [];
 
     $GLOBALS['quarter'] = $quarter;
-    function sumQuarters ($value){
-        $quarter = $GLOBALS['quarter'];
-        $totals = [];
-        foreach (\App\Swep\Helpers\Helper::quarters()[$quarter] as $m => $val){
-            $quarters = array_column($value,'quarters');
-            $totals[$m] =  array_sum(array_column($quarters,$m));
-        }
-        return $totals;
-    }
+
 @endphp
 @extends('printables.print_layouts.print_layout_main')
 
@@ -136,11 +128,27 @@
                 <td class="text-strong">TOTAL {{$dept['dept_obj']->name ?? ''}}</td>
                 <td></td>
                 <td></td>
-                @foreach(array_map('sumQuarters',$totalsArray)[$deptCode] as $m => $amount)
+                @foreach(array_map(function ($value){
+                                        $quarter = $GLOBALS['quarter'];
+                                        $totals = [];
+                                        foreach (\App\Swep\Helpers\Helper::quarters()[$quarter] as $m => $val){
+                                            $quarters = array_column($value,'quarters');
+                                            $totals[$m] =  array_sum(array_column($quarters,$m));
+                                        }
+                                        return $totals;
+                                    },$totalsArray)[$deptCode] as $m => $amount)
                     <td></td>
                     <td class="text-strong text-right">{{number_format($amount,2)}}</td>
                 @endforeach
-                <td class="text-strong text-right">{{number_format(array_sum(array_map('sumQuarters',$totalsArray)[$deptCode]),2)}}</td>
+                <td class="text-strong text-right">{{number_format(array_sum(array_map(function ($value){
+                                        $quarter = $GLOBALS['quarter'];
+                                        $totals = [];
+                                        foreach (\App\Swep\Helpers\Helper::quarters()[$quarter] as $m => $val){
+                                            $quarters = array_column($value,'quarters');
+                                            $totals[$m] =  array_sum(array_column($quarters,$m));
+                                        }
+                                        return $totals;
+                                    },$totalsArray)[$deptCode]),2)}}</td>
             </tr>
         @endforeach
             @if(count($orsArray) > 1)
@@ -149,7 +157,15 @@
                     <td></td>
                     <td></td>
                     @php
-                        $sumQuarters = array_map('sumQuarters',$totalsArray);
+                        $sumQuarters = array_map(function ($value){
+                                        $quarter = $GLOBALS['quarter'];
+                                        $totals = [];
+                                        foreach (\App\Swep\Helpers\Helper::quarters()[$quarter] as $m => $val){
+                                            $quarters = array_column($value,'quarters');
+                                            $totals[$m] =  array_sum(array_column($quarters,$m));
+                                        }
+                                        return $totals;
+                                    },$totalsArray);
                         $grandTotal = 0;
                     @endphp
                     @foreach(\App\Swep\Helpers\Helper::quarters()[$quarter] as $m => $amount)

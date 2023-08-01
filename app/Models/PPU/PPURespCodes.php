@@ -18,4 +18,8 @@ class PPURespCodes extends Model
     public function description(){
         return $this->belongsTo(RCDesc::class,'rc','rc');
     }
+
+    public function papCodes(){
+        return $this->hasMany(Pap::class,'resp_center','rc_code');
+    }
 }

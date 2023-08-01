@@ -3,6 +3,7 @@
 
 namespace App\Models\PPU;
 
+use App\Models\Budget\ORS;
 use App\Models\Budget\ORSProjectsApplied;
 use App\Models\PPBTMS\Transactions;
 use Illuminate\Database\Eloquent\Model;

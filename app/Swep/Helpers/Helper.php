@@ -680,4 +680,18 @@ class Helper
             return INF; // covers PHP8
         }
     }
+
+    public static function months(){
+        $year = Carbon::now()->format('Y');
+        $months = [];
+        for ($m = 1;$m <= 12; $m++){
+            $start = Carbon::parse($year.'-'.str_pad($m,2,'0',STR_PAD_LEFT).'-01')->format('Y-m-d');
+            $months[str_pad($m,2,'0',STR_PAD_LEFT)] = [
+                'start' => $start,
+                'end' => \Illuminate\Support\Carbon::parse($start)->lastOfMonth()->format('Y-m-d'),
+            ];
+        }
+        return $months;
+
+    }
 }

@@ -14,6 +14,7 @@ class Get
         return [
             'startOfQuarter' => Carbon::parse($year.'-'.str_pad($quarter,2,'0',STR_PAD_LEFT).'-01')->startOfQuarter()->format('Y-m-d'),
             'endOfQuarter' => Carbon::parse($year.'-'.str_pad($quarter,2,'0',STR_PAD_LEFT).'-01')->lastOfQuarter()->format('Y-m-d'),
+            'startOfYear' =>Carbon::parse($year.'-'.str_pad($quarter,2,'0',STR_PAD_LEFT).'-01')->firstOfYear()->format('Y-m-d')
         ];
     }
 
