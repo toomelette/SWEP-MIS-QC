@@ -402,8 +402,11 @@ class Arrays
 
     public static function groupedRespCodes($all = null){
 
-        $rcs = PPURespCodes::query()->with(['description'])
-            ->get();
+        $rcs = PPURespCodes::query()->with(['description']);
+        if($all == 'vis'){
+            $rcs->where('vis','=',1);
+        }
+        $rcs =  $rcs->get();
         $arr = [];
 
         if(!empty($rcs)){
@@ -411,7 +414,6 @@ class Arrays
                 $arr[$rc->description->name][$rc->rc_code] = $rc->desc;
             }
         }
-
         return $arr;
     }
 

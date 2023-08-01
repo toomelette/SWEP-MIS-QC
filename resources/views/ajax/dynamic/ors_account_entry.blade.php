@@ -16,7 +16,7 @@
         {!! \App\Swep\ViewHelpers\__form2::selectOnly('account_entries['.$rand.'][resp_center]',[
             'class' => 'input-sm select2_respCenter account_entries_'.$rand.'_resp_center',
             'container_class' => 'select2-sm',
-            'options' => \App\Swep\Helpers\Arrays::groupedRespCodes(),
+            'options' => \App\Swep\Helpers\Arrays::groupedRespCodes('vis'),
             'for' => 'resp_center',
         ],$data->resp_center ?? $data['resp_center'] ?? null) !!}
     </td>

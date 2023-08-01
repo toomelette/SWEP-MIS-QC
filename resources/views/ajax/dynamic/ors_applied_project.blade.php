@@ -5,7 +5,7 @@ $rand = \Illuminate\Support\Str::random();
     <td>
         {!! \App\Swep\ViewHelpers\__form2::selectOnly('applied_projects['.$rand.'][resp_center]',[
             'class' => 'input-sm resp_center_clear select2_respCenter applied_projects_'.$rand.'_resp_center',
-            'options' => \App\Swep\Helpers\Arrays::groupedRespCodes(),
+            'options' => \App\Swep\Helpers\Arrays::groupedRespCodes('vis'),
             'for' => 'resp_center',
             'container_class' => 'select2-sm',
         ],$data->pap->responsibilityCenter->rc_code ?? null) !!}
