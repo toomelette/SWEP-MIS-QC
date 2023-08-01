@@ -249,6 +249,7 @@ class DocumentController extends Controller{
             $mainX = $this->getXY($request->qr_location,$page_width,$page_height)['mainX'];
             $mainY = $this->getXY($request->qr_location,$page_width,$page_height)['mainY'];
             $pdf->useTemplate($tplIdx, 0, 0, null, null, true);
+            $pdf->SetAutoPageBreak(false);
             $pdf->SetXY($mainX,$mainY);
             if($pageNo < 2){
 
@@ -289,7 +290,7 @@ class DocumentController extends Controller{
                 break;
             case 'LOWER_LEFT_PADDED':
                 $mainX = 90;
-                $mainY = $page_height - 19;
+                $mainY = $page_height - 10;
                 break;
         }
 
