@@ -110,11 +110,11 @@
                                 $total = $total + $dvEntry->debit;
                             @endphp
                             <tr>
-                                <td style="padding: 0px 2px !important; font-size: 12px" class="b-left">{{$dvEntry->responsibilityCenter->description->department ?? ($dvEntry->dept.' '.$dvEntry->unit)}}</td>
-                                <td style="padding: 0px 2px !important; font-size: 12px" class="b-left">{{$dvEntry->chartOfAccount->account_title ?? '-'}}</td>
-                                <td style="padding: 0px 2px !important; font-size: 12px" class="b-left"></td>
+                                <td style="padding: 0px 2px !important; font-size: 13px" class="b-left">{{$dvEntry->responsibilityCenter->description->department ?? ($dvEntry->dept.' '.$dvEntry->unit)}}</td>
+                                <td style="padding: 0px 2px !important; font-size: 13px" class="b-left">{{$dvEntry->chartOfAccount->account_title ?? '-'}}</td>
+                                <td style="padding: 0px 2px !important; font-size: 13px" class="b-left"></td>
                                 <td style="padding: 0px 2px !important; font-size: 12px" class="b-left">{{$dvEntry->account_code}}</td>
-                                <td style="padding: 0px 2px !important; font-size: 12px" class="text-right b-left b-right">{{\App\Swep\Helpers\Helper::toNumber($dvEntry->debit,2)}}</td>
+                                <td style="padding: 0px 2px !important; font-size: 13px" class="text-right b-left b-right">{{\App\Swep\Helpers\Helper::toNumber($dvEntry->debit,2)}}</td>
                             </tr>
                         @endforeach
                         @if($pageNo == $noOfPages - 1)
