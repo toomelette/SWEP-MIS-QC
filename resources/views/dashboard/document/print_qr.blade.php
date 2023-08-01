@@ -23,6 +23,12 @@
         right: 0px;
         top: 0px;
     }
+    .LOWER_LEFT_PADDED{
+        position: absolute;
+        left: 0px;
+        bottom: 0px;
+        padding-left: 30%;
+    }
 </style>
 <div id="parent-of-trt">
     <table class="{{$document->qr_location ?? 'UPPER_RIGHT'}}">
