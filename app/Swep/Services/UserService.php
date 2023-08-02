@@ -135,7 +135,6 @@ class UserService extends BaseService{
         $user->firstname = $request->firstname;
         $user->lastname = $request->lastname;
         $user->middlename = $request->middlename;
-        $user->email = $request->email;
         $user->position = $request->position;
         $user->dash = $request->dash_type;
         $user->update();
