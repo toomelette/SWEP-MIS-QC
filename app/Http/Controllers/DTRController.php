@@ -12,6 +12,7 @@ use App\Models\DTREdits;
 use App\Models\Employee;
 use App\Models\Holiday;
 use App\Models\JoEmployees;
+use App\Models\SuSettings;
 use App\Models\UserSubmenu;
 use App\Swep\Helpers\__sanitize;
 use App\Swep\Helpers\Get;
@@ -44,11 +45,74 @@ class DTRController extends  Controller
             return 'IP NOT PROVIDED';
         }
 
-        if($request->ip != '21' && $request->ip != '22' && $request->ip != '23'){
-            return 'INVALID IP';
+        if(!$request->has('from')){
+            return 'please provide key from';
         }
+        if(!$request->has('to')){
+            return 'Please provide key to';
+        }
+
         $ip = '10.36.1.'.$request->ip;
-        return $this->dtr_service->extract($ip);
+        $last_uid = 0;
+        $last_from_device = $request->from;
+
+        $attendances = $this->fetchAttendance($ip);
+        $serial_no = $this->dtr_service->getSerialNo($ip);
+        $from = $request->from;
+        $to = $request->to;
+
+
+
+        $server_location = SuSettings::query()->where('setting','=','server_location')->first()->string_value;
+
+        $attendances_array = [];
+        for ($x = $from ; $x <= $to ; $x++){
+            if(isset($attendances[$x])){
+                if(isset($this->dtr_service->biometric_values(true)[$attendances[$x]['type']])){
+                    array_push($attendances_array,[
+                        'uid' => $attendances[$x]['uid'],
+                        'user' => $attendances[$x]['id'],
+                        'state' => $attendances[$x]['state'],
+                        'timestamp' => $attendances[$x]['timestamp'],
+                        'type' => $attendances[$x]['type'],
+                        'device' => $serial_no,
+                        'location' => $server_location,
+                    ]);
+                }
+
+            }
+        }
+        $a = DTR::insert($attendances_array);
+        dd($attendances_array);
+
+        if(count($attendances_array) > 0){
+            $a = DTR::insert($attendances_array);
+            if($a){
+                $string = 'Copied '.count($attendances_array).' data from device: '.$ip;
+                $cl = new CronLogs;
+                $cl->log = $string;
+                $cl->type = 1;
+                $cl->save();
+
+                $last_uid_db->last_uid = $last_from_device;
+                $last_uid_db->update();
+                return $string;
+            }
+            $string = 'Error doing insert';
+            $cl = new CronLogs;
+            $cl->log = $string;
+            $cl->type = 1;
+            $cl->save();
+            return 'Error doing insert';
+        }else{
+            $string = 'From device: '.$ip.' | No new attendance';
+            $cl = new CronLogs;
+            $cl->log = $string;
+            $cl->type = 1;
+            $cl->save();
+
+            return 'No new attendance found';
+        }
     }
 
 

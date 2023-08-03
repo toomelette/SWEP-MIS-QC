@@ -383,7 +383,7 @@ class DTRService extends BaseService
         }
     }
 
-    private function getSerialNo($ip){
+    public function getSerialNo($ip){
         $zk = new ZKTeco($ip);
         $zk->connect();
         return  preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', Helper::getStingAfterChar($zk->serialNumber(),'='));
