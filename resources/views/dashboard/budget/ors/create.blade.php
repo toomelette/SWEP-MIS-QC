@@ -436,7 +436,10 @@
         });
 
 
-
+        window.addEventListener('keydown', function(e) {
+            if (e.altKey == true && e.keyCode == 78)
+                $(".add_button").trigger('click');
+        });
 
 
 

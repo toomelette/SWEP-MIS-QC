@@ -414,5 +414,10 @@
         $("#payee").typeahead({
             ajax : "{{ route('dashboard.ajax.get','ors_payees') }}?typeahead=true",
         });
+
+        window.addEventListener('keydown', function(e) {
+            if (e.altKey == true && e.keyCode == 78)
+                $(".add_button").trigger('click');
+        });
     </script>
 @endsection
