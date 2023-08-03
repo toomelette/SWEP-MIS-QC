@@ -86,7 +86,7 @@
                                 $orsData = $appliedProject->ors;
                             @endphp
                             <tr>
-                                <td class="td-indent-3"> {{$orsData->payee}} - {{$orsData->payee}} </td>
+                                <td class="td-indent-3"> {{$orsData->payee}} - {{$orsData->particulars}} </td>
                                 <td></td>
                                 <td class="text-right">{{\App\Swep\Helpers\Helper::toNumber($appliedProject->co)}}</td>
                                 @foreach(\App\Swep\Helpers\Helper::quarters()[$quarter] as $m => $q)
