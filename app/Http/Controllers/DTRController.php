@@ -83,36 +83,8 @@ class DTRController extends  Controller
             }
         }
         $a = DTR::insert($attendances_array);
+        echo 'do not reload';
         dd($attendances_array);
-
-        if(count($attendances_array) > 0){
-            $a = DTR::insert($attendances_array);
-            if($a){
-                $string = 'Copied '.count($attendances_array).' data from device: '.$ip;
-                $cl = new CronLogs;
-                $cl->log = $string;
-                $cl->type = 1;
-                $cl->save();
-
-                $last_uid_db->last_uid = $last_from_device;
-                $last_uid_db->update();
-                return $string;
-            }
-            $string = 'Error doing insert';
-            $cl = new CronLogs;
-            $cl->log = $string;
-            $cl->type = 1;
-            $cl->save();
-            return 'Error doing insert';
-        }else{
-            $string = 'From device: '.$ip.' | No new attendance';
-            $cl = new CronLogs;
-            $cl->log = $string;
-            $cl->type = 1;
-            $cl->save();
-
-            return 'No new attendance found';
-        }
     }
 
 
