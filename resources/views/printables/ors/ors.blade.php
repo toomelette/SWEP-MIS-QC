@@ -6,7 +6,7 @@
 @section('wrapper')
     @php
         $noOfPages = 1;
-        $chunkBy = 12;
+        $chunkBy = 8;
         if(\Illuminate\Support\Facades\Request::get('withOrsEntries') == true){
             $chunked = $ors->dvEntries->chunk($chunkBy);
             $noOfPages = count($chunked);
