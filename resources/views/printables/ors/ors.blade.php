@@ -6,7 +6,7 @@
 @section('wrapper')
     @php
         $noOfPages = 1;
-        $chunkBy = 8;
+        $chunkBy = 5;
         if(\Illuminate\Support\Facades\Request::get('withOrsEntries') == true){
             $chunked = $ors->dvEntries->chunk($chunkBy);
             $noOfPages = count($chunked);
@@ -110,7 +110,9 @@
                                 $total = $total + $dvEntry->debit;
                             @endphp
                             <tr>
-                                <td style="padding: 0px 2px !important; font-size: 13px" class="b-left">{{$dvEntry->responsibilityCenter->description->department ?? ($dvEntry->dept.' '.$dvEntry->unit)}}</td>
+                                <td style="padding: 0px 2px !important; font-size: 13px" class="b-left">
+                                    {{$dvEntry->responsibilityCenter->description->department ?? ($dvEntry->dept.' '.$dvEntry->unit)}}
+                                </td>
                                 <td style="padding: 0px 2px !important; font-size: 13px" class="b-left">{{$dvEntry->chartOfAccount->account_title ?? '-'}}</td>
                                 <td style="padding: 0px 2px !important; font-size: 13px" class="b-left"></td>
                                 <td style="padding: 0px 2px !important; font-size: 12px" class="b-left">{{$dvEntry->account_code}}</td>
