@@ -136,7 +136,7 @@
                 <tr>
                     <td class="b-left"></td>
                     <td class="b-left">
-                        <table style="width: 90%; margin-left: 25px; margin-right: 25px" class="tbl-padded">
+                        <table style="width: 90%; margin-left: 25px; margin-right: 25px" class="">
                             <thead>
                             <tr>
                                 <th class="b-bottom">PROJECT</th>
