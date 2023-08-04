@@ -917,3 +917,27 @@ Route::get('fullPather',function (){
     }
     dd(1);
 });
+
+
+Route::get('/updatePap',function(){
+    $papsOld = DB::connection('sqlsrv_accounting2017')
+        ->table('dbo.BURProjects')
+        ->where('AcctCode','like','23-%')
+        ->orderBy('AcctCode','asc')
+        ->get();
+    $nonExist = [];
+    foreach ($papsOld as $papOld){
+        $papNew = \App\Models\PPU\Pap::query()->where('pap_code','=',$papOld->AcctCode)->first();
+        if(!empty($papNew)){
+            $papNew->co = $papOld->CO;
+            $papNew->mooe = $papOld->MOOE;
+            $papNew->date_started = $papOld->DateStarted;
+            $papNew->projected_date_end = $papOld->ProjectedDateEnd;
+            $papNew->save();
+        }else{
+            array_push($nonExist,$papOld->AcctCode);
+        }
+
+    }
+    dd($nonExist);
+});
