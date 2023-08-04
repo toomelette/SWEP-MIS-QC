@@ -6,7 +6,7 @@
 @section('wrapper')
     @php
         $noOfPages = 1;
-        $chunkBy = 5;
+        $chunkBy = \Illuminate\Support\Facades\Request::get('accountEntriesPerPage') ?? 15;
         if(\Illuminate\Support\Facades\Request::get('withOrsEntries') == true){
             $chunked = $ors->dvEntries->chunk($chunkBy);
             $noOfPages = count($chunked);
@@ -15,7 +15,6 @@
         $total = 0;
     @endphp
     @for($pageNo = 0; $pageNo < $noOfPages; $pageNo++)
-
         <div style="break-after: page">
             <table style="width: 100%;">
                 <tbody><tr>
@@ -133,6 +132,7 @@
 
                     @endif
                 @endif
+                @if($pageNo + 1 == $noOfPages)
                 <tr>
                     <td class="b-left"></td>
                     <td class="b-left">
@@ -159,6 +159,7 @@
                     <td class="b-left"></td>
                     <td class="b-left b-right"></td>
                 </tr>
+                @endif
                 </thead>
                 <tbody>
                 <tr id="adjuster" class="adjuster">

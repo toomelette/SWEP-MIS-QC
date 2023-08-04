@@ -312,7 +312,7 @@
                     succeed(form,true,true);
                     let print = "{{route('dashboard.ors.print','slug')}}";
                     let edit = "{{route('dashboard.ors.edit','slug')}}";
-                    print = print.replace('slug',res.slug)+'?withOrsEntries=true';
+                    print = print.replace('slug',res.slug)+'?withOrsEntries=true&accountEntriesPerPage=15';
                     edit = edit.replace('slug',res.slug);
 
                     Swal.fire({
