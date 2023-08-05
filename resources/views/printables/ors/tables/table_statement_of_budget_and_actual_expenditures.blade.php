@@ -1,5 +1,5 @@
-<table class="tbl tbl-bordered-grey tbl-padded" style="width: 100%; font-size: 11px">
-    <thead>
+<table class="tbl tbl-bordered-grey tbl-padded table-fixed-header" style="width: 100%; font-size: 11px">
+    <thead class="header">
     <tr>
         <th class="text-center">Account Title</th>
         <th class="text-center">Account Code</th>

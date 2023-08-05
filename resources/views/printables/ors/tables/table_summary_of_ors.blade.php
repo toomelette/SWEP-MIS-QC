@@ -1,5 +1,5 @@
-<table class="tbl tbl-bordered-grey tbl-padded" style="width: 100%; font-size: 11px">
-    <thead>
+<table class="tbl tbl-bordered-grey tbl-padded table-fixed-header" style="width: 100%; font-size: 11px">
+    <thead class="header">
     <tr class="bg-purple">
         <th class="text-center">ORS No.</th>
         <th class="text-center">Ref Doc</th>

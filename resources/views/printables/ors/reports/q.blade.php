@@ -11,6 +11,7 @@
 @extends('printables.print_layouts.print_layout_main')
 
 @section('wrapper')
+
     <div>
         <img src="{{asset('images/sra.png')}}" style="width: 60px; float: left; margin-right: 15px;">
         <p class="no-margin text-left" style="font-size: 14px"> <b>SUGAR REGULATORY ADMINISTRATION</b></p>
@@ -30,22 +31,25 @@
         </p>
     </div>
 
-    <table class="tbl tbl-bordered-grey tbl-padded" style="width: 100%; font-size: 11px">
-        <thead>
+
+
+
+    <table id="report_table" class="tbl tbl-bordered-grey tbl-padded table-fixed-header" style="width: 100%; font-size: 11px">
+        <thead class="header">
         <tr class="bg-purple">
-            <th class="text-center" rowspan="2">Recommended Programs/Projects</th>
-            <th class="text-center" colspan="2">Year</th>
+            <th style="position: sticky; top: 0;" class="text-center" rowspan="2">Recommended Programs/Projects</th>
+            <th style="position: sticky; top: 0;" class="text-center" colspan="2">Year</th>
             @foreach(\App\Swep\Helpers\Helper::quarters()[$quarter] as $m => $q)
-                <th class="text-center" colspan="2">{{\Illuminate\Support\Carbon::parse('2022-'.$m.'-01')->format('F')}}</th>
+                <th style="position: sticky; top: 0;" class="text-center" colspan="2">{{\Illuminate\Support\Carbon::parse('2022-'.$m.'-01')->format('F')}}</th>
             @endforeach
-            <th class="text-center" rowspan="2">Total for the <br> {{\App\Swep\Helpers\Helper::ordinal($quarter)}}  Quarter</th>
+            <th style="position: sticky; top: 0;" class="text-center" rowspan="2">Total for the <br> {{\App\Swep\Helpers\Helper::ordinal($quarter)}}  Quarter</th>
         </tr>
         <tr class="bg-purple">
-            <th class="text-center" style="width: 80px">MOOE</th>
-            <th class="text-center" style="width: 80px">CO</th>
+            <th style="position: sticky; top: 0;" class="text-center" style="width: 80px">MOOE</th>
+            <th style="position: sticky; top: 0;" class="text-center" style="width: 80px">CO</th>
             @foreach(\App\Swep\Helpers\Helper::quarters()[$quarter] as $m => $q)
-                <th class="text-center">DETAILS</th>
-                <th class="text-center">AMOUNT</th>
+                <th style="position: sticky; top: 0;" class="text-center">DETAILS</th>
+                <th style="position: sticky; top: 0;" class="text-center">AMOUNT</th>
             @endforeach
         </tr>
         </thead>
@@ -171,4 +175,12 @@
 
         </tbody>
     </table>
+
+
+@endsection
+
+@section('scripts')
+    <script type="text/javascript">
+
+    </script>
 @endsection

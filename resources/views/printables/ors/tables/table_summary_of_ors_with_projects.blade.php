@@ -1,5 +1,5 @@
-<table style="width: 100%" class="tbl-padded tbl-bordered-vertical">
-    <thead>
+<table style="width: 100%" class="tbl-padded tbl-bordered-vertical table-fixed-header">
+    <thead class="header">
     <tr>
         <th >ORS No.</th>
         <th >Payee</th>

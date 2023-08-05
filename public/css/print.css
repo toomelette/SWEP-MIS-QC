@@ -41,7 +41,9 @@
    .no-print{
        display: none;
    }
-
+    .header-copy{
+        display: none;
+    }
 
 }
 

@@ -8,6 +8,7 @@
     <link type="text/css" rel="stylesheet" href="{{asset('css/print.css')}}?rand={{\Illuminate\Support\Str::random()}}">
 
     <link type="text/css" rel="stylesheet" href="{{asset('template/bower_components/font-awesome/css/font-awesome.min.css')}}">
+    <link type="text/css" rel="stylesheet" href="{{asset('template/bower_components/font-awesome/css/font-awesome.min.css')}}">
 
     <style type="text/css">
         .no-margin{
@@ -39,13 +40,17 @@
     @yield('wrapper')
 </div>
 
-
+<script type="text/javascript" src="{{ asset('template/plugins/fixed-header/table-fixed-header.js') }}"></script>
 
 <script type="text/javascript">
     $(document).ready(function(){
         $("#loader").fadeOut(function(){
             $("#content").fadeIn(1000);
         })
+
+        $(".table-fixed-header").fixedHeader({
+            topOffset: 0
+        });
     })
 </script>
 
