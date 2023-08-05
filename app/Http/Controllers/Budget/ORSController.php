@@ -437,7 +437,16 @@ class ORSController extends Controller
                 if(!$request->has('quarter') || $request->quarter == '' || !$request->has('year') || $request->year == ''){
                     abort(504,'Required fields: YEAR, QUARTER');
                 }
-                $appliedProjects = ORSProjectsApplied::query()->with(['pap.responsibilityCenter.description','ors']);
+
+
+                $appliedProjects = ORSProjectsApplied::query()
+                    ->with(['pap.responsibilityCenter.description','ors'])
+                    ->whereHas('pap',function ($q){
+                        return $q->where('pap_code','=','23-02000-011');
+                        return $q->where('charge_to_income','!=',1)
+                            ->orWhereNull('charge_to_income');
+                    });
+
                 if($request->has('resp_center') & $request->resp_center != ''){
                     $appliedProjects = $appliedProjects->whereHas('pap.responsibilityCenter.description',function ($q) use ($request){
                         return $q->where('rc','=',$request->resp_center);
@@ -471,18 +480,22 @@ class ORSController extends Controller
                 $depts = $depts->get();
 
                 $ors = ORSProjectsApplied::query()
-                    ->with(['ors'])
+                    ->with(['ors','pap'])
                     ->whereHas('ors',function ($q)  use ($quarter, $year){
                         return $q->whereBetween('ors_date',[
                             Get::startAndEndOfQuarter($quarter, $year)['startOfQuarter'],
                             Get::startAndEndOfQuarter($quarter, $year)['endOfQuarter']
                         ]);
+                    })
+                    ->whereHas('pap',function ($q){
+                        return $q->withoutChargedToIncome();
                     });
                 if($request->has('resp_center') & $request->resp_center != ''){
                     $ors = $ors->whereHas('pap.responsibilityCenter.description',function ($q) use ($request){
                         return $q->where('rc','=',$request->resp_center);
                     });
                 }
+
                 $ors = $ors->get();
                 $utilized = ORSProjectsApplied::query()
                     ->with(['ors'])

@@ -920,6 +920,7 @@ Route::get('fullPather',function (){
 
 
 Route::get('/updatePap',function(){
+    dd('pause');
     $papsOld = DB::connection('sqlsrv_accounting2017')
         ->table('dbo.BURProjects')
         ->where('AcctCode','like','23-%')

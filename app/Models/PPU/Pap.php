@@ -6,6 +6,7 @@ namespace App\Models\PPU;
 use App\Models\Budget\ORS;
 use App\Models\Budget\ORSProjectsApplied;
 use App\Models\PPBTMS\Transactions;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Pap extends Model
@@ -28,4 +29,11 @@ class Pap extends Model
     public function procurements(){
         return $this->hasMany(Transactions::class,'pap_code','pap_code')->where('ref_book','=','PR')->orWhere('ref_book','=','JR');
     }
+
+
+    public function scopeWithoutChargedToIncome(Builder $query): void{
+        $query->where('charge_to_income','!=',1)
+            ->orWhereNull('charge_to_income');
+    }
+
 }

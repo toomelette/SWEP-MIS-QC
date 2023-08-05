@@ -59,80 +59,81 @@
                     <td class="text-strong td-indent">{{$respCenter->desc}}</td>
                     <td colspan="9"></td>
                 </tr>
-                @foreach($respCenter->papCodes as $pap)
-                    <tr class="bg-lightblue">
-                        <td colspan="10" style="font-size: 12px" class="td-indent-2"> <b>{{$pap->pap_code}}</b> - <span class="text-info text-strong text-italic">{{$pap->pap_title ?? 'N/A'}}</span></td>
-                    </tr>
-                    <tr>
+                @foreach($respCenter->papCodes as $key => $pap)
+                    @if($pap->charge_to_income != 1)
+                        <tr class="bg-lightblue">
+                            <td colspan="10" style="font-size: 12px" class="td-indent-2"> <b>{{$pap->pap_code}}</b> - <span class="text-info text-strong text-italic">{{$pap->pap_title ?? 'N/A'}}</span></td>
+                        </tr>
+                        <tr>
 
-                        <td class="text-right text-strong">BALANCE FORWARDED:</td>
-                        <td class="text-right text-strong">
-                            {{number_format(
-                               $balanceForwardedPerPapMooe = ($pap->mooe ?? 0) - (!empty($utilized->get($pap->pap_code)) ? $utilized->get($pap->pap_code)->sum('mooe') : 0 )
-                            ,2)}}
-                        </td>
-                        <td class="text-right text-strong">
-                            {{number_format(
-                               $balanceForwardedPerPapCo = ($pap->co ?? 0) - (!empty($utilized->get($pap->pap_code)) ? $utilized->get($pap->pap_code)->sum('co') : 0 )
-                            ,2)}}
-                        </td>
-                        <td colspan="7"></td>
-                    </tr>
-                    @if(!empty($ors[$pap->pap_code]))
+                            <td class="text-right text-strong">BALANCE FORWARDED:</td>
+                            <td class="text-right text-strong">
+                                {{number_format(
+                                   $balanceForwardedPerPapMooe = ($pap->mooe ?? 0) - (!empty($utilized->get($pap->pap_code)) ? $utilized->get($pap->pap_code)->sum('mooe') : 0 )
+                                ,2)}}
+                            </td>
+                            <td class="text-right text-strong">
+                                {{number_format(
+                                   $balanceForwardedPerPapCo = ($pap->co ?? 0) - (!empty($utilized->get($pap->pap_code)) ? $utilized->get($pap->pap_code)->sum('co') : 0 )
+                                ,2)}}
+                            </td>
+                            <td colspan="7"></td>
+                        </tr>
+                        @if(!empty($ors[$pap->pap_code]))
 
-                        @foreach($ors[$pap->pap_code] as $appliedProject)
+                            @foreach($ors[$pap->pap_code] as $appliedProject)
 
+                                @php
+                                    $orsData = $appliedProject->ors;
+                                @endphp
+                                <tr>
+                                    <td class="td-indent-3"> {{$orsData->payee}} - {{$orsData->particulars}} </td>
+                                    <td></td>
+                                    <td class="text-right">{{\App\Swep\Helpers\Helper::toNumber($appliedProject->co)}}</td>
+                                    @foreach(\App\Swep\Helpers\Helper::quarters()[$quarter] as $m => $q)
+                                        @if( \Illuminate\Support\Carbon::parse($orsData->ors_date)->format('m') == $m)
+                                            <td class="text-center">{{$orsData->ors_no}}</td>
+                                            <td class="text-right">{{\App\Swep\Helpers\Helper::toNumber($appliedProject->mooe)}}</td>
+                                        @else
+                                            <td></td>
+                                            <td></td>
+                                        @endif
+                                    @endforeach
+                                    <td></td>
+                                </tr>
+
+                            @endforeach
+                        @endif
+                        <tr class="bg-lightgreen">
                             @php
-                                $orsData = $appliedProject->ors;
+                                $utilizedPerPapMooe = !empty($ors->get($pap->pap_code)) ? $ors->get($pap->pap_code)->sum('mooe') : 0;
+                                $utilizedPerPapCo = !empty($ors->get($pap->pap_code)) ? $ors->get($pap->pap_code)->sum('co') : 0;
                             @endphp
-                            <tr>
-                                <td class="td-indent-3"> {{$orsData->payee}} - {{$orsData->particulars}} </td>
+                            <td class="text-right text-strong">Balance as of</td>
+                            <td class="text-right text-strong">
+                                {{number_format($balanceForwardedPerPapMooe - $utilizedPerPapMooe,2)}}
+                            </td>
+                            <td class="text-right text-strong">
+                                {{number_format($balanceForwardedPerPapCo - $utilizedPerPapCo,2)}}
+                            </td>
+                            @foreach(\App\Swep\Helpers\Helper::quarters()[$quarter] as $m => $q)
                                 <td></td>
-                                <td class="text-right">{{\App\Swep\Helpers\Helper::toNumber($appliedProject->co)}}</td>
-                                @foreach(\App\Swep\Helpers\Helper::quarters()[$quarter] as $m => $q)
-                                    @if( \Illuminate\Support\Carbon::parse($orsData->ors_date)->format('m') == $m)
-                                        <td class="text-center">{{$orsData->ors_no}}</td>
-                                        <td class="text-right">{{\App\Swep\Helpers\Helper::toNumber($appliedProject->mooe)}}</td>
-                                    @else
-                                        <td></td>
-                                        <td></td>
-                                    @endif
-                                @endforeach
-                                <td></td>
-                            </tr>
-
-                        @endforeach
+                                @if(!empty($ors[$pap->pap_code]))
+                                    <td class="text-right text-strong">
+                                        {{
+                                            \App\Swep\Helpers\Helper::toNumber($ors[$pap->pap_code]->whereBetween('ors.ors_date',[
+                                            $monthsStartingAndEnding[$m]['start'],
+                                            $monthsStartingAndEnding[$m]['end'],
+                                            ])->sum('mooe') ?? 0,2,'0.00')
+                                        }}
+                                    </td>
+                                @else
+                                    <td></td>
+                                @endif
+                            @endforeach
+                            <td class="text-right text-strong">{{number_format($utilizedPerPapMooe,2)}}</td>
+                        </tr>
                     @endif
-                    <tr class="bg-lightgreen">
-                        @php
-                            $utilizedPerPapMooe = !empty($ors->get($pap->pap_code)) ? $ors->get($pap->pap_code)->sum('mooe') : 0;
-                            $utilizedPerPapCo = !empty($ors->get($pap->pap_code)) ? $ors->get($pap->pap_code)->sum('co') : 0;
-                        @endphp
-                        <td class="text-right text-strong">Balance as of</td>
-                        <td class="text-right text-strong">
-                            {{number_format($balanceForwardedPerPapMooe - $utilizedPerPapMooe,2)}}
-                        </td>
-                        <td class="text-right text-strong">
-                            {{number_format($balanceForwardedPerPapCo - $utilizedPerPapCo,2)}}
-                        </td>
-                        @foreach(\App\Swep\Helpers\Helper::quarters()[$quarter] as $m => $q)
-                            <td></td>
-                            @if(!empty($ors[$pap->pap_code]))
-                                <td class="text-right text-strong">
-                                    {{
-                                        \App\Swep\Helpers\Helper::toNumber($ors[$pap->pap_code]->whereBetween('ors.ors_date',[
-                                        $monthsStartingAndEnding[$m]['start'],
-                                        $monthsStartingAndEnding[$m]['end'],
-                                        ])->sum('mooe') ?? 0,2,'0.00')
-                                    }}
-                                </td>
-                            @else
-                                <td></td>
-                            @endif
-                        @endforeach
-                        <td class="text-right text-strong">{{number_format($utilizedPerPapMooe,2)}}</td>
-                    </tr>
-
                 @endforeach
 
             @endforeach
