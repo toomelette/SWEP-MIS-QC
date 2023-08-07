@@ -11,6 +11,7 @@
         <th class="text-center">ORS No.</th>
         <th class="text-center">Particulars</th>
         <th class="text-center">Unit</th>
+        <th class="text-center">Project Code</th>
         <th class="text-center">Debit</th>
         <th class="text-center">Credit</th>
         <th class="text-center">Balance</th>
@@ -30,6 +31,13 @@
                             <td>{{$o->ors_no}}</td>
                             <td>{{$o->particulars}}</td>
                             <td>{{$orsEntry->unit}}</td>
+                            <td>
+                                @if(!empty($orsEntry->ors->projectsApplied))
+                                    @foreach($orsEntry->ors->projectsApplied as $proj)
+                                        {{$proj->pap_code}} <br>
+                                    @endforeach
+                                @endif
+                            </td>
                             <td class="text-right">{{Helper::toNumber($orsEntry->debit)}}</td>
                             <td class="text-right">{{Helper::toNumber($orsEntry->credit)}}</td>
                             <td></td>
@@ -41,6 +49,7 @@
                 <td></td>
                 <td></td>
                 <td class="text-strong">Total</td>
+                <td></td>
                 <td></td>
                 <td class="text-right text-strong"> {{number_format($totals['debit'],2)}}</td>
                 <td class="text-right text-strong"> {{number_format($totals['credit'],2)}}</td>

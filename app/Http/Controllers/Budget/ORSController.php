@@ -600,7 +600,7 @@ class ORSController extends Controller
                     abort(504,'Please select an account code.');
                 }
                 $ors = ORS::query()
-                    ->with(['orsEntries.chartOfAccount','orsEntries.responsibilityCenter'])
+                    ->with(['projectsApplied','orsEntries.chartOfAccount','orsEntries.responsibilityCenter','orsEntries.ors'])
                     ->whereHas('orsEntries.chartOfAccount',function ($q) use ($request){
                         return $q->where('account_code','=',$request->account);
                     });
@@ -620,13 +620,13 @@ class ORSController extends Controller
                 if(empty($account)){
                     abort(504,'Account Code does not exist.');
                 }
+
                 if($request->excel == true){
                     return Excel::download(
                         new SubsidiaryLedgerExporter($ors,$account,$request),
                         'Subsidiary Ledger.xlsx',
                     );
                 }
-
                 return view('printables.ors.reports.subsidiary_ledger')->with([
                     'ors' => $ors,
                     'account' => $account,

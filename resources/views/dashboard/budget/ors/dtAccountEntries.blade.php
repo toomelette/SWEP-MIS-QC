@@ -10,7 +10,7 @@
                 <li data-toggle="popup" title="{{$entry->account_code}} - {{$entry->chartOfAccount->account_title}}">{{$entry->account_code}} - <span class="pull-right text-strong">
                         {{\App\Swep\Helpers\Helper::toNumber($entry->debit,2)}}
                         @if(!empty($entry->credit) && $entry->credit != 0)
-                            <span title="CREDIT" class="text-danger">{{$entry->credit}}</span>
+                            <span title="CREDIT" class="text-danger">{{\App\Swep\Helpers\Helper::toNumber($entry->credit,2)}}</span>
                         @endif
                     </span></li>
             @endforeach
