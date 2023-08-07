@@ -942,3 +942,9 @@ Route::get('/updatePap',function(){
     }
     dd($nonExist);
 });
+
+
+Route::get('/string',function(){
+    $string = 'App\Models\Employee';
+   return $string::query()->count();
+});

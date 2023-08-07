@@ -8,6 +8,7 @@ use App\Models\Applicant;
 use App\Models\ApplicantPositionApplied;
 use App\Models\Budget\ChartOfAccounts;
 use App\Models\HRPayPlanitilla;
+use App\Models\MDDC;
 use App\Models\PPU\PPURespCodes;
 use App\Models\PPU\RCDesc;
 use App\Models\SuOptions;
@@ -520,5 +521,29 @@ class Arrays
                 ->toArray();
         }
         return null;
+    }
+
+    public static function employeeAssignments(){
+        $mddc = MDDC::query()
+            ->get();
+        return [
+            'OFFICE-BASED' => [
+                'BACOLOD OFFICE' => 'BACOLOD OFFICE',
+                'QUEZON CITY OFFICE' => 'QUEZON CITY OFFICE',
+            ],
+            'FIELD' => $mddc->pluck('slug','slug')->sort()->toArray(),
+        ];
+    }
+
+    public static function name_extensions(){
+        return [
+            'SR' => 'SR',
+            'JR' => 'JR',
+            'I' => 'I',
+            'II' => 'II',
+            'III' => 'III',
+            'IV' => 'IV',
+            'V' => 'V',
+        ];
     }
 }
