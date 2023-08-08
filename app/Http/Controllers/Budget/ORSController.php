@@ -23,6 +23,7 @@ use App\Swep\Helpers\Helper;
 use App\Swep\Services\Budget\ORSService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
@@ -34,6 +35,7 @@ class ORSController extends Controller
     public function __construct(ORSService $orsService)
     {
         $this->orsService = $orsService;
+
     }
 
     public function export_from_view(){
@@ -44,6 +46,7 @@ class ORSController extends Controller
     }
 
     public function index(Request $request){
+        $this->orsService->checkUserProjectCode();
         if($request->ajax() && $request->has('draw')){
             return $this->dataTable($request);
         }
@@ -106,10 +109,12 @@ class ORSController extends Controller
     }
 
     public function create(){
+        $this->orsService->checkUserProjectCode();
         return view('dashboard.budget.ors.create');
     }
 
     public function store(ORSFormRequest $request){
+        $project_id = Auth::user()->project_id;
         $ors = new ORS;
         $ors->slug = Str::random();
 //        $ors->ors_no = $this->orsService->newOrsNumber($request->funds)['newOrsNumber'];
@@ -136,6 +141,7 @@ class ORSController extends Controller
             $ct = 0;
             foreach ($request->account_entries as $account_entry){
                 array_push($arr,[
+                    'project_id' => $project_id,
                     'slug' => Str::random(),
                     'ors_slug' => $ors->slug,
                     'type' => $account_entry['type'],
@@ -155,7 +161,7 @@ class ORSController extends Controller
             $arr = [];
             foreach ($request->applied_projects as $applied_project){
                 array_push($arr,[
-
+                    'project_id' => $project_id,
                     'slug' => Str::random(),
                     'ors_slug' => $ors->slug,
                     'pap_code' => $applied_project['pap_code'],
@@ -185,13 +191,14 @@ class ORSController extends Controller
     }
 
     public function edit($slug){
+        $this->orsService->checkUserProjectCode();
         return view('dashboard.budget.ors.edit')->with([
             'ors' => $this->orsService->findBySlug($slug),
         ]);
     }
 
     public function update(ORSFormRequest $request,$slug){
-
+        $project_id = Auth::user()->project_id;
         $ors = $this->orsService->findBySlug($slug);
         $ors->ors_date = $request->ors_date;
         $ors->ors_no = $request->ors_no;
@@ -214,6 +221,7 @@ class ORSController extends Controller
                 $ct = 0;
                 foreach ($request->account_entries as $account_entry){
                     array_push($arr,[
+                        'project_id' => $project_id,
                         'slug' => Str::random(),
                         'ors_slug' => $ors->slug,
                         'type' => $account_entry['type'],
@@ -235,7 +243,7 @@ class ORSController extends Controller
                 $arr = [];
                 foreach ($request->applied_projects as $applied_project){
                     array_push($arr,[
-
+                        'project_id' => $project_id,
                         'slug' => Str::random(),
                         'ors_slug' => $ors->slug,
                         'pap_code' => $applied_project['pap_code'],
@@ -259,10 +267,12 @@ class ORSController extends Controller
     }
 
     public function reports(){
+        $this->orsService->checkUserProjectCode();
         return view('dashboard.budget.ors.reports');
     }
 
     public function reportGenerate($type){
+        $this->orsService->checkUserProjectCode();
         $request = Request::capture();
 
         switch ($type){

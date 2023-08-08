@@ -8,9 +8,23 @@ use App\Models\Budget\ORSProjectsApplied;
 use App\Models\PPBTMS\Transactions;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Pap extends Model
 {
+    public static function boot()
+    {
+        $user = Auth::user();
+        parent::boot();
+        static::updating(function($a) use ($user){
+            $a->project_id = $user->project_id;
+        });
+
+        static::creating(function ($a) use ($user){
+            $a->project_id = $user->project_id;
+        });
+    }
+
     protected $table = 'budget_pap';
 //    protected $connection = 'mysql_ppu';
 

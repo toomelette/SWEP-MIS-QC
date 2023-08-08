@@ -18,7 +18,9 @@ class ORSFormRequest extends FormRequest
             'ors_no' => [
                 'required',
                 'regex:/('.$this->request->get("funds").')-(\\d{2})-(\\d{2})-(\\d{4})$/',
-                Rule::unique('budget_ors','ors_no')->ignore($this->route('or'),'slug'),
+                Rule::unique('budget_ors','ors_no')
+                    ->where('project_id',\Auth::user()->project_id)
+                    ->ignore($this->route('or'),'slug'),
             ],
            'funds' => 'required|string',
             'ors_date' => 'required|date_format:Y-m-d',

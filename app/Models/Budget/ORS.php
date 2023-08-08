@@ -4,6 +4,7 @@
 namespace App\Models\Budget;
 
 
+use App\Models\Scopes\ProjectScope;
 use App\Models\User;
 use Auth;
 use Illuminate\Database\Eloquent\Model;
@@ -14,18 +15,23 @@ class ORS extends Model
 
     public static function boot()
     {
+        $user = Auth::user();
         parent::boot();
-        static::updating(function($a){
-            $a->user_updated = Auth::user()->user_id;
+        static::updating(function($a) use ($user){
+            $a->user_updated = $user->user_id;
             $a->ip_updated = request()->ip();
             $a->updated_at = \Carbon::now();
+            $a->project_id = $user->project_id;
         });
 
-        static::creating(function ($a){
-            $a->user_created = Auth::user()->user_id;
+        static::creating(function ($a) use ($user){
+            $a->user_created = $user->user_id;
             $a->ip_created = request()->ip();
             $a->created_at = \Carbon::now();
+            $a->project_id = $user->project_id;
         });
+
+        static::addGlobalScope(new ProjectScope);
     }
 
     public function accountEntries(){

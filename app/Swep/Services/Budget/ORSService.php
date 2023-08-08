@@ -65,4 +65,10 @@ class ORSService
             });
         }
     }
+
+    public function checkUserProjectCode(){
+        if(\Auth::user()->project_id == null){
+            abort(510,'Please ask MIS personnel to assign Project Code to your account.');
+        }
+    }
 }
