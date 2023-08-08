@@ -944,7 +944,8 @@ Route::get('/updatePap',function(){
 });
 
 
-Route::get('/string',function(){
+Route::get('/503',function(){
+    abort(404,'aa');
     $string = 'App\Models\Employee';
    return $string::query()->count();
 });

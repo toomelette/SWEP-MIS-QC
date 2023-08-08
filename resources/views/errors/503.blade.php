@@ -148,17 +148,14 @@
 
 
   <div id="wrapper">
-
-    <div class="grid">
-      <span class="server"></span>
-      <span class="server"></span>
-      <span class="server"></span>
-      <span class="server"></span>
-      <span class="server"></span>
+    <div style="width: 100%;">
+      <img width="400" src="{{asset('images/sra.png')}}">
     </div>
 
+    
+
     <div class="content">
-      <h1>Currently performing maintenance.</h1>
+      <h1 style="font-weight: bold">Currently performing maintenance.</h1>
 
       <p>{{$exception->getMessage()}}</p>
     </div>
