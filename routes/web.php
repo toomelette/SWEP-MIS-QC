@@ -497,6 +497,26 @@ Route::group(['prefix'=>'dashboard', 'as' => 'dashboard.',
 
     /** Annual Budget **/
     Route::resource('annual_budget','Budget\AnnualBudgetController');
+
+    /** Publication **/
+    Route::post('publication/{slug}/add_item','HRU\PublicationController@addItem')->name('publication.add_item');
+    Route::get('publication/{itemSlug}/edit_item','HRU\PublicationController@editItem')->name('publication.edit_item');
+    Route::patch('publication/{itemSlug}/update_item','HRU\PublicationController@updateItem')->name('publication.update_item');
+    Route::delete('publication/{itemSlug}/destroy_item','HRU\PublicationController@destroyItem')->name('publication.destroy_item');
+
+    Route::post('publication/{slug}/add_item','HRU\PublicationController@addItem')->name('publication.add_item');
+
+    Route::get('publication/{slug}/print','HRU\PublicationController@print')->name('publication.print');
+    Route::resource('publication',\App\Http\Controllers\HRU\PublicationController::class);
+
+});
+
+
+Route::group(['as' => 'public.',
+], function () {
+    Route::get('applicant_form/get_qs','Public\ApplicantFormController@getQs')->name('applicant_form.get_qs');
+    Route::get('applicant_form','Public\ApplicantFormController@index');
+    Route::post('applicant_form/submit','Public\ApplicantFormController@submit')->name('applicant_form.submit');
 });
 
 Route::get('display_qr/{slug}',function ($slug, \App\Http\Controllers\DocumentController $documentController){

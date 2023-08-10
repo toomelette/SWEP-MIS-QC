@@ -160,6 +160,12 @@ class PlantillaController extends Controller{
         $pp->original_job_grade = $request->original_job_grade;
         $pp->original_job_grade_si = $request->original_job_grade_si;
         $pp->employee_no = $request->employee_no;
+        $pp->qs_education = $request->qs_education;
+        $pp->qs_training = $request->qs_training;
+        $pp->qs_experience = $request->qs_experience;
+        $pp->qs_eligibility = $request->qs_eligibility;
+        $pp->qs_competency = $request->qs_competency;
+        $pp->place_of_assignment = $request->place_of_assignment;
         if($pp->update()){
             if(isset($pp->getChanges()['employee_no'])){
                 $emp = Employee::query()->where('employee_no','=',$pp->employee_no)->first();

@@ -1,5 +1,13 @@
+
+* {
+    font-variant-ligatures: none;
+}
 .treeview{
     z-index: 3;
+}
+
+.d-none{
+    display: none;
 }
 /* Loader */
 #loader{

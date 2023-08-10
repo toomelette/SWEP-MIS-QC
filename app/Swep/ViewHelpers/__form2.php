@@ -78,6 +78,13 @@ class __form2
         $id = ($n->id != '') ?  'id="'.$n->id.'"' : '';
         $tab_index = ($n->tab_index != '') ?  'tabindex="'.$n->tab_index.'"' : '';
         $title = ($n->title != '') ? '<i class="fa fa-question-circle" title="'.$n->title.'"></i>' : '';
+        if($n->copyNameToClass == 1){
+            $text = $name;
+            $text = str_replace('][','_',$text);
+            $text = str_replace('[','_',$text);
+            $text = str_replace(']','',$text);
+            $n->class = $n->class.' '.$text;
+        }
 
         if($input_only == true){
             return '<input class="form-control '.$n->class.'" '.$id.' '.$tab_index.' name="'. $name .$ext.'" type="'.$n->type.'" value="'.$value.'" placeholder="'. $n->placeholder.'" '. $n->extra_attr .' autocomplete="'.$n->autocomplete.'" '.$r_o.' '.$step.' '.$n->required.'>
@@ -223,6 +230,14 @@ class __form2
             $preSelected = '<option value="'.$value.'" selected>'.$n->select2_preSelected.'</option>';
         }
 
+        if($n->copyNameToClass == 1){
+            $text = $name;
+            $text = str_replace('][','_',$text);
+            $text = str_replace('[','_',$text);
+            $text = str_replace(']','',$text);
+            $n->class = $n->class.' '.$text;
+        }
+
         return '<div class=" '.$c_class.' col-md-'.$n->cols .' '.$name.'">
                 <select for="'.$n->for.'" name="'. $name .$ext.'" '. $id .' class="form-control single '.$n->class.'" '. $n->extra_attr .' '.$r_o.' '.$n->required.'>
                     '.$preSelected.'
@@ -349,6 +364,7 @@ class __form2
         (!isset($array['select2_preSelected'])) ? $array['select2_preSelected']= '' : false;
         (!isset($array['defaultText'])) ? $array['defaultText']= '' : false;
         (!isset($array['list'])) ? $array['list']= '' : false;
+        (!isset($array['copyNameToClass'])) ? $array['copyNameToClass']= '' : false;
 
         $this->class = $array['class'];
         $this->cols = $array['cols'];
@@ -372,6 +388,7 @@ class __form2
         $this->select2_preSelected = $array['select2_preSelected'];
         $this->defaultText = $array['defaultText'];
         $this->list = $array['list'];
+        $this->copyNameToClass = $array['copyNameToClass'];
     }
     public function get($array){
         return $this->name.' Hello';

@@ -437,7 +437,7 @@ function delete_data(slug,url){
                 if(res == 1){
                     btn.parents('#'+slug).addClass('danger');
                     btn.parents('#'+slug).addClass('animate__animated animate__zoomOutLeft');
-                    notify('Data deleted successfully','success');
+                    toast('success','Data deleted successfully','Success');
                     setTimeout(function () {
                         btn.parents('#'+slug).parent('tbody').parent('table').DataTable().draw(false);
                     },500);
@@ -497,4 +497,16 @@ function toast(type,message,heading = null,hideAfter = 5000) {
         loader: false,  // Whether to show loader or not. True by default
         loaderBg: '#9EC600',  // Background color of the toast loader
     });
+}
+
+function makeId(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        counter += 1;
+    }
+    return result;
 }

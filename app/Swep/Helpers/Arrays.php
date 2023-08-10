@@ -61,6 +61,14 @@ class Arrays
         return $array;
     }
 
+    public static function payPlantillasWithItemNumber(){
+
+        $pps = HRPayPlanitilla::query()->select('item_no','position')->get();
+        return $pps->pluck('position','item_no')->map(function ($value,$key){
+            return $key.' - '.$value;
+        })->toArray();
+    }
+
     public static function portals(){
         return [
             'DIGIFILE' => 'DIGIFILE',
@@ -544,6 +552,14 @@ class Arrays
             'III' => 'III',
             'IV' => 'IV',
             'V' => 'V',
+        ];
+    }
+
+    public static function educationalLevelsLimited(){
+        return [
+            'VOCATIONAL/TRADE COURSE' => 'VOCATIONAL/TRADE COURSE',
+            'COLLEGE' => 'COLLEGE',
+            'GRADUATE STUDIES' => 'GRADUATE STUDIES',
         ];
     }
 }

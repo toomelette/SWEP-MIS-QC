@@ -27,6 +27,40 @@
             'cols' => 4,
         ],$pp) !!}
     </div>
+    
+    <p class="page-header-sm text-info text-strong" style="border-bottom: 1px solid #cedbe1">
+        Qualification Standards
+    </p>
+
+    <div class="row">
+        {!! \App\Swep\ViewHelpers\__form2::textarea('qs_education',[
+            'label' => 'Education:',
+            'cols' => 12,
+        ],$pp ?? null)   !!}
+        {!! \App\Swep\ViewHelpers\__form2::textarea('qs_training',[
+            'label' => 'Training:',
+            'cols' => 12,
+        ],$pp ?? null)   !!}
+
+        {!! \App\Swep\ViewHelpers\__form2::textarea('qs_experience',[
+            'label' => 'Experience:',
+            'cols' => 12,
+        ],$pp ?? null)   !!}
+
+        {!! \App\Swep\ViewHelpers\__form2::textarea('qs_eligibility',[
+            'label' => 'Eligibility:',
+            'cols' => 12,
+        ],$pp ?? null)   !!}
+        {!! \App\Swep\ViewHelpers\__form2::textarea('qs_competency',[
+            'label' => 'Competency:',
+            'cols' => 12,
+        ],$pp ?? null)   !!}
+
+        {!! \App\Swep\ViewHelpers\__form2::textbox('place_of_assignment',[
+            'label' => 'Place of Assignment:',
+            'cols' => 12,
+        ],$pp ?? null)   !!}
+    </div>
 
 @endsection
 
