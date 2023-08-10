@@ -9,7 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @include('layouts.css-plugins')
 </head>
-<body class="hold-transition register-page" style="padding: 0px 50px">
+<body class="hold-transition register-page" style="padding: 30px 50px">
 <div class="register-box" style="width: 100%;margin: 0px">
 
     @php

@@ -8,7 +8,7 @@
     <section class="content">
         <div class="login-box">
             <div class="login-logo">
-                <h3>Edit</h3>
+                <h3>Create New Publication</h3>
             </div>
 
             <div class="login-box-body">
