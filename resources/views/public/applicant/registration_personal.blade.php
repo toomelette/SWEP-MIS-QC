@@ -122,7 +122,7 @@
                                     @forelse($positionsPublished as $slug => $position)
                                         <option value="{{$slug}}">{{$position}}</option>
                                     @empty
-                                        <option value="">Select</option>
+
                                     @endforelse
                                 </select>
                             </div>
