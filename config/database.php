@@ -105,7 +105,7 @@ return [
             'port' => env('DB_PORT_SERVER5', '3306'),
             'database' => env('DB_DATABASE_SERVER5', 'swep_afd'),
             'username' => env('DB_USERNAME_SERVER5', 'root'),
-            'password' => env('DB_PASSWORD_SERVER5', 'mssius@server5@misvis'),
+            'password' => env('DB_PASSWORD_SERVER5', 'P@ssw0rd:mssius@server7@misvis'),
             'unix_socket' => env('DB_SOCKET_SERVER5', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',

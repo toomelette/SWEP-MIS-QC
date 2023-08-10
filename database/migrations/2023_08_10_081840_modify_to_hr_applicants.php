@@ -14,16 +14,16 @@ return new class extends Migration
     public function up()
     {
         Schema::table('hr_applicants', function (Blueprint $table) {
-            $table->string('thru');
-            $table->string('email');
-            $table->string('res_block');
-            $table->string('res_street');
-            $table->string('res_subdivision');
-            $table->string('res_barangay');
-            $table->string('res_city');
-            $table->string('res_province');
-            $table->string('citizenship');
-            $table->string('citizenship_type');
+            $table->string('thru')->nullable();
+            $table->string('email')->nullable();
+            $table->string('res_block')->nullable();
+            $table->string('res_street')->nullable();
+            $table->string('res_subdivision')->nullable();
+            $table->string('res_barangay')->nullable();
+            $table->string('res_city')->nullable();
+            $table->string('res_province')->nullable();
+            $table->string('citizenship')->nullable();
+            $table->string('citizenship_type')->nullable();
         });
 
         Schema::create('hr_o_applicant_education',function (Blueprint $table){
