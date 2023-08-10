@@ -939,33 +939,23 @@ Route::get('fullPather',function (){
 });
 
 
-Route::get('/updatePap',function(){
-    dd('pause');
-    $papsOld = DB::connection('sqlsrv_accounting2017')
-        ->table('dbo.BURProjects')
-        ->where('AcctCode','like','23-%')
-        ->orderBy('AcctCode','asc')
-        ->get();
-    $nonExist = [];
-    foreach ($papsOld as $papOld){
-        $papNew = \App\Models\PPU\Pap::query()->where('pap_code','=',$papOld->AcctCode)->first();
-        if(!empty($papNew)){
-            $papNew->co = $papOld->CO;
-            $papNew->mooe = $papOld->MOOE;
-            $papNew->date_started = $papOld->DateStarted;
-            $papNew->projected_date_end = $papOld->ProjectedDateEnd;
-            $papNew->save();
-        }else{
-            array_push($nonExist,$papOld->AcctCode);
+
+
+
+Route::get('/update_plantilla',function(){
+    $items = DB::table('aa_temp_items')->get();
+    foreach ($items as $item){
+        $p = \App\Models\HRPayPlanitilla::query()->where('item_no','=',$item->item_no)->first();
+        if(!empty($p)){
+            $p->qs_education = $item->qs_education;
+            $p->qs_training = $item->qs_training;
+            $p->qs_experience = $item->qs_experience;
+            $p->qs_eligibility = $item->qs_eligibility;
+            $p->qs_competency = $item->qs_competency;
+            $p->place_of_assignment = $item->place_of_assignment;
+            $p->csc_position = $item->position;
+            $p->save();
         }
-
     }
-    dd($nonExist);
-});
-
-
-Route::get('/503',function(){
-    abort(404,'aa');
-    $string = 'App\Models\Employee';
-   return $string::query()->count();
+    return 1;
 });
