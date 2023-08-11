@@ -23,7 +23,7 @@ class ApplicantFormController extends Controller
         return view('public.applicant.registration_personal');
     }
 
-    public function submit(Request $request){
+    public function submit(OApplicantFormRequest $request){
 
         if(!empty($request->position_applied)){
             $positionArray = [];
