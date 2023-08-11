@@ -66,7 +66,15 @@
                 @foreach($respCenter->papCodes as $key => $pap)
                     @if($pap->charge_to_income != 1)
                         <tr class="bg-lightblue">
-                            <td colspan="10" style="font-size: 12px" class="td-indent-2"> <b>{{$pap->pap_code}}</b> - <span class="text-info text-strong text-italic">{{$pap->pap_title ?? 'N/A'}}</span></td>
+                            <td colspan="10" style="font-size: 12px" class="td-indent-2">
+                                <b>{{$pap->pap_code}}</b> -
+                                <span class="text-info text-strong text-italic">
+                                    {{$pap->pap_title ?? 'N/A'}}
+                                </span>
+                                <span class="text-strong">
+                                     -------- MOOE = {{number_format($pap->mooe,2)}} | CO = {{number_format($pap->co,2)}}
+                                </span>
+                            </td>
                         </tr>
                         <tr>
 

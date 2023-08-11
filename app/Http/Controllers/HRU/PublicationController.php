@@ -116,9 +116,13 @@ class PublicationController extends Controller
                         'data' => $data,
                     ]);
                 }else{
-                    return view('dashboard.hru.publication.items.dtActionsFinal')->with([
-                        'data' => $data,
-                    ]);
+                    if($data->applicants_count > 0){
+                        return view('dashboard.hru.publication.items.dtActionsFinal')->with([
+                            'data' => $data,
+                        ]);
+                    }else{
+                        return  '<span class="text-danger">No applicant</span>';
+                    }
                 }
             })
             ->editColumn('monthly_salary',function($data){

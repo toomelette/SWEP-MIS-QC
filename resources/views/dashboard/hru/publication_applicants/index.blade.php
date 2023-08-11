@@ -19,17 +19,11 @@
                     <table class="table table-bordered table-striped table-hover" id="applicants_table" style="width: 100% !important">
                         <thead>
                         <tr class="">
-                            <th >Position</th>
-                            <th >Item No.</th>
-                            <th >JG</th>
-                            <th >Salary</th>
-                            <th >Education</th>
-                            <th >Training</th>
-                            <th >Experience</th>
-                            <th >Eligibility</th>
-                            <th >Competency</th>
-                            <th >Place of Assgn.</th>
-
+                            <th>Applicant</th>
+                            <th>Education</th>
+                            <th>Eligibility</th>
+                            <th>Experience</th>
+                            <th>Training</th>
                             <th class="action">Action</th>
                         </tr>
                         </thead>
@@ -51,7 +45,7 @@
 
 
 @section('modals')
-
+    {!! \App\Swep\ViewHelpers\__html::blank_modal('assess-applicant-modal',85) !!}
 @endsection
 
 @section('scripts')
@@ -63,32 +57,19 @@
         applicants_tbl = $("#applicants_table").DataTable({
             "ajax" : '{{\Illuminate\Support\Facades\Request::url()}}',
             "columns": [
-                { "data": "position" },
-                { "data": "item_no" },
-                { "data": "salary_grade" },
-                { "data": "monthly_salary" },
-                { "data": "qs_education" },
-                { "data": "qs_training" },
-                { "data": "qs_experience" },
-                { "data": "qs_eligibility" },
-                { "data": "qs_competency" },
-                { "data": "place_of_assignment" },
-                { "data": "action" }
+                { "data": "lastname" },
+                { "data": "education" },
+                { "data": "eligibility" },
+                { "data": "experience" },
+                { "data": "training" },
+                { "data": "actions" },
             ],
             "buttons": [
                 {!! __js::dt_buttons() !!}
             ],
             "columnDefs":[
                 {
-                    "targets" : [1,2],
-                    "class" : 'w-6p',
-                },
-                {
-                    "targets" : [3],
-                    "class" : 'w-6p text-right',
-                },
-                {
-                    "targets" : 10,
+                    "targets" : 5,
                     "orderable" : false,
                     "class" : 'action3'
                 },
@@ -127,5 +108,25 @@
             }
         });
 
+
+        $("body").on("click",".assess-applicant-btn",function () {
+            let btn = $(this);
+            load_modal2(btn);
+            let uri = '{{route("dashboard.publication_applicants.assess","slug")}}';
+            uri = uri.replace('slug',btn.attr('data'));
+            $.ajax({
+                url : uri,
+                type: 'GET',
+                headers: {
+                    {!! __html::token_header() !!}
+                },
+                success: function (res) {
+                    populate_modal2(btn,res);
+                },
+                error: function (res) {
+                    populate_modal2_error(res);
+                }
+            })
+        })
     </script>
 @endsection

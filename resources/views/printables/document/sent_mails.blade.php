@@ -33,23 +33,23 @@
 			margin: 0px;
 		}
 
-		table{
+		.table{
 			width: 100%;
 		}
-		table td,th{
+		.table td,th{
 			padding: 0 5px;
 			border: 1px solid black !important;
 		}
 
-		table td:nth-child(3){
+		.table td:nth-child(3){
 			width: 220px;
 		}
 
-		table td:nth-child(4){
+		.table td:nth-child(4){
 			width: 20%;
 		}
 
-		table th{
+		.table th{
 			background-color: #179101;
 			color : white;
 		}
@@ -59,7 +59,7 @@
 		}
 
 		@media print {
-			table th{
+			.table th{
 				background-color: #179101 !important;
 				color : white !important;
     			-webkit-print-color-adjust: exact; 
@@ -73,10 +73,28 @@
 		</style>
 	</head>
 
-	<body onload="window.print()"  onafterprint="window.close()">
-
+{{--	<body onload="window.print()"  onafterprint="window.close()">--}}
+	<body onload="window.print()">
 	 	<div class="wrapper">
-	 		<span class="no-margin blue" style="font-size: 22px"><b>{{$document->reference_no}}</b></span>
+			<table style="width: 100%;">
+				<tr>
+					<td>
+						<span style="font-size: 22px">
+						<b>{{$document->reference_no}}</b>
+						</span>
+					</td>
+					<td>
+						<span style="font-size: 24px;text-align: center;" >
+							{{$document->folder_code}}
+							{{!empty($document->folder_code_2) ? ', '.$document->folder_code_2 : '' }}
+						</span>
+					</td>
+				</tr>
+			</table>
+
+	 		<span class="no-margin blue" style="font-size: 22px">
+
+			</span>
 	 		<p class="no-margin">
 				Document subject: <strong>{{$document->subject}}</strong>
 			</p>
@@ -121,7 +139,7 @@
 					@php
 						$sent = 0;
 					@endphp
-					<table>
+					<table class="table">
 						<thead>
 							<tr>
 								<th>Fullname</th>

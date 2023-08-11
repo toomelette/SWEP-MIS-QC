@@ -1,0 +1,2 @@
+<button type="button" class="btn btn-default btn-block btn-sm assess-applicant-btn" data-toggle="modal" data-target="#assess-applicant-modal" data="{{$data->slug}}">Assess applicant</button>
+<button type="button" class="btn btn-block btn-xs btn-danger">Disqualify</button>

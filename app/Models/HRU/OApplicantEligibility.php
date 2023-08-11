@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class OApplicantEligibility extends Model
 {
     protected $table = 'hr_o_applicant_eligibilities';
+    public $timestamps = false;
+
     public function applicant(){
         return $this->belongsTo(Applicant::class,'applicant_slug','slug');
     }
