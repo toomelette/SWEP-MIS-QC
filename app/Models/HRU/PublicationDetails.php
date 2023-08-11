@@ -25,4 +25,8 @@ class PublicationDetails extends Model
     public function publication(){
         return $this->belongsTo(Publications::class,'publication_slug','slug');
     }
+
+    public function applicants(){
+        return $this->hasMany(OApplicants::class,'publication_detail_slug','slug');
+    }
 }

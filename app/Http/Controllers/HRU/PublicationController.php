@@ -107,11 +107,16 @@ class PublicationController extends Controller
     private function itemsDataTable(Request $request, $slug){
         $items = PublicationDetails::query()
             ->with(['publication'])
+            ->withCount('applicants')
             ->where('publication_slug','=',$slug);
         return DataTables::of($items)
             ->addColumn('action',function($data){
                 if($data->publication->is_final != 1){
                     return view('dashboard.hru.publication.items.dtActions')->with([
+                        'data' => $data,
+                    ]);
+                }else{
+                    return view('dashboard.hru.publication.items.dtActionsFinal')->with([
                         'data' => $data,
                     ]);
                 }

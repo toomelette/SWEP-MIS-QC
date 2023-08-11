@@ -509,6 +509,10 @@ Route::group(['prefix'=>'dashboard', 'as' => 'dashboard.',
     Route::get('publication/{slug}/print','HRU\PublicationController@print')->name('publication.print');
     Route::resource('publication',\App\Http\Controllers\HRU\PublicationController::class);
 
+    /** Publication Applicants **/
+    Route::get('publication_applicants/{publication_detail_slug}', 'HRU\PublicationApplicantsController@index')->name('publication_applicants.index');
+//    Route::resource('publication_applicants/{publication_detail_slug}');
+
 });
 
 
