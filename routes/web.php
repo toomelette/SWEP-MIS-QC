@@ -512,6 +512,8 @@ Route::group(['prefix'=>'dashboard', 'as' => 'dashboard.',
     /** Publication Applicants **/
     Route::get('publication_applicants/{slug}/assess', 'HRU\PublicationApplicantsController@assess')->name('publication_applicants.assess');
     Route::post('publication_applicants/{slug}/assess', 'HRU\PublicationApplicantsController@assessPost')->name('publication_applicants.assess');
+    Route::delete('publication_applicants/{slug}/assess', 'HRU\PublicationApplicantsController@assessDisqualify')->name('publication_applicants.assess');
+    Route::patch('publication_applicants/{slug}/assess', 'HRU\PublicationApplicantsController@assessFinalize')->name('publication_applicants.assess');
     Route::get('publication_applicants/{publication_detail_slug}', 'HRU\PublicationApplicantsController@index')->name('publication_applicants.index');
 //    Route::resource('publication_applicants/{publication_detail_slug}');
 

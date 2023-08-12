@@ -128,5 +128,123 @@
                 }
             })
         })
+
+        $("body").on("click",'.disqualify-btn',function (){
+            let t = $(this);
+            let uri = '{{route('dashboard.publication_applicants.assess','slug')}}';
+            uri = uri.replace('slug',t.attr('data'));
+            let text = t.html();
+            let colors = {
+                'Qualify' :'#00acd6',
+                'Disqualify' : '#d73925',
+            }
+            let status = {
+                'Qualify' : null,
+                'Disqualify' : 'DISQUALIFIED',
+            }
+            Swal.fire({
+                title: text+' applicant?',
+                // html: 'ss',
+                inputAttributes: {
+                    autocapitalize: 'off',
+                },
+                inputValue: 'bm_uid',
+                showCancelButton: true,
+                confirmButtonText: text,
+                showLoaderOnConfirm: true,
+                confirmButtonColor : colors[text],
+                preConfirm: (texta) => {
+                    return $.ajax({
+                        url : uri,
+                        data : {'status':status[text]},
+                        type: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        },
+                        success: function (res) {
+                            active = res.slug;
+                            applicants_tbl.draw(false);
+                            notify('Changes were saved successfully.','success');
+                        },
+                        error: function (res) {
+                            if(res.status == 422){
+                                var message = res.responseJSON.errors.biometric_user_id;
+                            }else{
+                                var message = res.responseJSON.message;
+                            }
+                            Swal.showValidationMessage(
+                                'Request failed: ' + message
+                            );
+                        }
+                    }).then(response => {
+                        if (!response.ok) {
+                            throw new Error(response.statusText)
+                        }
+                        return response.json()
+                    }).catch(error => {
+
+                    })
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            })
+        })
+
+        $("body").on("click", ".finalize-assessment-btn",function (){
+            let t = $(this);
+            let uri = '{{route('dashboard.publication_applicants.assess','slug')}}';
+            uri = uri.replace('slug',t.attr('data'));
+            let text = t.html();
+            let action = t.attr('action');
+            if(action == 'reassess'){
+                text = 'Re-assess applicant';
+            }
+            console.log(action);
+            Swal.fire({
+                    title: text+'?',
+                // html: 'ss',
+                    inputAttributes: {
+                    autocapitalize: 'off',
+                },
+                inputValue: 'bm_uid',
+                showCancelButton: true,
+                confirmButtonText: text,
+                showLoaderOnConfirm: true,
+                preConfirm: (texta) => {
+                    return $.ajax({
+                        url : uri,
+                        data : {'action':action},
+                        type: 'PATCH',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        },
+                        success: function (res) {
+                            active = res.slug;
+                            applicants_tbl.draw(false);
+                            notify('Changes were saved successfully.','success');
+                        },
+                        error: function (res) {
+                            if(res.status == 422){
+                                var message = res.responseJSON.errors.biometric_user_id;
+                            }else{
+                                var message = res.responseJSON.message;
+                            }
+                            Swal.showValidationMessage(
+                                'Request failed: ' + message
+                            );
+                        }
+                    }).then(response => {
+                        if (!response.ok) {
+                            throw new Error(response.statusText)
+                        }
+                        return response.json()
+                    }).catch(error => {
+
+                    })
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            })
+        })
+
+
     </script>
 @endsection

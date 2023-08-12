@@ -9,7 +9,7 @@
 
 @section('modal-body')
     <p class="text-info text-right"><i class="fa fa-info-circle"></i> Please select relevant information to the position applied</p>
-    <table class="table table-striped table-condensed table-bordered">
+    <table class="table table-condensed table-bordered">
         <thead>
         <tr>
             <th>Education</th>
@@ -213,7 +213,7 @@
                                         <dd>{{$training->from}} to {{$training->to}}</dd>
                                         <dd>
                                             <span class="text-success text-strong">
-                                                {{$training->number_of_hours}} hours
+                                                {{$training->number_of_hours ?? 0}} hours
                                             </span>
                                         </dd>
                                         <dd>
@@ -284,6 +284,7 @@
                 },
                 success: function (res) {
                     active = res.slug;
+                    applicants_tbl.draw(false);
                     succeed(form,true,true);
                     toast('success','Assessment successfully saved.','Success!');
                 },
@@ -292,6 +293,8 @@
                 }
             })
         })
+
+
     </script>
 @endsection
 

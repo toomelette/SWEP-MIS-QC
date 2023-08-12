@@ -26,10 +26,18 @@ class PublicationApplicantsController extends Controller
         if($request->ajax() && $request->has('draw')){
             $applicants = OApplicants::query()
                 ->with([
-                    'educationalBackground',
-                    'eligibilities',
-                    'workExperiences',
-                    'trainings',
+                    'educationalBackground' => function($q){
+                        return $q->selected();
+                    },
+                    'eligibilities' => function($q){
+                        return $q->selected();
+                    },
+                    'workExperiences' => function($q){
+                        return $q->selected();
+                    },
+                    'trainings' => function($q){
+                        return $q->selected();
+                    },
                 ])
                 ->where('publication_detail_slug','=',$publicationDetailSlug);
             return DataTables::of($applicants)
@@ -82,6 +90,8 @@ class PublicationApplicantsController extends Controller
 
     public function assessPost($applicantSlug,Request $request){
         $applicant = $this->publicationApplicantService->findBySlug($applicantSlug);
+        $applicant->status = 'ASSESSED';
+        $test = 1;
         /*EDUCATION*/
         $applicant->educationalBackground()
             ->update([
@@ -139,8 +149,35 @@ class PublicationApplicantsController extends Controller
         })->toArray();
         OApplicantTraining::upsert($array,['id'],['selected']);
 
-        return $applicant->only('slug');
+
+        if($applicant->save()) {
+            return $applicant->only('slug');
+        }
+        abort(503,'Error saving the assessment');
     }
 
+    public function assessDisqualify($applicantSlug,Request $request){
+        $applicant = $this->publicationApplicantService->findBySlug($applicantSlug);
+        $applicant->status = $request->status;
+        if($applicant->save()){
+            return $applicant->only('slug');
+        }
+        abort(503,'Error performing an action.');
+    }
 
+    public function assessFinalize($applicantSlug, Request $request){
+
+        $applicant = $this->publicationApplicantService->findBySlug($applicantSlug);
+        if($request->action == 'reassess'){
+            $applicant->status = null;
+
+        }elseif($request->action == 'finalize'){
+
+            $applicant->status = 'FINALIZED';
+        }
+        if($applicant->save()){
+            return $applicant->only('slug');
+        }
+        abort(503,'Error performing action');
+    }
 }

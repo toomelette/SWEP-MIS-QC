@@ -1,5 +1,16 @@
-<b>{{$data->lastname}}, {{$data->firstname}}</b>
 
+@if($data->status == 'DISQUALIFIED')
+    <b>
+        <s>{{$data->lastname}}, {{$data->firstname}}</s>
+    </b>
+    <span class="pull-right text-danger text-strong">
+        DISQUALIFIED
+    </span>
+@else
+    <b>
+        {{$data->lastname}}, {{$data->firstname}}
+    </b>
+@endif
 <div class="table-subdetail" style="margin-top: 3px">
     <table style="width: 100%;">
         <tr>

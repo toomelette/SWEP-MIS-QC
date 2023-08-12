@@ -3,6 +3,7 @@
 namespace App\Models\HRU;
 
 use App\Models\Applicant;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class OApplicantWork extends Model
@@ -11,6 +12,10 @@ class OApplicantWork extends Model
     public $timestamps = false;
     public function applicant(){
         return $this->belongsTo(Applicant::class,'applicant_slug','slug');
+    }
+
+    public function scopeSelected(Builder $query){
+        $query->where('selected','=',1);
     }
 
 }
