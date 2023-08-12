@@ -39,11 +39,16 @@
 }
 
 .nav-tabs-custom>.nav-tabs>li.tab-error {
-    /*border-top-color: #ff203b;*/
+    border-top-color: #a80000;
 }
 
 .nav-tabs-custom>.nav-tabs>li.tab-error a {
     color:darkred !important;
+    background-color: #ffe7df !important;
+}
+
+.nav-tabs-custom>.nav-tabs>li.tab-error.active a {
+    background-color: #ffc0aa !important;
 }
 
 .page-header-sm{

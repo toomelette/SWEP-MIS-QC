@@ -44,6 +44,7 @@ class OApplicantFormRequest extends FormRequest
             'eligibilities.*.place' => 'required|string|max:255',
 
             'work_experiences.*.from' => 'required|date_format:Y-m-d',
+            'work_experiences.*.to' => 'nullable|date_format:Y-m-d',
             'work_experiences.*.position' => 'required|string|max:255',
             'work_experiences.*.company' => 'required|string|max:255',
             'work_experiences.*.is_govt' => 'required|string|max:255',
@@ -52,6 +53,7 @@ class OApplicantFormRequest extends FormRequest
             'trainings.*.from' => 'required|date_format:Y-m-d',
             'trainings.*.to' => 'required|date_format:Y-m-d',
             'trainings.*.conducted_by' => 'required|string|max:255',
+            'trainings.*.number_of_hours' => 'required|decimal:0,2|max:255',
         ];
         //Require course if not elementary and secondary
         foreach($this->educations as $key => $education){
@@ -64,8 +66,48 @@ class OApplicantFormRequest extends FormRequest
                     }
                 })
             ];
+            $rules['educations.'.$key.'.to'] = [
+                Rule::requiredIf(function () use($key,$education){
+                    if(!in_array($this->educations[$key]['level'],Arrays::educationalLevelsLimited())){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                })
+            ];
+            $rules['educations.'.$key.'.highest_level_earned'] = [
+                Rule::requiredIf(function () use($key,$education){
+                    if($this->educations[$key]['year_graduated'] == null){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                })
+            ];
         }
 
         return $rules;
+    }
+
+    public function messages(){
+        return [
+            'work_experiences.*.to' => [
+                'date_format' => 'Must be in mm/dd/yyyy format.',
+            ],
+            'work_experiences.*.from' => [
+                'required' => 'The field is required.',
+                'date_format' => 'Must be in mm/dd/yyyy format.',
+            ],
+
+            'trainings.*.to' => [
+                'required' => 'The field is required.',
+                'date_format' => 'Must be in mm/dd/yyyy format.',
+            ],
+
+            'trainings.*.from' => [
+                'required' => 'The field is required.',
+                'date_format' => 'Must be in mm/dd/yyyy format.',
+            ],
+        ];
     }
 }

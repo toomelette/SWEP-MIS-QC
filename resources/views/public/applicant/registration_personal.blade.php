@@ -8,6 +8,7 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @include('layouts.css-plugins')
+
 </head>
 <body class="hold-transition register-page" style="padding: 30px 50px">
 <div class="register-box" style="width: 100%;margin: 0px">
@@ -244,6 +245,7 @@
                                         {!! \App\Swep\ViewHelpers\__form2::selectOnly('educations[irA4w4][year_graduated]',[
                                             'class' => 'input-sm',
                                             'options' => $years,
+                                            'copyNameToClass' => 1,
                                         ])   !!}
                                     </td>
                                     <td>
@@ -444,7 +446,7 @@
                                     </td>
                                     <td>
                                         {!! \App\Swep\ViewHelpers\__form2::textboxOnly('work_experiences[slug][monthly_salary]',[
-                                            'class' => 'input-sm',
+                                            'class' => ' text-right input-sm autonum',
                                             'copyNameToClass' => 1,
                                         ])   !!}
                                     </td>
@@ -700,7 +702,7 @@
             </td>
             <td>
                 {!! \App\Swep\ViewHelpers\__form2::textboxOnly('work_experiences[slug][monthly_salary]',[
-                    'class' => 'input-sm',
+                    'class' => 'text-right input-sm autonum_slug',
                     'copyNameToClass' => 1,
                 ])   !!}
             </td>
@@ -788,6 +790,18 @@
         let id = 'a'+makeId(8);
         let html = $($(this).attr('target')).html();
         tbl.find('tbody').append('<tr>'+html.replaceAll('slug',id)+'</tr>');
+
+        setTimeout(function (){
+            $(".autonum_"+id).each(function(){
+                $(this).attr('autocomplete','off');
+                new AutoNumeric(this, autonum_settings);
+            });
+        },1000)
+
+        /*$(".autonum").each(function(){
+            $(this).attr('autocomplete','off');
+            new AutoNumeric(this, autonum_settings);
+        });*/
     })
 
     $("#form").submit(function (e) {
@@ -835,6 +849,7 @@
         })
     });
 
+    $(".add-btn[target='#educ_bg_template']").trigger('click');
 
 
 </script>

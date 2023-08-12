@@ -346,10 +346,11 @@
                     })
                     $("a[href='#tab_1']").trigger('click');
                     $("select[name='funds']").show().focus().click();
+                    markTabs(form)
                 },
                 error: function (res) {
                     errored(form,res);
-
+                    markTabs(form);
 
                 }
             })
