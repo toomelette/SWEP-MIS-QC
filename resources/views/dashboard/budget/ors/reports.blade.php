@@ -22,6 +22,7 @@
                                         <li role="presentation" class=""><a href="#budget_monitoring" data-toggle="tab" aria-expanded="true">Budget Monitoring</a></li>
                                         <li role="presentation" class=""><a href="#statement_of_budget_and_actual_expenditures" data-toggle="tab" aria-expanded="true">Statement of Budget and Actual Expenditures</a></li>
                                         <li role="presentation" class=""><a href="#subsidiary_ledger" data-toggle="tab" aria-expanded="true">Subsidiary Ledger</a></li>
+                                        <li role="presentation" class=""><a href="#subsidiary_ledger_2" data-toggle="tab" aria-expanded="true">Subsidiary Ledger 2</a></li>
                                         <li role="presentation" class=""><a href="#budget_proposal_monitoring" data-toggle="tab" aria-expanded="true">Budget Proposal - (Monitoring)</a></li>
                                     </ul>
                                 </div>
@@ -45,6 +46,9 @@
                                 </div>
                                 <div class="tab-pane" id="subsidiary_ledger">
                                     @include('dashboard.budget.ors.reports.subsidiary_ledger')
+                                </div>
+                                <div class="tab-pane" id="subsidiary_ledger_2">
+                                    @include('dashboard.budget.ors.reports.subsidiary_ledger_2')
                                 </div>
                                 <div class="tab-pane" id="budget_proposal_monitoring">
                                     @include('dashboard.budget.ors.reports.budget_proposal_monitoring')
@@ -104,5 +108,6 @@
         })
 
         $("#sl_accounts").select2();
+        $("#sl2_accounts").select2();
     </script>
 @endsection

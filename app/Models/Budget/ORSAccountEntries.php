@@ -6,6 +6,7 @@ namespace App\Models\Budget;
 
 use App\Models\PPU\PPURespCodes;
 use App\Models\Scopes\ProjectScope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
@@ -42,5 +43,12 @@ class ORSAccountEntries extends Model
 
     public function responsibilityCenter(){
         return $this->belongsTo(PPURespCodes::class,'resp_center','rc_code');
+    }
+
+    public function scopeOrsEntriesOnly(Builder $query){
+        $query->where('type','=','ORS');
+    }
+    public function scopeDvEntriesOnly(Builder $query){
+        $query->where('type','=','DV');
     }
 }
