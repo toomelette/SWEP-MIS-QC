@@ -8,6 +8,7 @@ use App\Models\HRU\PublicationDetails;
 use App\Models\HRU\Publications;
 use App\Swep\Helpers\Helper;
 use App\Swep\Services\HRU\PlantillaService;
+use App\Swep\Services\HRU\PublicationDetailService;
 use App\Swep\Services\HRU\PublicationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -19,6 +20,7 @@ class PublicationController extends Controller
     public function __construct(
         protected PublicationService $publicationService,
         protected PlantillaService $plantillaService,
+        protected PublicationDetailService $publicationDetailService,
     )
     {
         $this->publicationService = $publicationService;
@@ -81,6 +83,7 @@ class PublicationController extends Controller
     }
 
     public function edit(Request $request,$slug){
+
         if($request->ajax() && $request->has('draw')){
             return $this->itemsDataTable($request,$slug);
         }
@@ -168,5 +171,28 @@ class PublicationController extends Controller
             }
         }
         abort(503,'Error deleting item.');
+    }
+    public function printItem($slug){
+
+        $item = PublicationDetails::query()->with([
+            'publication',
+            'applicants.educationalBackground' => function($q){
+                return $q->selected();
+            },
+            'applicants.eligibilities' => function($q){
+                return $q->selected();
+            },
+            'applicants.workExperiences' => function($q){
+                return $q->selected();
+            },
+            'applicants.trainings' => function($q){
+                return $q->selected();
+            },
+        ])
+            ->where('slug','=',$slug)
+            ->first();
+        return view('printables.hru.items.print')->with([
+            'item' => $item,
+        ]);
     }
 }

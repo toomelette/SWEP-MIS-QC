@@ -62,7 +62,7 @@
 
 
                 <div id="items_table_container" style="display: none">
-                    <table class="table table-bordered table-striped table-hover" id="items_table" style="width: 100% !important">
+                    <table class="table table-bordered table-striped table-hover table-responsive" id="items_table" style="width: 100% !important">
                         <thead>
                         <tr class="">
                             <th >Position</th>
@@ -97,31 +97,31 @@
 
 @section('modals')
 
-<div class="modal fade" id="add_publication_modal" tabindex="-1" role="dialog" aria-labelledby="add_publication_modal_label">
-  <div class="modal-dialog modal-sm" role="document">
-    <div class="modal-content">
-      <form id="add_item_form">
-          <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="myModalLabel">Add item</h4>
-          </div>
-          <div class="modal-body">
-              <div class="row">
-                  {!! \App\Swep\ViewHelpers\__form2::select('item_no',[
-                        'label' => 'Select Plantilla Item',
-                        'cols' => 12,
-                        'options' => \App\Swep\Helpers\Arrays::payPlantillasWithItemNumber(),
-                        'id' => 'plantilla_select',
-                  ])  !!}
-              </div>
-          </div>
-          <div class="modal-footer">
-              <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-check"></i> Add</button>
-          </div>
-      </form>
+    <div class="modal fade" id="add_publication_modal" tabindex="-1" role="dialog" aria-labelledby="add_publication_modal_label">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <form id="add_item_form">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Add item</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            {!! \App\Swep\ViewHelpers\__form2::select('item_no',[
+                                  'label' => 'Select Plantilla Item',
+                                  'cols' => 12,
+                                  'options' => \App\Swep\Helpers\Arrays::payPlantillasWithItemNumber(),
+                                  'id' => 'plantilla_select',
+                            ])  !!}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-check"></i> Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 @endsection
 
 @section('scripts')
@@ -168,7 +168,7 @@
                     "class" : 'action3'
                 },
             ],
-            "responsive": false,
+            "responsive": true,
             'dom' : 'lBfrtip',
             "processing": true,
             "serverSide": true,
