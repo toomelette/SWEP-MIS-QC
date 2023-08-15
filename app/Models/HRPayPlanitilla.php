@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class HRPayPlanitilla extends Model
 {
     protected $table = 'hr_pay_plantilla';
-    protected $connection = 'server5';
+//    protected $connection = 'server5';
     public function incumbentEmployee(){
         return $this->hasOne(Employee::class,'employee_no','employee_no');
     }

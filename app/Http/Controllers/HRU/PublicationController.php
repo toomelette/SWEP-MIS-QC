@@ -88,6 +88,7 @@ class PublicationController extends Controller
             return $this->itemsDataTable($request,$slug);
         }
         $pub = $this->publicationService->findBySlug($slug);
+
         return view('dashboard.hru.publication.edit')->with([
             'publication' => $pub,
         ]);
