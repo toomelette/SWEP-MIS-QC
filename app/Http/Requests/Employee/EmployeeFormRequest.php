@@ -21,7 +21,7 @@ class EmployeeFormRequest extends FormRequest{
 
     public function rules(){
         
-        $rows_children = $this->request->get('row_children');
+//        $rows_children = $this->request->get('row_children');
 //        $rows_eb = $this->request->all()['row_eb'];
 //        $rows_training = $this->request->get('row_training');
 //        $rows_eligibility = $this->request->get('row_eligibility');
@@ -190,12 +190,12 @@ class EmployeeFormRequest extends FormRequest{
 
 
         // Children
-        if(!empty($rows_children)){
-            foreach($rows_children as $key => $value){   
-                $rules['row_children.'.$key.'.fullname'] = 'nullable|string|max:255';
-                $rules['row_children.'.$key.'.date_of_birth'] = 'nullable|date_format:"m/d/Y"';
-            } 
-        }
+//        if(!empty($rows_children)){
+//            foreach($rows_children as $key => $value){
+//                $rules['row_children.'.$key.'.fullname'] = 'nullable|string|max:255';
+//                $rules['row_children.'.$key.'.date_of_birth'] = 'nullable|date_format:"m/d/Y"';
+//            }
+//        }
 
 
         // Educational background
@@ -228,7 +228,7 @@ class EmployeeFormRequest extends FormRequest{
 
 
         // Work Experience
-        if(!empty($rows_we)){
+        /*if(!empty($rows_we)){
             foreach($rows_we as $key => $value){   
                 $rules['row_we.'.$key.'.date_from'] = 'nullable|date_format:"m/d/Y"';
                 $rules['row_we.'.$key.'.date_to'] = 'nullable|date_format:"m/d/Y"';
@@ -239,11 +239,11 @@ class EmployeeFormRequest extends FormRequest{
                 $rules['row_we.'.$key.'.appointment_status'] = 'nullable|string|max:45';
                 $rules['row_we.'.$key.'.is_gov_service'] = 'nullable|string|max:11';
             } 
-        }
+        }*/
 
 
         // Voluntary Works
-        if(!empty($rows_vw)){
+        /*if(!empty($rows_vw)){
             foreach($rows_vw as $key => $value){   
                 $rules['row_vw.'.$key.'.name'] = 'nullable|string|max:255';
                 $rules['row_vw.'.$key.'.address'] = 'nullable|string|max:255';
@@ -252,41 +252,41 @@ class EmployeeFormRequest extends FormRequest{
                 $rules['row_vw.'.$key.'.hours'] = 'nullable|numeric';
                 $rules['row_vw.'.$key.'.position'] = 'nullable|string|max:90';
             } 
-        }
+        }*/
 
 
         // Recognition
-        if(!empty($rows_recognition)){
+        /*if(!empty($rows_recognition)){
             foreach($rows_recognition as $key => $value){   
                 $rules['row_recognition.'.$key.'.title'] = 'nullable|string|max:255';
             } 
-        }
+        }*/
 
 
         // Organizations
-        if(!empty($rows_org)){
+        /*if(!empty($rows_org)){
             foreach($rows_org as $key => $value){   
                 $rules['row_org.'.$key.'.name'] = 'nullable|string|max:255';
             } 
-        }
+        }*/
 
 
         // Special Skills
-        if(!empty($rows_ss)){
+        /*if(!empty($rows_ss)){
             foreach($rows_ss as $key => $value){   
                 $rules['row_ss.'.$key.'.description'] = 'nullable|string|max:255';
             } 
-        }
+        }*/
 
 
         // Voluntary Works
-        if(!empty($rows_reference)){
+        /*if(!empty($rows_reference)){
             foreach($rows_reference as $key => $value){   
                 $rules['row_reference.'.$key.'.fullname'] = 'nullable|string|max:255';
                 $rules['row_reference.'.$key.'.address'] = 'nullable|string|max:255';
                 $rules['row_reference.'.$key.'.tel_no'] = 'nullable|string|max:20';
             } 
-        }
+        }*/
 
 
         return $rules;
