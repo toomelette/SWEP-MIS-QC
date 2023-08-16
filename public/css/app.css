@@ -184,48 +184,48 @@ ol.example li.placeholder:before {
     width: 8%;
 }
 
-.w-6p{
+td.w-6p{
     width: 6%;
 }
 
-.w-1p{
+td.w-1p{
     width: 1% !important;
 }
 
-.w-2p{
+td.w-2p{
     width: 2% !important;
 }
 
-.w-8p{
+td.w-8p{
     width: 8%;
 }
 
-.w-10p{
+td.w-10p{
     width: 10%;
 }
 
-.w-12p{
+td.w-12p{
     width: 12%;
 }
 
-.w-14p{
+td.w-14p{
     width: 14%;
 }
 
-.w-16p{
+td.w-16p{
     width: 16%;
     max-width: 17%;
 }
 
-.w-18p{
+td.w-18p{
     width: 18%;
 }
 
-.w-20p{
+td.w-20p{
     width: 20%;
 }
 
-.w-25p{
+td.w-25p{
     width: 25%;
 }
 

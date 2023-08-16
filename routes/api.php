@@ -50,3 +50,4 @@ Route::get('/department/textbox_department_ByDepartmentId/{dept_id}', 'Api\ApiDe
 		->name('textboxDepartmentByDepartmentId');
 
 
+Route::get('/getEmployee/{id}','Api\Employee\ApiEmployeeController@getEmployee');

@@ -81,6 +81,7 @@ class BiometricDevicesController extends Controller
         return $serve;
     }
     public function attendances(Request $request){
+
         if($request->has('draw')){
 
             if ($request->has('device')){
@@ -107,7 +108,10 @@ class BiometricDevicesController extends Controller
             abort(503,'Missing parameters');
         }
 
-        $device = BiometricDevices::with('attendances')->find($request->id);
+        $device = BiometricDevices::query()
+            ->where('id','=',$request->get('id'))
+            ->first();
+
         if (empty($device)){
             abort(503,"Device not found");
         }
@@ -125,7 +129,6 @@ class BiometricDevicesController extends Controller
         foreach ($union as $employee){
             $employees_arr[$employee->biometric_user_id] = $employee;
         }
-
         return view('dashboard.biometric_devices.logs')->with([
             'device' => $device,
             'employees_arr' => $employees_arr,
