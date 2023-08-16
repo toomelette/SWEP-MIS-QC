@@ -166,6 +166,10 @@
                     "orderable" : false,
                     "class" : 'action3'
                 },
+                {
+                    responsivePriority : 10001,
+                    targets: [6,7,8],
+                }
             ],
             "responsive": true,
             'dom' : 'lBfrtip',
