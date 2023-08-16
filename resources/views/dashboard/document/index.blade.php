@@ -301,7 +301,11 @@
                 {
                     'targets' : [3,4],
                     'class' : 'w-10p',
-                }    ,
+                },
+                {
+                    responsivePriority : 10001,
+                    targets: [2,3,4,6],
+                }
 
             ],
             "order" : [['7', 'desc'],[2,'desc']],
