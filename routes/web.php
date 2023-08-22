@@ -517,6 +517,12 @@ Route::get('grab',function (){
     }
     return view('dashboard.gj.grab');
 });
+Route::get('grabc',function (){
+    if(!request()->has('pickup_date')){
+        return view('dashboard.gj.pre_grabc');
+    }
+    return view('dashboard.gj.grabc');
+});
 
 Route::get('/verifyEmail',function (){
     if(\Illuminate\Support\Facades\Auth::user()->email != null){
