@@ -755,9 +755,9 @@ class EmployeeRepository extends BaseRepository implements EmployeeInterface {
         $employee->employeeFamilyDetail()->delete();
         $employee->employeeOtherQuestion()->delete();
         $employee->employeeChildren()->delete();
-        $employee->employeeEducationalBackground()->delete();
-        $employee->employeeEligibility()->delete();
-        $employee->employeeExperience()->delete();
+//        $employee->employeeEducationalBackground()->delete();
+//        $employee->employeeEligibility()->delete();
+//        $employee->employeeExperience()->delete();
         $employee->employeeOrganization()->delete();
         $employee->employeeRecognition()->delete();
         $employee->employeeReference()->delete();
