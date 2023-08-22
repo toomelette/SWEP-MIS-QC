@@ -133,7 +133,7 @@
                           'cols' => 1,
                         ],$employee ?? null) !!}
 
-                        {!! \App\Swep\ViewHelpers\__form2::textbox('height',[
+                        {!! \App\Swep\ViewHelpers\__form2::textbox('weight',[
                           'label' => 'Weight:',
                           'cols' => 1,
                         ],$employee ?? null) !!}
