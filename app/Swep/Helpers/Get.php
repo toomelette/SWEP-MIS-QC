@@ -22,4 +22,5 @@ class Get
         $s = SuSettings::query()->where('setting','=',$setting)->first();
         return $s;
     }
+
 }

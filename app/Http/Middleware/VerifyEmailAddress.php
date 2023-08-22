@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Swep\Helpers\Get;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -16,12 +17,16 @@ class VerifyEmailAddress
      */
     public function handle(Request $request, Closure $next)
     {
-        if(\Auth::user()->email == null){
-            if($request->ajax()){
-                abort(503,'Please reload the page.');
+        if(Get::setting('require_email_address')->int_value == 1){
+            if(\Auth::user()->email == null){
+                if($request->ajax()){
+                    abort(503,'Please reload the page.');
+                }
+                return redirect('/verifyEmail?next='.$request->path());
             }
-            return redirect('/verifyEmail?next='.$request->path());
+            return $next($request);
+        }else{
+            return  $next($request);
         }
-        return $next($request);
     }
 }
