@@ -82,7 +82,7 @@
                                                                                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                                                                     <tbody>
                                                                                     <tr>
-                                                                                        <td height="15"><img style="display:block" src="./Gmail - Your Grab E-Receipt_files/unnamed.gif" alt="" width="20" height="15" border="0"></td>
+                                                                                        <td height="15"><img style="display:block" src="{{asset('grb/unnamed.png')}}" alt="" width="20" height="15" border="0"></td>
                                                                                     </tr>
                                                                                     <tr>
                                                                                         <td align="left" style="font-family:Helvetica,&#39;Arial&#39;,sans-serif;color:#00af41;font-size:20px;line-height:24px;font-weight:bold;line-height:26px;text-align:left">
@@ -90,7 +90,7 @@
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr>
-                                                                                        <td height="15"><img style="display:block" src="./Gmail - Your Grab E-Receipt_files/unnamed.gif" alt="" width="20" height="15" border="0"></td>
+                                                                                        <td height="15"><img style="display:block" src="{{asset('grb/unnamed.png')}}" alt="" width="20" height="15" border="0"></td>
                                                                                     </tr>
                                                                                     <tr>
                                                                                         <td>

@@ -99,6 +99,21 @@ return [
             'engine' => null,
         ],
 
+        'mysql_sida' => [
+            'driver' => 'mysql',
+            'host' => 'localhost',
+            'port' => '3306',
+            'database' => 'sida_sys',
+            'username' => 'root',
+            'password' => 'misvis',
+            'unix_socket' => env('DB_SOCKET_PPU', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
+        ],
+
         'server5' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST_SERVER5', '10.36.1.14'),

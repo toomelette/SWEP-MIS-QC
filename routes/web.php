@@ -6,166 +6,7 @@ use App\Swep\Helpers\Helper;
 use Rats\Zkteco\Lib\ZKTeco;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
-Route::get('/pdf', function () {
-    $generator = new Picqer\Barcode\BarcodeGeneratorPNG();
-    file_put_contents('D:/SRA-QC-0001.png', $generator->getBarcode('SRA-QC-0001', $generator::TYPE_CODE_128));
 
-    $image1 ='D:/SRA-QC-0001.png';
-    $pdf = new \setasign\Fpdi\Fpdi();
-
-    $filename = 'D:/sample.pdf';
-    $totalPages = $pdf->setSourceFile($filename);
-    $page_height = $pdf->GetPageHeight();
-    $page_width = $pdf->GetPageWidth();
-
-
-    for ($pageNo = 1;$pageNo <= $totalPages; $pageNo++){
-        $pdf->AddPage();
-        $tplIdx = $pdf->importPage($pageNo);
-
-        $pdf->useTemplate($tplIdx, 0, 0, null, null, true);
-
-//        UPPER RIGHT
-        $mainX = $page_width - 50;
-        $mainY = 20;
-        //UPPER LEFT
-//        $mainX = 10;
-//        $mainY = 20;
-
-        //BOTTOM LEFT
-//        $mainX = 10;
-//        $mainY = $page_height - 20;
-
-        //BOTTOM RIGHT
-//        $mainX = $page_width  - 45;
-//        $mainY = $page_height - 20;
-
-
-
-        $pdf->SetXY($mainX,$mainY);
-        $pdf->SetFont('Arial', '', '8');
-        $pdf->Image($image1,$mainX,$mainY-15,40 , 10);
-        $pdf->SetFont('Arial', '', '8');
-        $pdf->SetXY($mainX-10,$mainY-3);
-
-        $pdf->Multicell(60,2    ,"SRA-QC-0001",0,"C");
-
-        $pdf->SetXY($mainX-10,$mainY-18);
-        $pdf->SetFont('Arial', '', '6');
-        $pdf->Multicell(60,2    ,"SUGAR REGULATORY ADMINISTRATION",0,"C");
-    }
-
-
-    $pdf->Output('D:/sample.pdf', 'F');
-
-//    header("location: ".$filename);
-    exit;
-
-});
-
-Route::get('/qr',function (){
-    $documents = \App\Models\Document::query()->get();
-    $num = 1000001;
-    foreach ($documents as $document){
-
-        $document->document_id = 'SRA-VIS-'.$num;
-        $document->update();
-        $num++;
-    }
-    return 1;
-
-});
-
-Route::get('/rec1',function (){
-    if(!\Illuminate\Support\Facades\Request::has('less_than') OR !\Illuminate\Support\Facades\Request::has('more_than')){
-        return 'Missing less_than and _more_than';
-    }
-    $old_docs = DB::table('temp_rec_documents_qc')
-        ->where('id','<=',\Illuminate\Support\Facades\Request::get('less_than'))
-        ->orWhere('id','=>',\Illuminate\Support\Facades\Request::get('more_than'))
-        ->get();
-
-    foreach ($old_docs as $old_doc){
-        $new_doc = \App\Models\Document::query()->where('slug','=',$old_doc->slug)->first();
-
-        if(!empty($new_doc)){
-            $new_doc->old_document_id = $old_doc->document_id;
-            $new_doc->save();
-        }
-    }
-    return 'Done';
-});
-Route::get('/rec2',function (){
-    $d_logs = \App\Models\DocumentDisseminationLog::query()->where('document_id','like','%DOC%')->limit(5000)->get();
-    foreach ($d_logs as $d_log){
-        $doc = \App\Models\Document::query()->where('old_document_id','=', $d_log->document_id)->first();
-        if(!empty($doc)){
-            $d_log->document_id = $doc->document_id;
-            $d_log->save();
-        }
-    }
-    return 'DONE 5000';
-});
-
-Route::get('/rec3',function (){
-    $d_logs = \App\Models\DocumentDisseminationLog::query()
-        ->where('document_id','like','%DOC%')
-        ->limit(500)->get();
-
-    foreach ($d_logs as $d_log){
-
-        $doc = \App\Models\Document::query()->where('subject','like', '%'.$d_log->subject.'%')->first();
-
-        if(!empty($doc)){
-
-            $d_log->document_id = $doc->document_id;
-            $d_log->save();
-        }
-    }
-    return 'DONE 1000';
-});
-
-Route::get('rec4',function (){
-   $docs = \App\Models\Document::query()->where('path','=',null)->limit(4000)->get();
-   foreach ($docs as $doc){
-
-       $doc->path = \Illuminate\Support\Carbon::parse($doc->date)->format('Y').'/'.$doc->folder_code.'/';
-       if($doc->folder_code2 != null){
-           $doc->path2 =\Illuminate\Support\Carbon::parse($doc->date)->format('Y').'/'.$doc->folder_code2.'/';
-       }
-       $doc->save();
-   }
-   return 1;
-});
-
-Route::get('/dv1',function(){
-    $dvs = \App\Models\DisbursementVoucher::query()->get();
-    foreach ($dvs as $dv){
-        $resp_center = '';
-        switch ($dv->department_name){
-            case 'RD':
-                $resp_center = 'RD-VIS';
-                break;
-            case 'AFD':
-                $resp_center = 'AFD-VIS';
-                break;
-            case 'RDE':
-                $resp_center = 'RDE-VIS';
-                break;
-            default:
-                break;
-        }
-        \App\Models\DisbursementVoucherDetails::insert([
-            'slug' => \Illuminate\Support\Str::random(),
-            'dv_slug' => $dv->slug,
-            'dv_id' => $dv->dv_id,
-            'resp_center' => $resp_center,
-            'mfo_pap' => $dv->project_code,
-            'amount' => $dv->amount,
-        ]);
-    }
-    return 1;
-});
 
 
 //PUBLIC ROUTES
@@ -969,4 +810,39 @@ Route::get('/update_plantilla',function(){
         }
     }
     return 1;
+});
+
+
+Route::get('regions',function (){
+    $regions = \App\Models\Temp\Sida\Regions::query()
+        ->with(['provinces.municipalities.barangays'])
+        ->get();
+    //laravel collections MAP WITH KEYS
+    $json = $regions->mapWithKeys(function ($region){
+        return [
+            //REGION
+            $region->region => [
+                'region_name' => 'REGION '.$region->region,
+                'province_list' => $region->provinces->mapWithKeys(function ($province){
+                    //PROVINCE
+                    return [
+                        $province->province => [
+                            'municipality_list' => $province->municipalities->mapWithKeys(function ($municipality){
+                                //MUNICIPALITY
+                                return [
+                                    $municipality->municipality => [
+                                        //BARANGAY
+                                        'barangay_list' => $municipality->barangays->map(function ($barangay){
+                                            return $barangay->barangay;
+                                        })
+                                    ],
+                                ];
+                            }),
+                        ],
+                    ];
+                }),
+            ]
+        ];
+    });
+    return Response::json($json,200,[],JSON_PRETTY_PRINT);
 });
