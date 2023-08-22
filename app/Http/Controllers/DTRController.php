@@ -124,7 +124,7 @@ class DTRController extends  Controller
 
             return Datatables::of($query)
                 ->addColumn('last_attendance',function ($data){
-                    return '<p style="font-family: Consolas">'.Helper::dateFormat($data->lastRawDtrRecord->timestamp ?? null,'M. d, Y | h:i A').' --- '.$this->dtr_service->biometric_values(true)[$data->lastRawDtrRecord->type].'</p>';
+                    return '<p style="font-family: Consolas">'.Helper::dateFormat($data->lastRawDtrRecord->timestamp ?? null,'M. d, Y | h:i A').' --- '.$this->dtr_service->biometric_values(true)[$data->lastRawDtrRecord->type ?? 10].'</p>';
                 })
                 ->editColumn('sex',function ($data){
                     return __html::sex($data->sex);
