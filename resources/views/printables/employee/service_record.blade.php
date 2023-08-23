@@ -120,7 +120,7 @@
                     <th rowspan="2" class="b-top b-left b-bottom">OFFICE/STATION</th>
                     <th rowspan="2" class="b-top b-left b-bottom">LEAVE W/o PAY</th>
                     <th colspan="2" class="b-top b-left b-bottom">SEPARATION</th>
-                    <th rowspan="2" class="b-top b-left b-bottom b-right">REMARKS</th>
+                    <th rowspan="2" class="b-top b-left b-bottom b-right" style="width: 12%">REMARKS</th>
                 </tr>
                 <tr>
                     <th class="b-bottom b-left">From</th>
@@ -145,7 +145,7 @@
                             <td class="text-center">{{$srArray[$key]->lwp}}</td>
                             <td class="text-center">{{$srArray[$key]->spdate}}</td>
                             <td class="text-center">{{$srArray[$key]->status}}</td>
-                            <td class="text-center">{{$srArray[$key]->remarks}}</td>
+                            <td class="text-center" style="font-size: 8px">{{$srArray[$key]->remarks}}</td>
                         </tr>
                     @endif
 
