@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\HRU\TemplateDeductions;
+use App\Models\HRU\TemplateIncentives;
 use App\Models\SqlServer\EmpMaster;
 use App\Models\SqlServer\IncentiveTemplate;
 use Illuminate\Database\Eloquent\Model;
@@ -273,5 +275,16 @@ class Employee extends Model{
 
     public function incentiveTemplate(){
         return $this->hasMany(IncentiveTemplate::class,'EmpNo','employee_no');
+    }
+
+    public function templateIncentives(){
+        return $this->hasMany(TemplateIncentives::class,'employee_no','employee_no')
+            ->where('non_deletable','!=',1)
+            ->orderBy('priority','asc');
+    }
+
+    public function templateDeductions(){
+        return $this->hasMany(TemplateDeductions::class,'employee_no','employee_no')
+            ->orderBy('priority','asc');
     }
 }

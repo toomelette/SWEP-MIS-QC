@@ -72,6 +72,39 @@
                             </dd>
                         </dl>
                     </div>
+
+                    <div class="col-md-2">
+                        <dl>
+                            <dt>UNOBLIGATED:</dt>
+                            <dd>
+                                <table style="width: 100%;">
+                                    <tr>
+                                        <td>Total budget: </td>
+                                        <td class="text-right text-strong" style="font-family: Consolas">{{\App\Swep\Helpers\Helper::toNumber($totalBudget = $pap->co + $pap->mooe,2,'0.00')}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>PR: </td>
+                                        <td class="text-right text-strong" style="font-family: Consolas">{{\App\Swep\Helpers\Helper::toNumber($prs = $pap->procurementsPr->sum('abc'),2,'0.00')}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>JR: </td>
+                                        <td class="text-right text-strong" style="font-family: Consolas">{{\App\Swep\Helpers\Helper::toNumber($jrs = $pap->procurementsJr->sum('abc'),2,'0.00')}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="b-top">Balance: </td>
+                                        @php
+                                            $totalProcurements = $prs + $jrs;
+                                            $totalProcurements = $prs + $jrs;
+                                            $totalUnobligated = $totalBudget - $totalProcurements;
+                                        @endphp
+                                        <td class="text-right text-strong b-top {{$totalUnobligated < 0 ? 'text-danger' : ''}}" style="font-family: Consolas">
+                                            {{\App\Swep\Helpers\Helper::toNumber($totalUnobligated,2,'0.00')}}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </dd>
+                        </dl>
+                    </div>
                 </div>
             </div>
         </div>

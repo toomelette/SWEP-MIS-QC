@@ -44,6 +44,14 @@ class Pap extends Model
         return $this->hasMany(Transactions::class,'pap_code','pap_code')->where('ref_book','=','PR')->orWhere('ref_book','=','JR');
     }
 
+    public function procurementsPr(){
+        return $this->hasMany(Transactions::class,'pap_code','pap_code')->where('ref_book','=','PR');
+    }
+
+    public function procurementsJr(){
+        return $this->hasMany(Transactions::class,'pap_code','pap_code')->where('ref_book','=','JR');
+    }
+
 
     public function scopeWithoutChargedToIncome(Builder $query): void{
         $query->where('charge_to_income','!=',1)

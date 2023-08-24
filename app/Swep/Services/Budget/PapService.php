@@ -50,7 +50,18 @@ class PapService
 
 
     public function findBySlug($slug){
-        $pap = Pap::query()->with(['responsibilityCenter','orsAppliedProjects'])->where('slug','=',$slug)->first();
+        $pap = Pap::query()
+            ->with([
+                'responsibilityCenter',
+                'orsAppliedProjects',
+                'procurementsPr' => function($q){
+                    return $q->receivedAndNotCancelled();
+                },
+                'procurementsJr' => function($q){
+                    return $q->receivedAndNotCancelled();
+                },
+            ])
+            ->where('slug','=',$slug)->first();
         return $pap ?? abort(503,'PAP not found.');
     }
 }

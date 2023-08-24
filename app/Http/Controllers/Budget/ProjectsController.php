@@ -35,7 +35,20 @@ class ProjectsController extends Controller
 
 
     public function dataTable(Request $request){
-        $paps = Pap::query()->with(['responsibilityCenter','orsAppliedProjects']);
+        $paps = Pap::query()->with([
+            'responsibilityCenter',
+            'orsAppliedProjects',
+        ])
+        ->withSum([
+            'procurementsPr' => function($q){
+                return $q->receivedAndNotCancelled();
+            }
+        ],'abc')
+        ->withSum([
+            'procurementsJr' => function($q){
+                return $q->receivedAndNotCancelled();
+            }
+        ],'abc');
         if($request->has('resp_center') && $request->resp_center != ''){
             $paps = $paps->where('resp_center','=',$request->resp_center);
         }
@@ -45,8 +58,10 @@ class ProjectsController extends Controller
                     'data' => $data,
                 ]);
             })
-            ->addColumn('procurement',function($data){
-                return 1;
+            ->addColumn('procurements',function($data){
+                return view('dashboard.budget.projects.dtProcurements')->with([
+                    'data' => $data,
+                ]);
             })
             ->addColumn('details',function ($data){
                 return 'd';
@@ -71,7 +86,7 @@ class ProjectsController extends Controller
                 ]);
             })
             ->addColumn('totalBudget',function($data){
-                return number_format($data->ps + $data->co + $data->mooe,2);
+                return '<b>'.number_format($data->ps + $data->co + $data->mooe,2).'</b>';
             })
             ->escapeColumns([])
             ->setRowId('slug')
@@ -218,7 +233,9 @@ class ProjectsController extends Controller
             ->where(function ($q){
                 $q->where('ref_book','=','PR')
                     ->orWhere('ref_book','=','JR');
-            });
+            })
+            ->where('is_locked','=',1)
+            ->where('cancelled_at','=',null);
 
 
         return DataTables::of($transactions)
@@ -231,6 +248,9 @@ class ProjectsController extends Controller
             })
             ->editColumn('ors_date',function($data){
                 return $data->ors_date != null ? Carbon::parse($data->ors_date)->format('M. d, Y') : '';
+            })
+            ->editColumn('ref_no',function($data){
+                return '<a href="http://119.93.145.202:8006/dashboard/'.strtolower($data->ref_book).'?find='.$data->ref_no.'" target="_blank">'.$data->ref_no.'</a>';
             })
             ->editColumn('date',function($data){
                 return Helper::dateFormat($data->date,'M. d, Y');

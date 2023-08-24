@@ -53,7 +53,7 @@
                             <th style="width: 10%;">CO</th>
                             <th style="width: 10%;">MOOE</th>
                             <th style="width: 10%;">Total budget</th>
-                            <th style="width: 10%;">Details</th>
+                            <th style="width: 10%;">Procurements</th>
                             <th style="width: 10%;">Action</th>
                         </tr>
                         </thead>
@@ -212,7 +212,7 @@
                     { "data": "co" },
                     { "data": "mooe" },
                     { "data": "totalBudget" },
-                    { "data": "pcent_share" },
+                    { "data": "procurements" },
                     { "data": "action" }
                 ],
                 "buttons": [
@@ -228,8 +228,8 @@
                         "class" : 'w-8p'
                     },
                     {
-                        "targets" : [3,4,5],
-                        "class" : 'w-8p text-right'
+                        "targets" : [3,4,5,6],
+                        "class" : 'w-10p text-right'
                     },
                     {
                         "targets" : 7,

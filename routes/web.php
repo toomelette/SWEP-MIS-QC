@@ -361,6 +361,8 @@ Route::group(['prefix'=>'dashboard', 'as' => 'dashboard.',
     Route::get('publication_applicants/{publication_detail_slug}', 'HRU\PublicationApplicantsController@index')->name('publication_applicants.index');
 //    Route::resource('publication_applicants/{publication_detail_slug}');
 
+    /** Payroll Template **/
+    Route::resource('payroll_template',\App\Http\Controllers\HRU\PayrollTemplateController::class);
 });
 
 
