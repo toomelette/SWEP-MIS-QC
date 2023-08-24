@@ -196,4 +196,11 @@ class PublicationController extends Controller
             'item' => $item,
         ]);
     }
+
+    public function print($slug){
+        $publication = $this->publicationService->findBySlug($slug);
+        return view('printables.hru.publication.publication_summary')->with([
+            'publication' => $publication,
+        ]);
+    }
 }

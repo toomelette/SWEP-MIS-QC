@@ -340,16 +340,16 @@ Route::group(['prefix'=>'dashboard', 'as' => 'dashboard.',
     Route::resource('annual_budget','Budget\AnnualBudgetController');
 
     /** Publication **/
-    Route::get('publication/{slug}/print_item', 'HRU\PublicationController@printItem')->name('publication.print_item');
+    Route::get('publication/{slug}/print', 'HRU\PublicationController@print')->name('publication.print');
     Route::post('publication/{slug}/add_item','HRU\PublicationController@addItem')->name('publication.add_item');
     Route::get('publication/{itemSlug}/edit_item','HRU\PublicationController@editItem')->name('publication.edit_item');
     Route::patch('publication/{itemSlug}/update_item','HRU\PublicationController@updateItem')->name('publication.update_item');
     Route::delete('publication/{itemSlug}/destroy_item','HRU\PublicationController@destroyItem')->name('publication.destroy_item');
 
-
+    Route::get('publication/{slug}/print_item', 'HRU\PublicationController@printItem')->name('publication.print_item');
     Route::post('publication/{slug}/add_item','HRU\PublicationController@addItem')->name('publication.add_item');
 
-    Route::get('publication/{slug}/print','HRU\PublicationController@print')->name('publication.print');
+
     Route::resource('publication',\App\Http\Controllers\HRU\PublicationController::class);
 
     /** Publication Applicants **/
