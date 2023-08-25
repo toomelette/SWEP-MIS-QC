@@ -17,7 +17,11 @@
                 <tr>
                     <td>{{$templateIncentive->incentive->description}}</td>
                     <td>{{$templateIncentive->incentive_code}}</td>
-                    <td>{{$templateIncentive->amount}}</td>
+                    <td>
+                        {!! \App\Swep\ViewHelpers\__form2::textboxOnly('incentives['.$templateIncentive->incentive_code.']',[
+                            'class' => 'input-xs text-right'
+                        ],$templateIncentive->amount) !!}
+                    </td>
                 </tr>
             @empty
             @endforelse

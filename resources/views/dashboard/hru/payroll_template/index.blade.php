@@ -12,7 +12,7 @@
         <div class="box box-solid">
             <div class="box-body">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div id="employees_table_container" style="display: none">
                             <table class="table table-bordered table-striped table-hover table-condensed" id="employees_table" style="width: 100% !important">
                                 <thead>
@@ -32,7 +32,7 @@
                             </center>
                         </div>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-9">
                         <div id="edit-view-container">
 
                         </div>

@@ -53,7 +53,7 @@
                             <th style="width: 10%;">CO</th>
                             <th style="width: 10%;">MOOE</th>
                             <th style="width: 10%;">Total budget</th>
-                            <th style="width: 10%;">Procurements</th>
+                            <th style="width: 10%;">Procurement</th>
                             <th style="width: 10%;">Action</th>
                         </tr>
                         </thead>
