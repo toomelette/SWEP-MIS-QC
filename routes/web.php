@@ -638,7 +638,7 @@ Route::get('/migrate_bur',function (\Illuminate\Http\Request $request){
         $slug = \Illuminate\Support\Str::random();
         array_push($orsArr,[
             'slug' => $slug,
-            'project_id' => $bur->ProjectID,
+            'project_id' => 2,
             'ors_id' => $bur->BURID,
             'funds' => $bur->Funds,
             'ors_no' => $bur->BURNo,
@@ -661,6 +661,7 @@ Route::get('/migrate_bur',function (\Illuminate\Http\Request $request){
             foreach ($bur->BURDetailsAll as $detail){
                 array_push($orsDetailsArr,[
                     'slug' => \Illuminate\Support\Str::random(),
+                    'project_id' => 2,
                     'ors_slug' => $slug,
                     'type' => $detail->BURorDV == 'BUR' ? 'ORS': $detail->BURorDV,
                     'seq_no' => $detail->SEQNO,
@@ -678,6 +679,7 @@ Route::get('/migrate_bur',function (\Illuminate\Http\Request $request){
             foreach ($bur->BURProjApplied as $proj){
                 array_push($orsProjectsAppliedArr,[
                     'slug' => Str::random(),
+                    'project_id' => 2,
                     'ors_slug' => $slug,
                     'pap_code' => $proj->AcctCode,
                     'co' => $proj->CoAmt == 0 ? null : $proj->CoAmt,
