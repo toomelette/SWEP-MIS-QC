@@ -619,7 +619,7 @@ Route::get('/migrate_bur',function (\Illuminate\Http\Request $request){
         return 'Offset parameter missing';
     }
     $offset = $request->offset;
-    return $offset;
+
     $burs = \App\Models\SqlServer\BUR::query()
         ->with(['BURDetails','BURProjApplied','certified','budget'])
         ->where('BURDate','>=','2023-01-01')
