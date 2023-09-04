@@ -605,11 +605,21 @@ Route::get('summaryOfOrsWithProjects',function (\Illuminate\Http\Request $reques
         'cols' => $colss,
     ]);
 });
+Route::get('count_bur',function (){
+    $burs = \App\Models\SqlServer\BUR::query()
+        ->with(['BURDetails','BURProjApplied','certified','budget'])
+        ->where('BURDate','>=','2023-01-01')
+        ->count();
+    dd($burs);
+});
 
-Route::get('/migrate_bur',function (){
+Route::get('/migrate_bur',function (\Illuminate\Http\Request $request){
     //please resume on 44,000
-
-    $offset = 3000;
+    if(!$request->has('offset')){
+        return 'Offset parameter missing';
+    }
+    $offset = $request->offset;
+    return $offset;
     $burs = \App\Models\SqlServer\BUR::query()
         ->with(['BURDetails','BURProjApplied','certified','budget'])
         ->where('BURDate','>=','2023-01-01')
