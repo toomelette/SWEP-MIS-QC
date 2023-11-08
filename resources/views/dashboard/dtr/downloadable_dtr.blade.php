@@ -164,8 +164,20 @@
                             @endif
                         </td>
 
-                        <td>{!! __html::dtrTime($dtr_array[$month.'-'.$date]->ot_in) !!}</td>
-                        <td>{!! __html::dtrTime($dtr_array[$month.'-'.$date]->ot_out) !!}</td>
+                        <td>
+                            @if(isset($dtr_edits_array[$fullDate]['ot_in']))
+                                <span class="text-red"><i>{{$dtr_edits_array[$fullDate]['ot_in']}}</i></span>
+                            @else
+                                {!! __html::dtrTime($dtr_array[$month.'-'.$date]->ot_in) !!}
+                            @endif
+                        </td>
+                        <td>
+                            @if(isset($dtr_edits_array[$fullDate]['ot_out']))
+                                <span class="text-red"><i>{{$dtr_edits_array[$fullDate]['ot_out']}}</i></span>
+                            @else
+                                {!! __html::dtrTime($dtr_array[$month.'-'.$date]->ot_out) !!}
+                            @endif
+                        </td>
                         <td>
                             {!! $italic_op !!}
                             {{$dtr_array[$month.'-'.$date]->late == 0 ? '' : \App\Swep\Helpers\Helper::convertToHoursMins($dtr_array[$month.'-'.$date]->late)}}
@@ -367,8 +379,20 @@
                             @endif
                         </td>
 
-                        <td>{!! __html::dtrTime($dtr_array[$month.'-'.$date]->ot_in) !!}</td>
-                        <td>{!! __html::dtrTime($dtr_array[$month.'-'.$date]->ot_out) !!}</td>
+                        <td>
+                            @if(isset($dtr_edits_array[$fullDate]['ot_in']))
+                                <span class="text-red"><i>{{$dtr_edits_array[$fullDate]['ot_in']}}</i></span>
+                            @else
+                                {!! __html::dtrTime($dtr_array[$month.'-'.$date]->ot_in) !!}
+                            @endif
+                        </td>
+                        <td>
+                            @if(isset($dtr_edits_array[$fullDate]['ot_out']))
+                                <span class="text-red"><i>{{$dtr_edits_array[$fullDate]['ot_out']}}</i></span>
+                            @else
+                                {!! __html::dtrTime($dtr_array[$month.'-'.$date]->ot_out) !!}
+                            @endif
+                        </td>
                         <td>
                             {!! $italic_op !!}
                                 {{$dtr_array[$month.'-'.$date]->late == 0 ? '' : \App\Swep\Helpers\Helper::convertToHoursMins($dtr_array[$month.'-'.$date]->late)}}
