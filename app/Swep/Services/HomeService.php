@@ -32,19 +32,7 @@ class HomeService extends BaseService{
 
     public function view(){
 
-        $count_active_emp = $this->employee_repo->getAll()->count();
-        $count_male_emp = $this->employee_repo->getBySex('M')->count();
-        $count_female_emp = $this->employee_repo->getBySex('F')->count();
-        $count_online_users = $this->user_repo->getByIsOnline(1)->count();
-        $get_emp_by_dept = $this->getEmpByDept();
-
-        return view('dashboard.home.index', compact(
-                'count_active_emp',
-                'count_male_emp',
-                'count_female_emp',
-                'count_online_users',
-                'get_emp_by_dept'
-        ));
+        return view('dashboard.home.index');
 
     }
 

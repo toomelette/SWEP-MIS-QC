@@ -28,7 +28,16 @@ class TreeComposer
 
         $dtr_menus = Menu::query()->with(['submenu']);
 
+        $dtr_menus = $dtr_menus->orWhere('slug','=','ptQX7MfbtJR2EtIf')
+            ->get();
 
+        foreach ($dtr_menus as $dtr_menu){
+            $tree[$dtr_menu->category][$dtr_menu->menu_id]['menu_obj'] = $dtr_menu;
+            foreach (
+                $dtr_menu->submenu as $submenu){
+                $tree[$dtr_menu->category][$dtr_menu->menu_id]['submenus'][$submenu->submenu_id] = $submenu;
+            }
+        }
 
         foreach ($user_submenus as $user_submenu){
             $tree[$user_submenu->submenu->menu->category][$user_submenu->submenu->menu->menu_id]['menu_obj'] = $user_submenu->submenu->menu;
