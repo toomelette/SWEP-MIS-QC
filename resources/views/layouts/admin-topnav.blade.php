@@ -1,8 +1,8 @@
 
 <header class="main-header">
   <a href="#" class="logo">
-    <span class="logo-mini">A</span>
-    <span class="logo-lg"><b>AFD</b></span>
+    <span class="logo-mini">M</span>
+    <span class="logo-lg"><b>MIS</b></span>
   </a>
   @php
     $sa = \App\Models\SuSettings::query()->where('setting','=','SERVER_ADDR')->first();
